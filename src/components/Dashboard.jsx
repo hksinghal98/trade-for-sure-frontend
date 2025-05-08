@@ -11,7 +11,7 @@ import {
   } from "../components/ui/select"
 import { Label } from '../components/ui/label';
 import { Input } from './ui/input';
-import handleexchangerequest from "../utilityc/Api";
+import { handleexchangerequest } from "../utility/Api";
 
 // import addbrokerbox from './addbrokerbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "../components/ui/dialog";
@@ -32,7 +32,11 @@ const Dashboard = () => {
     const [brokerName1, setBrokerName1] = useState("");
     const [brokerName2, setBrokerName2] = useState("");
     const [brokerName3, setBrokerName3] = useState(""); // State for Broker Name
-
+    const [apiSecretLogin,setApiSecretLogin] = useState(""); // State for API Secret
+    const [redirectUrlLogin,setRedirectUrlLogin] = useState(""); // State for API Secret
+    const [tableDatafetch, setTableDatafetch] = useState([]);
+    const [loading, setLoading] = useState(false);
+    
     
     const handleopen = () => setAddBrOpen(true)
     const handleSelectChange = (value) => {
@@ -141,7 +145,31 @@ const Dashboard = () => {
           alert("An error occurred. Please try again.");
         }
       };
-    
+      const fetchTableData = async () => {
+        setLoading(true);
+        try {
+          const response = await fetch("https://example.com/api/table-data",{
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            }
+          }); // Replace with your API endpoint
+          if (!response.ok) {
+            throw new Error("Failed to fetch data");
+          }
+          const data = await response.json();
+          setTableDatafetch(data);
+          alert("Data fetched successfully!");
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          alert("Error fetching data:  " + error.message);
+        } finally {
+          setLoading(false);
+        }
+      };
+      useEffect(() => {
+        fetchTableData();
+      }, []);
 
   return (
     <>
@@ -279,7 +307,7 @@ const Dashboard = () => {
           placeholder="API Secret"
           className="border p-1 rounded items-center placeholder:text-sm"
           value={apiSecret}
-        onChange={(e) => setApiSecret(e.target.value)}
+        onChange={(e) => setApiSecretLogin(e.target.value)}
         />
         </div>
         <div className="flex gap-2 items-center justify-between w-full">
@@ -296,6 +324,7 @@ const Dashboard = () => {
           type="text"
           placeholder="Redirect URL"
           className="border p-1 rounded items-center placeholder:text-sm"
+          onChange={(e) => setRedirectUrlLogin(e.target.value)}
         />
         </div>
         <Button className = " bg-green-700 hover:bg-green-900" onClick={handleexchange}> LogIn</Button>
@@ -527,10 +556,12 @@ const Dashboard = () => {
         </Button>
       </div>
       <div className="overflow-x-auto h-72 w-full rounded-lg">
+      {/* {loading && <p>Loading...</p>} */}
       <table className="table-auto border-collapse border border-gray-300 w-full overflow-hidden">
         <thead>
           <tr className="bg-gray-200">
-            {Object.keys(tableData[0]).map((key) => (
+            {tableDatafetch.length > 0 &&
+            Object.keys(tableData[0]).map((key) => (
               <th key={key} className="border border-gray-300 px-4 py-2">
                 {key.charAt(0).toUpperCase() + key.slice(1)}
               </th>
@@ -538,7 +569,7 @@ const Dashboard = () => {
           </tr>
         </thead>
         <tbody>
-          {tableData.map((row) => (
+          {tableDatafetch.map((row) => (
             <tr key={row.id} className="text-center">
               {Object.values(row).map((value, index) => (
                 <td key={index} className="border border-gray-300 px-4 py-2">
