@@ -13,6 +13,23 @@ import { Label } from '../components/ui/label';
 import { Input } from './ui/input';
 import { handleexchangerequest } from "../utility/Api";
 
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "../components/ui/popover";
+import {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from "../components/ui/command"
+
 // import addbrokerbox from './addbrokerbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "../components/ui/dialog";
 import { useNavigate } from "react-router-dom";
@@ -43,6 +60,13 @@ const navigate = useNavigate();
     const [login, setLogin] = useState('');
     const [Password, setPassword] = useState('');
     const [loading,setLoading]= useState('')
+    const [Comboopen, setComboOpen] = useState(false)
+    const [selectsymbol,setselectsymbol]=useState('')
+    const [Symbol,setsymbol]= useState([])
+     const [brokers, setBrokers] = useState([])
+
+
+
 
     
     
@@ -98,6 +122,24 @@ const navigate = useNavigate();
           window.removeEventListener("keydown", handleKeyPress);
         };
       }, []);
+
+      const fetchBrokers = async () => {
+    try {
+      const response = await handleexchangerequest("GET", null, "/api/brokers"); // Replace with your API endpoint
+      if (response && response.data) {
+        setBrokers(response.data); // Assuming response.data contains the broker list
+      } else {
+        console.error("Failed to fetch brokers");
+      }
+    } catch (error) {
+      console.error("Error fetching brokers:", error);
+    }
+  };
+
+  // Fetch brokers on component mount
+  useEffect(() => {
+    fetchBrokers();
+  }, []);
 
 
       const dashlogout =()=>{
@@ -247,27 +289,26 @@ const handlelogout = async () => {
                 <Select onSelect={(value) => setBrokerName1(value)}>
   <SelectTrigger className="w-[180px] bg-stone-700 text-white hover:bg-stone-600" 
   >
-    <SelectValue placeholder="Market" / >
+    <SelectValue placeholder="Broker Name" / >
   </SelectTrigger>
   <SelectContent className="bg-white border border-blue-300">
+    {brokers && brokers.length > 0 ? (
+      brokers.map((broker, index) => (
     <SelectItem
       value="light"
       className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
     >
-      Zerodha
+      {broker.name}
     </SelectItem>
+      ))
+    ):(
     <SelectItem
       value="dark"
       className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
     >
-      Angel
+      {loading ? "Loading brokers..." : "No brokers available"}
     </SelectItem>
-    <SelectItem
-      value="system"
-      className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-    >
-      Something
-    </SelectItem>
+    )}
   </SelectContent>
 </Select>
         </div>
@@ -360,24 +401,21 @@ const handlelogout = async () => {
     <SelectValue placeholder="Market" / >
   </SelectTrigger>
   <SelectContent className="bg-white border border-blue-300">
-    <SelectItem
-      value="light"
-      className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-    >
-      Zerodha
-    </SelectItem>
-    <SelectItem
-      value="dark"
-      className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-    >
-      Angel
-    </SelectItem>
-    <SelectItem
-      value="system"
-      className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-    >
-      Something
-    </SelectItem>
+    {brokers && brokers.length > 0 ? (
+      brokers.map((broker, index) => (
+        <SelectItem
+          key={index}
+          value={broker.name || broker.id}
+          className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+        >
+          {broker.name}
+        </SelectItem>
+      ))
+    ) : (
+      <SelectItem value="loading" disabled>
+        {loading ? "Loading brokers..." : "No brokers available"}
+      </SelectItem>
+    )}
   </SelectContent>
 </Select>
         </div>
@@ -408,24 +446,21 @@ const handlelogout = async () => {
     <SelectValue placeholder="Market" />
   </SelectTrigger>
   <SelectContent className="bg-white border border-blue-300">
-    <SelectItem
-      value="light"
-      className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-    >
-      Zerodha
-    </SelectItem>
-    <SelectItem
-      value="dark"
-      className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-    >
-      Angel
-    </SelectItem>
-    <SelectItem
-      value="system"
-      className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-    >
-      Something
-    </SelectItem>
+   {brokers && brokers.length > 0 ? (
+      brokers.map((broker, index) => (
+        <SelectItem
+          key={index}
+          value={broker.name || broker.id}
+          className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+        >
+          {broker.name}
+        </SelectItem>
+      ))
+    ) : (
+      <SelectItem value="loading" disabled>
+        {loading ? "Loading brokers..." : "No brokers available"}
+      </SelectItem>
+    )}
   </SelectContent>
 </Select>
         </div>
@@ -486,12 +521,21 @@ const handlelogout = async () => {
                   <SelectValue placeholder="" />
                 </SelectTrigger>
                 <SelectContent className="bg-white border border-blue-300">
-                  <SelectItem
-                    value="light"
-                    className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-                  >
-                    
-                  </SelectItem>
+                  {brokers && brokers.length > 0 ? (
+                    brokers.map((broker, index) => (
+                      <SelectItem
+                        key={index}
+                        value={broker.name || broker.id}
+                        className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+                      >
+                        {broker.name}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <SelectItem value="loading" disabled>
+                      {loading ? "Loading brokers..." : "No brokers available"}
+                    </SelectItem>
+                  )}
                   
                 </SelectContent>
               </Select>
@@ -539,31 +583,46 @@ const handlelogout = async () => {
             <div className='flex gap-2'>
                 <div className='flex flex-col gap-2'>
                 <Label className =" text-white text-base">Symbol</Label>
-                <Select>
-  <SelectTrigger className="w-[180px] bg-blue-800 text-white hover:bg-blue-700">
-    <SelectValue placeholder="" />
-  </SelectTrigger>
-  <SelectContent className="bg-white border border-blue-300">
-    <SelectItem
-      value="light"
-      className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-    >
-      Zerodha
-    </SelectItem>
-    <SelectItem
-      value="dark"
-      className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-    >
-      Angel
-    </SelectItem>
-    <SelectItem
-      value="system"
-      className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-    >
-      Something
-    </SelectItem>
-  </SelectContent>
-</Select>
+                <Popover open={Comboopen} onOpenChange={setComboOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      aria-expanded={Comboopen}
+                      className="w-[200px] justify-between bg-blue-700 text-white hover:bg-blue-600"
+                    >
+                      {selectsymbol || "Select Symbol"}
+                      {/* <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" /> */}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandInput  placeholder="Search symbol..." />
+                      <CommandList>
+                        <CommandEmpty>No symbol found.</CommandEmpty>
+                        <CommandGroup>
+                          <CommandItem value="select-symbol" onChange={(e) => setselectsymbol(e)}>
+                            Select Symbol
+                          </CommandItem>
+                          {Symbol.map((symbol, index) => (
+                            <CommandItem
+                              key={index}
+                              value={symbol}
+                              onSelect={() => setselectsymbol(symbol)}
+                            >
+                              <Check
+                                className={`mr-2 h-4 w-4 ${
+                                  selectsymbol === symbol ? "opacity-100" : "opacity-0"
+                                }`}
+                              />
+                              {symbol}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
                 </div>
             </div>
             <div className=' flex flex-col gap-2'>
