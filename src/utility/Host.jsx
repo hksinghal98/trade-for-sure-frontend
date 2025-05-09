@@ -1,5 +1,5 @@
 
-export const Host_Ip = "http://3.7.105.243:8000/";
+export const Host_Ip = "http://localhost:8000/";
 
 
 

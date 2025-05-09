@@ -15,11 +15,13 @@ import { handleexchangerequest } from "../utility/Api";
 
 // import addbrokerbox from './addbrokerbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "../components/ui/dialog";
+import { useNavigate } from "react-router-dom";
   
 
 
 
 const Dashboard = () => {
+const navigate = useNavigate();
 
     const [AddBropen, setAddBrOpen] = useState(false)
     const [Loginopen, setLoginOpen] = useState(false)
@@ -45,6 +47,28 @@ const Dashboard = () => {
     
     
     const handleopen = () => setAddBrOpen(true)
+    
+    
+    
+    const handleplaceorder = ()=>{
+         const payload = JSON.stringify({
+          brokerName4,
+          Symbol,
+          order,
+          brokerName1,
+
+        });
+        const type = "POST"
+        const endpoint= "placeorder"
+        handleexchangerequest(type, payload, endpoint)
+    .then(response => {
+    console.log(response) 
+    
+    window.location.reload()
+    })
+    
+    }
+
     const handleSelectChange = (value) => {
         if (value === "Buy") {
           setDialogTheme("bg-green-300"); // Greenish theme for Buy
@@ -74,6 +98,12 @@ const Dashboard = () => {
           window.removeEventListener("keydown", handleKeyPress);
         };
       }, []);
+
+
+      const dashlogout =()=>{
+        localStorage.clear()
+        navigate('/')
+      }
 
 
       const data1 = [
@@ -126,34 +156,54 @@ const Dashboard = () => {
 
         });
         const type = "POST"
-    handleexchangerequest(type, payload, endpoint)
+        const endpoint= "broker"
+        handleexchangerequest(type, payload, endpoint)
     .then(response => {
     console.log(response) 
     
     window.location.reload()
     })
-        
-        try {
-          const response = await fetch("https://example.com/api/broker", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(payload),
-          });
     
-          if (response.ok) {
-            alert("Broker details saved successfully!");
-            setAddBrOpen(false); // Close the dialog
-          } else {
-            alert("Failed to save broker details. Please try again.");
-          }
-        } catch (error) {
-          console.error("Error:", error);
-          alert("An error occurred. Please try again.");
-        }
-      };
-      const fetchTableData = async () => {
+        };
+
+ const handlelogin = async () => {
+        const payload = JSON.stringify({
+          brokerName2,
+       
+
+        });
+        const type = "POST"
+        const endpoint= "loginbroker"
+        handleexchangerequest(type, payload, endpoint)
+    .then(response => {
+    console.log(response) 
+    
+    window.location.reload()
+    })
+    
+        };
+
+
+const handlelogout = async () => {
+        const payload = JSON.stringify({
+          brokerName3,
+       
+
+        });
+        const type = "POST"
+        const endpoint= "logoutbroker"
+        handleexchangerequest(type, payload, endpoint)
+    .then(response => {
+    console.log(response) 
+    
+    window.location.reload()
+    })
+    
+        };
+
+
+      
+       const fetchTableData = async () => {
         setLoading(true);
         try {
           const response = await fetch("https://example.com/api/table-data",{
@@ -242,17 +292,7 @@ const Dashboard = () => {
         />
         </div>
        
-        <div className="flex gap-2 items-center justify-between w-full">
-        <Label htmlFor="broker-name" className=' mr-2'>Redirect URL</Label>
-        <input
-          type="text"
-          placeholder="Redirect URL"
-          className="border p-1 rounded items-center placeholder:text-sm"
-          value={redirectUrl}
-        onChange={(e) => setRedirectUrl(e.target.value)}
-        />
-        </div>
-
+ 
         <div className="flex gap-2 items-center justify-between w-full">
         <Label htmlFor="broker-name" className=' mr-2'>TOTP Token</Label>
         <input
@@ -289,7 +329,7 @@ const Dashboard = () => {
 
        
 
-        <Button className = " bg-green-700 hover:bg-green-900"  onClick={handleexchange}> Save</Button>
+        <Button className = " bg-green-700 hover:bg-green-900"  onClick={()=>handleexchange()}> Save</Button>
 
 
 
@@ -341,34 +381,7 @@ const Dashboard = () => {
   </SelectContent>
 </Select>
         </div>
-        <div className="flex gap-2 items-center justify-between w-full">
-        <Label htmlFor="broker-name" className=' mr-2'>API Secret</Label>
-        <input
-          type="text"
-          placeholder="API Secret"
-          className="border p-1 rounded items-center placeholder:text-sm"
-          value={apiSecret}
-        onChange={(e) => setApiSecretLogin(e.target.value)}
-        />
-        </div>
-        <div className="flex gap-2 items-center justify-between w-full">
-        <Label htmlFor="broker-name" className=' mr-2'>Redirect URL</Label>
-        <input
-          type="text"
-          placeholder="Redirect URL"
-          className="border p-1 rounded items-center placeholder:text-sm"
-        />
-        </div>
-        <div className="flex gap-2 items-center justify-between w-full">
-        <Label htmlFor="broker-name" className=' mr-2'>Redirect URL</Label>
-        <input
-          type="text"
-          placeholder="Redirect URL"
-          className="border p-1 rounded items-center placeholder:text-sm"
-          onChange={(e) => setRedirectUrlLogin(e.target.value)}
-        />
-        </div>
-        <Button className = " bg-green-700 hover:bg-green-900" onClick={handleexchange}> LogIn</Button>
+                <Button className = " bg-green-700 hover:bg-green-900" onClick={handlelogin}> LogIn</Button>
 
 
 
@@ -417,7 +430,7 @@ const Dashboard = () => {
 </Select>
         </div>
         
-        <Button className = " bg-green-700 hover:bg-green-900" onClick={handleexchange}> LogOut</Button>
+        <Button className = " bg-green-700 hover:bg-green-900" onClick={()=>handlelogout()}> LogOut</Button>
 
 
 
@@ -618,7 +631,7 @@ const Dashboard = () => {
                 </div>
             </div>
 
-            <Button className = " bg-green-700 hover:bg-green-900"> Place Order</Button>
+            <Button  onClick={()=>handleplaceorder()} className = " bg-green-700 hover:bg-green-900"> Place Order</Button>
         </div>
         </div>
         
@@ -627,7 +640,7 @@ const Dashboard = () => {
 
       </DialogContent>
     </Dialog>
-    <Button className ="  bg-blue-600 text-white hover:bg-blue-700">Dashboard LogOut</Button>
+    <Button onClick={() => dashlogout()} className ="  bg-blue-600 text-white hover:bg-blue-700">Dashboard LogOut</Button>
 
         </div>
 
@@ -645,13 +658,7 @@ const Dashboard = () => {
         >
           Close Order
         </Button>
-        <Button
-          className="w-28 text-sm bg-red-500 hover:bg-red-700 text-white"
-          onClick={() => fetchTableData()}
-        >
-          Positions
-        </Button>
-      </div>
+              </div>
       <div className="overflow-x-auto h-72 w-full rounded-lg">
       {/* {loading && <p>Loading...</p>} */}
       <table className="table-auto border-collapse border border-gray-300 w-full overflow-hidden">
