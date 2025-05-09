@@ -188,6 +188,53 @@ const navigate = useNavigate();
       ];
     const [tableData, setTableData] = useState(data1);
 
+    const handleLogoutBroker = async () => {
+      const payload = JSON.stringify({
+        brokerName: brokerName3,
+      });
+      const type = "POST";
+      const endpoint = "/api/logout-broker";
+      
+      handleexchangerequest(type, payload, endpoint)
+      .then(response => {
+        console.log(response);
+        if(response) {
+          alert("Broker logout successful!");
+          setLogoutOpen(false); // Close the dialog
+        } else {
+          alert("Failed to logout. Please try again.");
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        alert("An error occurred. Please try again.");
+      });
+    };
+        const handleLoginBroker = async () => {
+      const payload = JSON.stringify({
+        apiSecret: apiSecretLogin,
+        redirectUrl: redirectUrlLogin,
+        brokerName: brokerName2,
+      });
+      const type = "POST";
+      const endpoint = "/api/login-broker";
+      
+      handleexchangerequest(type, payload, endpoint)
+      .then(response => {
+        console.log(response);
+        if(response) {
+          alert("Broker login successful!");
+          setLoginOpen(false); 
+        } else {
+          alert("Failed to login. Please try again.");
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        alert("An error occurred. Please try again.");
+      });
+    };
+
 
     const handleexchange = async () => {
         const payload = JSON.stringify({
@@ -267,6 +314,29 @@ const handlelogout = async () => {
           setLoading(false);
         }
       };
+
+      const fetchSymbols = async (broker, exchange) => {
+        setLoading(true);
+        try {
+          const queryParams = `broker=${broker}&exchange=${exchange}`;
+          const response = await handleexchangerequest("GET", queryParams, "/api/symbols");
+          if (response) {
+            setsymbol(response);
+            console.log("Symbols fetched successfully:", response);
+          } else {
+            console.error("Failed to fetch symbols");
+          }
+        } catch (error) {
+          console.error("Error fetching symbols:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      // Fetch brokers on component mount
+      useEffect(() => {
+        fetchBrokers();
+      }, []);
     
   return (
     <>
@@ -542,7 +612,14 @@ const handlelogout = async () => {
                 </div>
                 <div className='flex flex-col gap-2'>
                 <Label className =" text-white text-base">Exchange</Label>
-                <Select onSelect={(value) => setBrokerName4(value)}>
+                <Select onSelect={(value) => {
+                   if (brokerName4) {
+                    fetchSymbols(brokerName4, value);
+                  } else {
+                    alert("Please select a broker first");
+                  }
+                }}
+                >
                 <SelectTrigger className="w-[180px] bg-blue-800 text-white hover:bg-blue-700">
                   <SelectValue placeholder="" />
                 </SelectTrigger>
@@ -604,20 +681,29 @@ const handlelogout = async () => {
                           <CommandItem value="select-symbol" onChange={(e) => setselectsymbol(e)}>
                             Select Symbol
                           </CommandItem>
-                          {Symbol.map((symbol, index) => (
-                            <CommandItem
-                              key={index}
-                              value={symbol}
-                              onSelect={() => setselectsymbol(symbol)}
-                            >
-                              <Check
-                                className={`mr-2 h-4 w-4 ${
-                                  selectsymbol === symbol ? "opacity-100" : "opacity-0"
-                                }`}
-                              />
-                              {symbol}
+                          {Symbol.length > 0 ? (
+                            Symbol.map((symbol, index) => (
+                              <CommandItem
+                                key={index}
+                                value={symbol}
+                                onSelect={() => {
+                                  setselectsymbol(symbol);
+                                  setComboOpen(false);
+                                }}
+                              >
+                                <Check
+                                  className={`mr-2 h-4 w-4 ${
+                                    selectsymbol === symbol ? "opacity-100" : "opacity-0"
+                                  }`}
+                                />
+                                {symbol}
+                              </CommandItem>
+                            ))
+                          ) : (
+                            <CommandItem disabled>
+                              {loading ? "Loading symbols..." : "No symbols available"}
                             </CommandItem>
-                          ))}
+                          )}
                         </CommandGroup>
                       </CommandList>
                     </Command>
