@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { Button } from "../components/ui/button";
@@ -38,7 +37,7 @@ import { useNavigate } from "react-router-dom";
 
 
 const Dashboard = () => {
-const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const [AddBropen, setAddBrOpen] = useState(false)
     const [Loginopen, setLoginOpen] = useState(false)
@@ -123,11 +122,12 @@ const navigate = useNavigate();
         };
       }, []);
 
+
       const fetchBrokers = async () => {
-    try {
-      const response = await handleexchangerequest("GET", null, "/api/brokers"); // Replace with your API endpoint
-      if (response && response.data) {
-        setBrokers(response.data); // Assuming response.data contains the broker list
+        try {
+      const response = await handleexchangerequest("GET", 'Broker=all', "symbol"); // Replace with your API endpoint
+      if (response) {
+        setBrokers(response); // Assuming response.data contains the broker list
       } else {
         console.error("Failed to fetch brokers");
       }
@@ -137,10 +137,7 @@ const navigate = useNavigate();
   };
 
   // Fetch brokers on component mount
-  useEffect(() => {
-    fetchBrokers();
-  }, []);
-
+ 
 
       const dashlogout =()=>{
         localStorage.clear()
@@ -273,6 +270,7 @@ const navigate = useNavigate();
         };
 
 
+
 const handlelogout = async () => {
         const payload = JSON.stringify({
           brokerName3,
@@ -291,35 +289,24 @@ const handlelogout = async () => {
         };
 
 
-      
-       const fetchTableData = async () => {
-        setLoading(true);
-        try {
-          const response = await fetch("https://example.com/api/table-data",{
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            }
-          }); // Replace with your API endpoint
-          if (!response.ok) {
-            throw new Error("Failed to fetch data");
-          }
-          const data = await response.json();
-          setTableDatafetch(data);
-          alert("Data fetched successfully!");
-        } catch (error) {
-          console.error("Error fetching data:", error);
-          alert("Error fetching data:  " + error.message);
-        } finally {
-          setLoading(false);
-        }
-      };
+const handleorders= async (x) => {
+     
+        const type = "GET"
+        const endpoint= "position"
+        const payload= "type="+x
+        handleexchangerequest(type, payload, endpoint)
+        .then(response => {
+          console.log(response) 
+        setTableDatafetch(response);
+    // alert("Data fetched successfully!");
+    })
+ };
 
       const fetchSymbols = async (broker, exchange) => {
         setLoading(true);
         try {
           const queryParams = `broker=${broker}&exchange=${exchange}`;
-          const response = await handleexchangerequest("GET", queryParams, "/api/symbols");
+          const response = await handleexchangerequest("GET", queryParams, "symbols");
           if (response) {
             setsymbol(response);
             console.log("Symbols fetched successfully:", response);
@@ -336,6 +323,7 @@ const handlelogout = async () => {
       // Fetch brokers on component mount
       useEffect(() => {
         fetchBrokers();
+    
       }, []);
     
   return (
@@ -356,7 +344,7 @@ const handlelogout = async () => {
         </DialogHeader>
         <div className="flex gap-2 items-center justify-between w-full">
         <Label htmlFor="broker-name" className=' mr-2'>Select Broker</Label>
-                <Select onSelect={(value) => setBrokerName1(value)}>
+    <Select onValueChange ={(value) => setBrokerName1(value)}>
   <SelectTrigger className="w-[180px] bg-stone-700 text-white hover:bg-stone-600" 
   >
     <SelectValue placeholder="Broker Name" / >
@@ -365,10 +353,11 @@ const handlelogout = async () => {
     {brokers && brokers.length > 0 ? (
       brokers.map((broker, index) => (
     <SelectItem
-      value="light"
+      value={broker.NAME}
+
       className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
     >
-      {broker.name}
+      {broker.NAME}
     </SelectItem>
       ))
     ):(
@@ -475,10 +464,10 @@ const handlelogout = async () => {
       brokers.map((broker, index) => (
         <SelectItem
           key={index}
-          value={broker.name || broker.id}
+          value={broker.NAME}
           className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
         >
-          {broker.name}
+          {broker.NAME}
         </SelectItem>
       ))
     ) : (
@@ -520,10 +509,10 @@ const handlelogout = async () => {
       brokers.map((broker, index) => (
         <SelectItem
           key={index}
-          value={broker.name || broker.id}
+          value={broker.NAME}
           className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
         >
-          {broker.name}
+          {broker.NAME}
         </SelectItem>
       ))
     ) : (
@@ -595,10 +584,10 @@ const handlelogout = async () => {
                     brokers.map((broker, index) => (
                       <SelectItem
                         key={index}
-                        value={broker.name || broker.id}
+                        value={broker.NAME}
                         className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
                       >
-                        {broker.name}
+                        {broker.NAME}
                       </SelectItem>
                     ))
                   ) : (
@@ -729,19 +718,19 @@ const handlelogout = async () => {
   </SelectTrigger>
   <SelectContent className="bg-white border border-blue-300">
     <SelectItem
-      value="light"
+      value="INTRADAY"
       className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
     >   
       INTRADAY
     </SelectItem>
     <SelectItem
-      value="dark"
+      value="CARRYFORWARD"
       className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
     >
       CARRYFORWARD
     </SelectItem>
     <SelectItem
-      value="system"
+      value="DELIVERY"
       className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
     >
       DELIVERY
@@ -793,13 +782,16 @@ const handlelogout = async () => {
       <div className="flex gap-4 mb-4">
         <Button
           className="w-28 text-sm bg-blue-500 hover:bg-blue-700 text-white"
-          onClick={() => fetchTableData()}
-        >
+          onClick={() => handleorders('open')}>
           Open Order
         </Button>
+
+
+
+        
         <Button
           className="w-28 text-sm bg-green-500 hover:bg-green-700 text-white"
-          onClick={() => fetchTableData()}
+          onClick={() => handleorders('close')}
         >
           Close Order
         </Button>
@@ -837,5 +829,6 @@ const handlelogout = async () => {
     </>
   )
 }
+
 
 export default Dashboard
