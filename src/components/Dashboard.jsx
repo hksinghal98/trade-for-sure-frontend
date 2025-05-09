@@ -32,10 +32,16 @@ const Dashboard = () => {
     const [brokerName1, setBrokerName1] = useState("");
     const [brokerName2, setBrokerName2] = useState("");
     const [brokerName3, setBrokerName3] = useState(""); // State for Broker Name
+    const [brokerName4, setBrokerName4] = useState(""); // State for Broker Name
+
     const [apiSecretLogin,setApiSecretLogin] = useState(""); // State for API Secret
     const [redirectUrlLogin,setRedirectUrlLogin] = useState(""); // State for API Secret
     const [tableDatafetch, setTableDatafetch] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [totp, setTotp] = useState('');
+    const [login, setLogin] = useState('');
+    const [Password, setPassword] = useState('');
+    const [loading,setLoading]= useState('')
+
     
     
     const handleopen = () => setAddBrOpen(true)
@@ -117,11 +123,13 @@ const Dashboard = () => {
           apiSecret,
           redirectUrl,
           brokerName1,
+
         });
         const type = "POST"
     handleexchangerequest(type, payload, endpoint)
     .then(response => {
     console.log(response) 
+    
     window.location.reload()
     })
         
@@ -167,10 +175,7 @@ const Dashboard = () => {
           setLoading(false);
         }
       };
-      useEffect(() => {
-        fetchTableData();
-      }, []);
-
+    
   return (
     <>
     <div className="container-fluid bg-slate-700 h-screen flex flex-col gap-4">
@@ -229,7 +234,7 @@ const Dashboard = () => {
         <div className="flex gap-2 items-center justify-between w-full">
         <Label htmlFor="broker-name" className=' mr-2'>API Secret</Label>
         <input
-          type="text"
+          type="Password"
           placeholder="API Secret"
           className="border p-1 rounded items-center placeholder:text-sm"
           value={apiSecret}
@@ -247,6 +252,42 @@ const Dashboard = () => {
         onChange={(e) => setRedirectUrl(e.target.value)}
         />
         </div>
+
+        <div className="flex gap-2 items-center justify-between w-full">
+        <Label htmlFor="broker-name" className=' mr-2'>TOTP Token</Label>
+        <input
+          type="text"
+          placeholder="TOTP Token"
+          className="border p-1 rounded items-center placeholder:text-sm"
+          value={totp}
+        onChange={(e) => setTotp(e.target.value)}
+        />
+        </div>
+
+        <div className="flex gap-2 items-center justify-between w-full">
+        <Label htmlFor="broker-name" className=' mr-2'>LOGIN ID</Label>
+        <input
+          type="text"
+          placeholder="LOGIN ID"
+          className="border p-1 rounded items-center placeholder:text-sm"
+          value={login}
+        onChange={(e) => setLogin(e.target.value)}
+        />
+        </div>
+
+        <div className="flex gap-2 items-center justify-between w-full">
+        <Label htmlFor="broker-name" className=' mr-2'>Password</Label>
+        <input
+          type="Password"
+          placeholder="Password"
+          className="border p-1 rounded items-center placeholder:text-sm"
+          value={Password}
+        onChange={(e) => setPassword(e.target.value)}
+        />
+        </div>
+
+
+       
 
         <Button className = " bg-green-700 hover:bg-green-900"  onClick={handleexchange}> Save</Button>
 
@@ -382,16 +423,19 @@ const Dashboard = () => {
 
       </DialogContent>
     </Dialog>
-            <Button className ="  bg-blue-600 text-white hover:bg-blue-700">Dashboard LogOut</Button>
 
 
-            <Dialog open={placeorderopen} onOpenChange={setPlaceOrderOpen} className = "">
+    <Dialog open={placeorderopen} onOpenChange={setPlaceOrderOpen} className = "">
+      
+      
       <DialogTrigger asChild>
       <Select  onValueChange={handleSelectChange}>
   <SelectTrigger className="w-[180px] bg-blue-800 text-white hover:bg-blue-700">
-    <SelectValue placeholder="Select Option" />
+    <SelectValue placeholder="Place Order" />
   </SelectTrigger>
   <SelectContent className="bg-white border border-blue-300">
+  
+
     <SelectItem
       value="Buy"
       className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
@@ -413,8 +457,7 @@ const Dashboard = () => {
         <DialogHeader>
           <DialogTitle>Place Order</DialogTitle>
           <DialogDescription className='text-base text-black'>
-          {dialogTheme === "bg-green-200"
-                    ? "You are placing a Buy order."
+          {dialogTheme === "bg-green-300"? "You are placing a Buy order."
                     : "You are placing a Sell order."}
           </DialogDescription>
         </DialogHeader>
@@ -422,6 +465,64 @@ const Dashboard = () => {
         <div className='flex flex-col justify-between flex-wrap gap-4 pt-3 items-center border-2 border-blue-500 rounded-lg bg-slate-800 p-4'>
             <p className='text-2xl font-bold text-white '>Place Order</p>
             <div className='flex justify-between flex-wrap gap-2'>
+            <div className='flex gap-2'>
+              <div className='flex flex-col gap-2'>
+                <Label className =" text-white text-base">Broker</Label>
+                <Select>
+                <SelectTrigger className="w-[180px] bg-blue-800 text-white hover:bg-blue-700">
+                  <SelectValue placeholder="" />
+                </SelectTrigger>
+                <SelectContent className="bg-white border border-blue-300">
+                  <SelectItem
+                    value="light"
+                    className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+                  >
+                    
+                  </SelectItem>
+                  
+                </SelectContent>
+              </Select>
+                </div>
+                <div className='flex flex-col gap-2'>
+                <Label className =" text-white text-base">Exchange</Label>
+                <Select onSelect={(value) => setBrokerName4(value)}>
+                <SelectTrigger className="w-[180px] bg-blue-800 text-white hover:bg-blue-700">
+                  <SelectValue placeholder="" />
+                </SelectTrigger>
+                <SelectContent className="bg-white border border-blue-300">
+                  <SelectItem
+                    value="NSE"
+                    className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+                  >
+                    NSE
+                  </SelectItem>
+                  <SelectItem
+                    value="NFO"
+                    className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+                  >
+                    NFO
+                  </SelectItem>
+                  <SelectItem
+                    value="BSE"
+                    className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+                  >
+                    BSE
+                  </SelectItem>
+                  <SelectItem
+                    value="BFO"
+                    className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+                  >
+                    BFO
+                  </SelectItem>
+                 
+                  
+                </SelectContent>
+              </Select>
+                </div>
+
+                
+
+              </div>
             <div className='flex gap-2'>
                 <div className='flex flex-col gap-2'>
                 <Label className =" text-white text-base">Symbol</Label>
@@ -473,19 +574,19 @@ const Dashboard = () => {
       value="light"
       className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
     >   
-      Zerodha
+      INTRADAY
     </SelectItem>
     <SelectItem
       value="dark"
       className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
     >
-      Angel
+      CARRYFORWARD
     </SelectItem>
     <SelectItem
       value="system"
       className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
     >
-      Something
+      DELIVERY
     </SelectItem>
   </SelectContent>
 </Select>
@@ -496,29 +597,23 @@ const Dashboard = () => {
                 <Label className =" text-white text-base">Order Type</Label>
                 <Select>
   <SelectTrigger className="w-[180px] bg-blue-800 text-white hover:bg-blue-700">
-    <SelectValue placeholder="Market" />
+    <SelectValue placeholder="" />
   </SelectTrigger>
   <SelectContent className="bg-white border border-blue-300">
     <SelectItem
-      value="light"
+      value="Market"
       className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
     >
-      Zerodha
+      Market
     </SelectItem>
     <SelectItem
-      value="dark"
+      value="LIMIT"
       className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
     >
-      Angel
+      LIMIT
     </SelectItem>
-    <SelectItem
-      value="system"
-      className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-    >
-      Something
-    </SelectItem>
-  </SelectContent>
-</Select>
+    </SelectContent>
+      </Select>
 </div>
                 </div>
             </div>
@@ -532,27 +627,29 @@ const Dashboard = () => {
 
       </DialogContent>
     </Dialog>
+    <Button className ="  bg-blue-600 text-white hover:bg-blue-700">Dashboard LogOut</Button>
+
         </div>
 
         <div className="container mx-auto mt-5">
       <div className="flex gap-4 mb-4">
         <Button
           className="w-28 text-sm bg-blue-500 hover:bg-blue-700 text-white"
-          onClick={() => setTableData(data1)}
+          onClick={() => fetchTableData()}
         >
-          Open Order_ID
+          Open Order
         </Button>
         <Button
           className="w-28 text-sm bg-green-500 hover:bg-green-700 text-white"
-          onClick={() => setTableData(data2)}
+          onClick={() => fetchTableData()}
         >
-          Close Order_ID
+          Close Order
         </Button>
         <Button
           className="w-28 text-sm bg-red-500 hover:bg-red-700 text-white"
-          onClick={() => setTableData(data3)}
+          onClick={() => fetchTableData()}
         >
-          Order_ID
+          Positions
         </Button>
       </div>
       <div className="overflow-x-auto h-72 w-full rounded-lg">
@@ -561,7 +658,7 @@ const Dashboard = () => {
         <thead>
           <tr className="bg-gray-200">
             {tableDatafetch.length > 0 &&
-            Object.keys(tableData[0]).map((key) => (
+            Object.keys(tableDatafetch[0]).map((key) => (
               <th key={key} className="border border-gray-300 px-4 py-2">
                 {key.charAt(0).toUpperCase() + key.slice(1)}
               </th>
