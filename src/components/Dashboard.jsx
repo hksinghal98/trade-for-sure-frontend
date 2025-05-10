@@ -78,6 +78,9 @@ const Dashboard = () => {
      const[exchange,setExchange]= useState("")
      const [query, setQuery] = useState("");
      const [side, setside] = useState("");
+     const [isIndexEnabled, setIsIndexEnabled] = useState(false);
+     const [instrument, setInstrument] = useState('EQ');
+
 
 
 
@@ -132,11 +135,14 @@ const Dashboard = () => {
             event.preventDefault(); // Prevent default browser behavior (help menu)
             setDialogTheme("bg-green-300"); // Set theme for Buy
             setPlaceOrderOpen(true); // Open the Buy dialog
+            setside('BUY')
           }
             else if (event.key === "F2") {
                 event.preventDefault(); // Prevent default browser behavior (help menu)
                 setDialogTheme("bg-red-300"); // Set theme for Sell
                 setPlaceOrderOpen(true); // Open the Sell dialog
+            setside('SELL')
+
             }
         };
     
@@ -294,22 +300,15 @@ const handleorders= async (x) => {
  };
 
     const handleSearch = debounce((value) => {
+
          setQuery(value);
       if (value) {
-        filteredAndSortedProjects = filteredAndSortedProjects.filter((Symbol) =>
-        Symbol.toLowerCase().includes(value.toLowerCase())
-        );
-        setfilteredsymbol(filteredAndSortedProjects)
+         setselectsymbol(value); 
+      fetchSymbols(brokerName4, exchange,instrument,value); 
+}
+    
 
-
-      }
-      else {
-                setfilteredsymbol([])
-
-
-      }
-
-        }, 300); // Wait 300ms before executing the search
+        }, 600); // Wait 300ms before executing the search
 
 
 
@@ -344,11 +343,10 @@ const handleorders= async (x) => {
 
 
 
-      const fetchSymbols = async (broker, exchange) => {
+      const fetchSymbols = async (broker, exchange,instrument,symbol) => {
         setLoading(true);
-        setExchange(exchange)
         try {
-          const queryParams = `Broker=${broker}&exchange=${exchange}`;
+          const queryParams = `Broker=${broker}&exchange=${exchange}&instrument=${instrument}&name=${symbol}`;
           const response = await handleexchangerequest("GET", queryParams, "symbols",false);
           if (response) {
             const removeDuplicatsymbol = [...new Set(response.TradingSymbol)];
@@ -370,6 +368,35 @@ const handleorders= async (x) => {
         fetchBrokers();
     
       }, []);
+
+      const handleSelectIndex = (value) => {
+         if (brokerName4) {
+      // fetchSymbols(brokerName4, value)
+        setExchange(value)
+      // ;
+
+    } else {
+      alert("Please select a broker first");
+    }
+
+    // Enable "Select Index" only for "NFO" or "BFO"
+    if (value === "NFO" || value === "BFO") {
+      setIsIndexEnabled(true);
+    } else {
+      setIsIndexEnabled(false);
+    }
+  }
+  const alertsymbol = (value) => {
+
+    
+    if (brokerName4) {  
+      setInstrument(value)
+
+      // fetchSymbols(brokerName4, value);
+    } else {
+      alert("Please select a broker first");
+    }
+  }
     
   return (
     <>
@@ -656,52 +683,94 @@ const handleorders= async (x) => {
                 </div>
                 <div className='flex flex-col gap-2'>
                 <Label className =" text-white text-base">Exchange</Label>
-                <Select onValueChange={(value) => {
-                   if (brokerName4) {
-                    fetchSymbols(brokerName4, value);
-                  } else {
-                    alert("Please select a broker first");
-                  }
-                }}
-                >
-                <SelectTrigger className="w-[180px] bg-blue-800 text-white hover:bg-blue-700">
-                  <SelectValue placeholder="" />
-                </SelectTrigger>
-                <SelectContent className="bg-white border border-blue-300">
-                  <SelectItem
-                    value="NSE"
-                    className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-                  >
-                    NSE
-                  </SelectItem>
-                  <SelectItem
-                    value="NFO"
-                    className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-                  >
-                    NFO
-                  </SelectItem>
-                  <SelectItem
-                    value="BSE"
-                    className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-                  >
-                    BSE
-                  </SelectItem>
-                  <SelectItem
-                    value="BFO"
-                    className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-                  >
-                    BFO
-                  </SelectItem>
-                 
-                  
-                </SelectContent>
-              </Select>
+                <Select
+  onValueChange= {(value) => handleSelectIndex(value)}
+>
+  <SelectTrigger className="w-[180px] bg-blue-800 text-white hover:bg-blue-700">
+    <SelectValue placeholder="" />
+  </SelectTrigger>
+  <SelectContent className="bg-white border border-blue-300">
+    <SelectItem
+      value="NSE"
+      className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+    >
+      NSE
+    </SelectItem> 
+    <SelectItem
+      value="NFO"
+      className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+    >
+      NFO
+    </SelectItem>
+    <SelectItem
+      value="BSE"
+      className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+    >
+      BSE
+    </SelectItem>
+    <SelectItem
+      value="BFO"
+      className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+    >
+      BFO
+    </SelectItem>
+  </SelectContent>
+</Select>
                 </div>
+                <div className='flex flex-col gap-2'>
+                <Label className =" text-white text-base">Type</Label>
+                <Select
+  onValueChange={(value) => {
+    alertsymbol(value);
+  }}
+  disabled={!isIndexEnabled} // Disable when `isIndexEnabled` is false
+>
+  <SelectTrigger
+    className={`w-[130px] ${
+      isIndexEnabled
+        ? "bg-blue-800 text-white hover:bg-blue-700"
+        : "bg-gray-400 text-gray-600 cursor-not-allowed"
+    }`}
+  >
+    <SelectValue placeholder="" />
+  </SelectTrigger>
+  <SelectContent className="bg-white border border-blue-300">
+    
+    <SelectItem
+      value="FUTSTK"
+      className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+    >
+      FUTSTK
+    </SelectItem>
+    <SelectItem
+      value="FUTIDX"
+      className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+    >
+      FUTIDX
+    </SelectItem>
+    <SelectItem
+      value="OPTIDX"
+      className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+    >
+      OPTIDX
+    </SelectItem>
+    <SelectItem
+      value="OPTSTK"
+      className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+    >
+      OPTSTK
+    </SelectItem>
+  </SelectContent>
+</Select>
+                </div>
+                
 
                 
 
               </div>
             <div className='flex gap-2'>
+                
+    <div className='flex gap-2'>
                 <div className='flex flex-col gap-2'>
                 <Label className =" text-white text-base">Symbol</Label>
                 <Popover open={Comboopen} onOpenChange={setComboOpen}>
@@ -710,82 +779,35 @@ const handleorders= async (x) => {
                       variant="outline"
                       role="combobox"
                       aria-expanded={Comboopen}
-                      className="w-[300px] justify-between bg-blue-700 text-white hover:bg-blue-600"
+                      className="w-[200px] justify-between bg-blue-700 text-white hover:bg-blue-600"
                     >
                       {selectsymbol || "Select Symbol"}
                       {/* <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" /> */}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-[200px] p-0">
-                    <Command className="w-60 p-0">
-                      <CommandInput onValueChange={handleSearch} placeholder="Search symbol..." />
+                    <Command>
+                      <CommandInput  onValueChange={handleSearch} 
+                           
+                        placeholder="Search symbol..." />
                       <CommandList>
                         <CommandEmpty>No symbol found.</CommandEmpty>
                         <CommandGroup>
                           <CommandItem value="select-symbol" onChange={(e) => setselectsymbol(e)}>
                             Select Symbol
                           </CommandItem>
-                          <FixedSizeList height={400} itemCount={filteredsymbol.length} itemSize={35}>
-                          {({ index, style }) => (
-                          
-                          <div >
-                            
-                                    <option key={index} style={style} value={filteredsymbol[index]}>
-                                      {filteredsymbol[index]}
-                                    </option>
-                                
-
-                             {/* <CommandItem
-                              value={Symbol[index]}
-                              key={index}
-                                onSelect={() => {
-                                  setselectsymbol(Symbol[index]);
-                                  setComboOpen(false);
-                                }}
-                              > */}
-                                <Check
-                                  className={`mr-2 h-4 w-16 ${
-                                    selectsymbol === Symbol[index] ? "opacity-100" : "opacity-0"
-                                  }`}
-                                />
-                                {/* {Symbol} */}
-                              {/* </CommandItem> */}
-
-                            </div>
-                                  )}
-                           
-                            </FixedSizeList>
-                            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                          {/* {Symbol.length > 0 ? (
-                            filteredsymbol.map((symbol, index) => (
+                          {Symbol.length > 0 ? (
+                            Symbol.map((symbol, index) => (
                               <CommandItem
-                              value={symbol}
-                              key={index}
+                                key={index}
+                                value={symbol}
                                 onSelect={() => {
                                   setselectsymbol(symbol);
                                   setComboOpen(false);
                                 }}
                               >
                                 <Check
-                                  className={`mr-2 h-4 w-16 ${
+                                  className={`mr-2 h-4 w-4 ${
                                     selectsymbol === symbol ? "opacity-100" : "opacity-0"
                                   }`}
                                 />
@@ -796,13 +818,15 @@ const handleorders= async (x) => {
                             <CommandItem disabled>
                               {loading ? "Loading symbols..." : "No symbols available"}
                             </CommandItem>
-                          )} */}
+                          )}
                         </CommandGroup>
                       </CommandList>
                     </Command>
                   </PopoverContent>
                 </Popover>
                 </div>
+            </div>
+                
             </div>
             <div className=' flex flex-col gap-2'>
                 <Label className =" text-white text-base">Entry Price</Label>
@@ -816,7 +840,7 @@ const handleorders= async (x) => {
             <div className='flex gap-2'>
                 <div className='flex flex-col gap-2'>
                 <Label className =" text-white text-base">Product</Label>
-                <Select onChange={(e)=>setProduct(e.target.value)}>
+                <Select onValueChange={(value)=>setProduct(value)}>
   <SelectTrigger className="w-[180px] bg-blue-800 text-white hover:bg-blue-700">
     <SelectValue  placeholder="" />
   </SelectTrigger>
@@ -846,16 +870,16 @@ const handleorders= async (x) => {
             <div className='flex gap-2'>
                 <div className='flex flex-col gap-2'>
                 <Label className =" text-white text-base">Order Type</Label>
-                <Select   onChange={(e)=>setOrdertype(e.target.value)}>
+                <Select   onValueChange={(value)=>setOrdertype(value)}>
   <SelectTrigger className="w-[180px] bg-blue-800 text-white hover:bg-blue-700">
     <SelectValue placeholder="" />
   </SelectTrigger>
   <SelectContent className="bg-white border border-blue-300">
     <SelectItem
-      value="Market"
+      value="MARKET"
       className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
     >
-      Market
+      MARKET
     </SelectItem>
     <SelectItem
       value="LIMIT"
