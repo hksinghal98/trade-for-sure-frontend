@@ -11,6 +11,8 @@ import {
 import { Label } from '../components/ui/label';
 import { Input } from './ui/input';
 import { handleexchangerequest } from "../utility/Api";
+import { Check, ChevronsUpDown } from "lucide-react"
+import { FixedSizeList } from "react-window";
 
 import {
   Popover,
@@ -33,6 +35,9 @@ import {
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "../components/ui/dialog";
 import { useNavigate } from "react-router-dom";
   
+import debounce from "lodash.debounce";
+
+
 
 
 
@@ -44,31 +49,39 @@ const Dashboard = () => {
     const [Logoutopen, setLogoutOpen] = useState(false)
     const [placeorderopen, setPlaceOrderOpen] = useState(false)
     const [dialogTheme, setDialogTheme] = useState("");
-    const [apiKey, setApiKey] = useState(""); // State for API Key
-    const [apiSecret, setApiSecret] = useState(""); // State for API Secret
+    const [apikey, setapikey] = useState(""); // State for API Key
+    const [secretkey, setsecretkey] = useState(""); // State for API Secret
     const [redirectUrl, setRedirectUrl] = useState("");
     const [brokerName1, setBrokerName1] = useState("");
     const [brokerName2, setBrokerName2] = useState("");
-    const [brokerName3, setBrokerName3] = useState(""); // State for Broker Name
-    const [brokerName4, setBrokerName4] = useState(""); // State for Broker Name
+    const [brokerName3, setBrokerName3] = useState(""); 
+    const [brokerName4, setBrokerName4] = useState(""); 
+    const [vendorcode, setvendorcode] = useState(""); 
+    const[filterText,setFilterText]= useState("")
 
-    const [apiSecretLogin,setApiSecretLogin] = useState(""); // State for API Secret
+    const [secretkeyLogin,setsecretkeyLogin] = useState(""); // State for API Secret
     const [redirectUrlLogin,setRedirectUrlLogin] = useState(""); // State for API Secret
     const [tableDatafetch, setTableDatafetch] = useState([]);
-    const [totp, setTotp] = useState('');
-    const [login, setLogin] = useState('');
-    const [Password, setPassword] = useState('');
+    const [AuthToken, setAuthToken] = useState('');
+    const [accountnumber, setaccountnumber] = useState('');
+    const [password, setPassword] = useState('');
     const [loading,setLoading]= useState('')
     const [Comboopen, setComboOpen] = useState(false)
     const [selectsymbol,setselectsymbol]=useState('')
     const [Symbol,setsymbol]= useState([])
      const [brokers, setBrokers] = useState([])
+     const [ordertype, setOrdertype] = useState("")
+     const [product, setProduct] = useState("")
+     const [filteredsymbol, setfilteredsymbol] = useState([])
+     const [price, setPrice] = useState("")
+     const [quantity, setQuantity] = useState("")
+     const[exchange,setExchange]= useState("")
+     const [query, setQuery] = useState("");
+     const [side, setside] = useState("");
 
 
 
 
-    
-    
     const handleopen = () => setAddBrOpen(true)
     
     
@@ -76,14 +89,19 @@ const Dashboard = () => {
     const handleplaceorder = ()=>{
          const payload = JSON.stringify({
           brokerName4,
-          Symbol,
-          order,
-          brokerName1,
+          selectsymbol,
+          ordertype,
+          product,
+          quantity,
+          price,
+          exchange,
+          side
+
 
         });
         const type = "POST"
         const endpoint= "placeorder"
-        handleexchangerequest(type, payload, endpoint)
+        handleexchangerequest(type, payload, endpoint,true)
     .then(response => {
     console.log(response) 
     
@@ -91,14 +109,20 @@ const Dashboard = () => {
     })
     
     }
+  
+    
+    
 
     const handleSelectChange = (value) => {
         if (value === "Buy") {
           setDialogTheme("bg-green-300"); // Greenish theme for Buy
           setPlaceOrderOpen(true);
+          setside('BUY')
         } else if (value === "Sell") {
           setDialogTheme("bg-red-300"); // Reddish theme for Sell
           setPlaceOrderOpen(true);
+          setside('SELL')
+
         }
       };
 
@@ -125,7 +149,7 @@ const Dashboard = () => {
 
       const fetchBrokers = async () => {
         try {
-      const response = await handleexchangerequest("GET", 'Broker=all', "symbol"); // Replace with your API endpoint
+      const response = await handleexchangerequest("GET", 'Broker=all', "symbols",false); // Replace with your API endpoint
       if (response) {
         setBrokers(response); // Assuming response.data contains the broker list
       } else {
@@ -202,65 +226,20 @@ const Dashboard = () => {
 ]
     const [tableData, setTableData] = useState(data1);
 
-    const handleLogoutBroker = async () => {
-      const payload = JSON.stringify({
-        brokerName: brokerName3,
-      });
-      const type = "POST";
-      const endpoint = "/api/logout-broker";
-      
-      handleexchangerequest(type, payload, endpoint)
-      .then(response => {
-        console.log(response);
-        if(response) {
-          alert("Broker logout successful!");
-          setLogoutOpen(false); // Close the dialog
-        } else {
-          alert("Failed to logout. Please try again.");
-        }
-      })
-      .catch(error => {
-        console.error("Error:", error);
-        alert("An error occurred. Please try again.");
-      });
-    };
-        const handleLoginBroker = async () => {
-      const payload = JSON.stringify({
-        apiSecret: apiSecretLogin,
-        redirectUrl: redirectUrlLogin,
-        brokerName: brokerName2,
-      });
-      const type = "POST";
-      const endpoint = "/api/login-broker";
-      
-      handleexchangerequest(type, payload, endpoint)
-      .then(response => {
-        console.log(response);
-        if(response) {
-          alert("Broker login successful!");
-          setLoginOpen(false); 
-        } else {
-          alert("Failed to login. Please try again.");
-        }
-      })
-      .catch(error => {
-        console.error("Error:", error);
-        alert("An error occurred. Please try again.");
-      });
-    };
-
+    
 
     const handleexchange = async () => {
         const payload = JSON.stringify({
-          apiKey,
-          apiSecret,
+          apikey,
+          secretkey,
           redirectUrl,
           brokerName1,
+          vendorcode,AuthToken,accountnumber,password
 
         });
         const type = "POST"
         const endpoint= "broker"
-        handleexchangerequest(type, payload, endpoint)
+        handleexchangerequest(type, payload, endpoint,true)
     .then(response => {
     console.log(response) 
     
@@ -270,14 +249,10 @@ const Dashboard = () => {
         };
 
  const handlelogin = async () => {
-        const payload = JSON.stringify({
-          brokerName2,
-       
-
-        });
+        const payload = JSON.stringify({brokerName2 });
         const type = "POST"
         const endpoint= "loginbroker"
-        handleexchangerequest(type, payload, endpoint)
+        handleexchangerequest(type, payload, endpoint,true)
     .then(response => {
     console.log(response) 
     
@@ -296,10 +271,9 @@ const handlelogout = async () => {
         });
         const type = "POST"
         const endpoint= "logoutbroker"
-        handleexchangerequest(type, payload, endpoint)
+        handleexchangerequest(type, payload, endpoint,true)
     .then(response => {
-    console.log(response) 
-    
+      
     window.location.reload()
     })
     
@@ -311,7 +285,7 @@ const handleorders= async (x) => {
         const type = "GET"
         const endpoint= "position"
         const payload= "type="+x
-        handleexchangerequest(type, payload, endpoint)
+        handleexchangerequest(type, payload, endpoint,true)
         .then(response => {
           console.log(response) 
         setTableDatafetch(response);
@@ -319,14 +293,68 @@ const handleorders= async (x) => {
     })
  };
 
+    const handleSearch = debounce((value) => {
+         setQuery(value);
+      if (value) {
+        filteredAndSortedProjects = filteredAndSortedProjects.filter((Symbol) =>
+        Symbol.toLowerCase().includes(value.toLowerCase())
+        );
+        setfilteredsymbol(filteredAndSortedProjects)
+
+
+      }
+      else {
+                setfilteredsymbol([])
+
+
+      }
+
+        }, 300); // Wait 300ms before executing the search
+
+
+
+ const handleFilterChange = (value) => {
+      setFilterText(value);
+      if (value) {
+      filteredAndSortedProjects = filteredAndSortedProjects.filter((Symbol) =>
+      Symbol.toLowerCase().includes(value.toLowerCase())
+      );
+      setfilteredsymbol(filteredAndSortedProjects)
+
+
+    }
+
+    };
+   
+  
+  let filteredAndSortedProjects = [...Symbol];
+
+    // Apply filtering
+
+
+  useEffect(()=>{
+
+      setfilteredsymbol(filteredAndSortedProjects)
+
+  },[setfilteredsymbol])
+    
+
+
+  
+
+
+
       const fetchSymbols = async (broker, exchange) => {
         setLoading(true);
+        setExchange(exchange)
         try {
-          const queryParams = `broker=${broker}&exchange=${exchange}`;
-          const response = await handleexchangerequest("GET", queryParams, "symbols");
+          const queryParams = `Broker=${broker}&exchange=${exchange}`;
+          const response = await handleexchangerequest("GET", queryParams, "symbols",false);
           if (response) {
-            setsymbol(response);
-            console.log("Symbols fetched successfully:", response);
+            const removeDuplicatsymbol = [...new Set(response.TradingSymbol)];
+
+            setsymbol(removeDuplicatsymbol);
+            console.log("Symbols fetched successfully:", removeDuplicatsymbol);
           } else {
             console.error("Failed to fetch symbols");
           }
@@ -393,8 +421,8 @@ const handleorders= async (x) => {
           type="text"
           placeholder="API Key"
           className="border p-1 rounded items-center placeholder:text-sm"
-          value={apiKey}
-          onChange={(e) => setApiKey(e.target.value)}
+          value={apikey}
+          onChange={(e) => setapikey(e.target.value)}
         />
         </div>
         <div className="flex gap-2 items-center justify-between w-full">
@@ -403,20 +431,30 @@ const handleorders= async (x) => {
           type="Password"
           placeholder="API Secret"
           className="border p-1 rounded items-center placeholder:text-sm"
-          value={apiSecret}
-        onChange={(e) => setApiSecret(e.target.value)}
+          value={secretkey}
+        onChange={(e) => setsecretkey(e.target.value)}
         />
         </div>
        
  
         <div className="flex gap-2 items-center justify-between w-full">
-        <Label htmlFor="broker-name" className=' mr-2'>TOTP Token</Label>
+        <Label htmlFor="broker-name" className=' mr-2'>AuthToken Token</Label>
         <input
           type="text"
-          placeholder="TOTP Token"
+          placeholder="AuthToken Token"
           className="border p-1 rounded items-center placeholder:text-sm"
-          value={totp}
-        onChange={(e) => setTotp(e.target.value)}
+          value={AuthToken}
+        onChange={(e) => setAuthToken(e.target.value)}
+        />
+        </div>
+<div className="flex gap-2 items-center justify-between w-full">
+        <Label htmlFor="broker-name" className=' mr-2'>Vendor_code</Label>
+        <input
+          type="text"
+          placeholder="Vendor_code"
+          className="border p-1 rounded items-center placeholder:text-sm"
+          value={vendorcode}
+        onChange={(e) => setvendorcode(e.target.value)}
         />
         </div>
 
@@ -426,10 +464,11 @@ const handleorders= async (x) => {
           type="text"
           placeholder="LOGIN ID"
           className="border p-1 rounded items-center placeholder:text-sm"
-          value={login}
-        onChange={(e) => setLogin(e.target.value)}
+          value={accountnumber}
+        onChange={(e) => setaccountnumber(e.target.value)}
         />
         </div>
+
 
         <div className="flex gap-2 items-center justify-between w-full">
         <Label htmlFor="broker-name" className=' mr-2'>Password</Label>
@@ -437,7 +476,7 @@ const handleorders= async (x) => {
           type="Password"
           placeholder="Password"
           className="border p-1 rounded items-center placeholder:text-sm"
-          value={Password}
+          value={password}
         onChange={(e) => setPassword(e.target.value)}
         />
         </div>
@@ -494,7 +533,7 @@ const handleorders= async (x) => {
   </SelectContent>
 </Select>
         </div>
-                <Button className = " bg-green-700 hover:bg-green-900" onClick={handlelogin}> LogIn</Button>
+                <Button className = " bg-green-700 hover:bg-green-900" onClick={()=>handlelogin()}> LogIn</Button>
 
 
 
@@ -591,7 +630,7 @@ const handleorders= async (x) => {
             <div className='flex gap-2'>
               <div className='flex flex-col gap-2'>
                 <Label className =" text-white text-base">Broker</Label>
-                <Select>
+                <Select onValueChange={(value) => setBrokerName4(value)}>
                 <SelectTrigger className="w-[180px] bg-blue-800 text-white hover:bg-blue-700">
                   <SelectValue placeholder="" />
                 </SelectTrigger>
@@ -671,33 +710,82 @@ const handleorders= async (x) => {
                       variant="outline"
                       role="combobox"
                       aria-expanded={Comboopen}
-                      className="w-[200px] justify-between bg-blue-700 text-white hover:bg-blue-600"
+                      className="w-[300px] justify-between bg-blue-700 text-white hover:bg-blue-600"
                     >
                       {selectsymbol || "Select Symbol"}
                       {/* <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" /> */}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-[200px] p-0">
-                    <Command>
-                      <CommandInput  placeholder="Search symbol..." />
+                    <Command className="w-60 p-0">
+                      <CommandInput onValueChange={handleSearch} placeholder="Search symbol..." />
                       <CommandList>
                         <CommandEmpty>No symbol found.</CommandEmpty>
                         <CommandGroup>
                           <CommandItem value="select-symbol" onChange={(e) => setselectsymbol(e)}>
                             Select Symbol
                           </CommandItem>
-                          {Symbol.length > 0 ? (
-                            Symbol.map((symbol, index) => (
+                          <FixedSizeList height={400} itemCount={filteredsymbol.length} itemSize={35}>
+                          {({ index, style }) => (
+                          
+                          <div >
+                            
+                                    <option key={index} style={style} value={filteredsymbol[index]}>
+                                      {filteredsymbol[index]}
+                                    </option>
+                                
+
+                             {/* <CommandItem
+                              value={Symbol[index]}
+                              key={index}
+                                onSelect={() => {
+                                  setselectsymbol(Symbol[index]);
+                                  setComboOpen(false);
+                                }}
+                              > */}
+                                <Check
+                                  className={`mr-2 h-4 w-16 ${
+                                    selectsymbol === Symbol[index] ? "opacity-100" : "opacity-0"
+                                  }`}
+                                />
+                                {/* {Symbol} */}
+                              {/* </CommandItem> */}
+
+                            </div>
+                                  )}
+                           
+                            </FixedSizeList>
+                            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                          {/* {Symbol.length > 0 ? (
+                            filteredsymbol.map((symbol, index) => (
                               <CommandItem
-                                key={index}
-                                value={symbol}
+                              value={symbol}
+                              key={index}
                                 onSelect={() => {
                                   setselectsymbol(symbol);
                                   setComboOpen(false);
                                 }}
                               >
                                 <Check
-                                  className={`mr-2 h-4 w-4 ${
+                                  className={`mr-2 h-4 w-16 ${
                                     selectsymbol === symbol ? "opacity-100" : "opacity-0"
                                   }`}
                                 />
@@ -708,7 +796,7 @@ const handleorders= async (x) => {
                             <CommandItem disabled>
                               {loading ? "Loading symbols..." : "No symbols available"}
                             </CommandItem>
-                          )}
+                          )} */}
                         </CommandGroup>
                       </CommandList>
                     </Command>
@@ -718,19 +806,19 @@ const handleorders= async (x) => {
             </div>
             <div className=' flex flex-col gap-2'>
                 <Label className =" text-white text-base">Entry Price</Label>
-                <Input type='number' className='bg-blue-800'/>
+                <Input onChange={(e)=>setPrice(e.target.value)} type='number' className='bg-blue-800'/>
             </div>
             <div className='flex flex-col gap-2'>
                 <Label className =" text-white text-base">Quantity</Label>
-                <Input type='number' className='bg-blue-800'/>
+                <Input  onChange={(e)=>setQuantity(e.target.value)} type='number' className='bg-blue-800'/>
             </div>
 
             <div className='flex gap-2'>
                 <div className='flex flex-col gap-2'>
                 <Label className =" text-white text-base">Product</Label>
-                <Select>
+                <Select onChange={(e)=>setProduct(e.target.value)}>
   <SelectTrigger className="w-[180px] bg-blue-800 text-white hover:bg-blue-700">
-    <SelectValue placeholder="MIS" />
+    <SelectValue  placeholder="" />
   </SelectTrigger>
   <SelectContent className="bg-white border border-blue-300">
     <SelectItem
@@ -758,7 +846,7 @@ const handleorders= async (x) => {
             <div className='flex gap-2'>
                 <div className='flex flex-col gap-2'>
                 <Label className =" text-white text-base">Order Type</Label>
-                <Select>
+                <Select   onChange={(e)=>setOrdertype(e.target.value)}>
   <SelectTrigger className="w-[180px] bg-blue-800 text-white hover:bg-blue-700">
     <SelectValue placeholder="" />
   </SelectTrigger>

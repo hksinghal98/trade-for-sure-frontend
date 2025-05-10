@@ -32,7 +32,7 @@ export const Specificdelete = (All,item,blockid, deleteFunction) => {
 }
 
 
-export const handleexchangerequest = async (type, payload, endpoint) => {
+export const handleexchangerequest = async (type, payload, endpoint,okalert) => {
 
 
   const sdd = localStorage.getItem("token");
@@ -50,9 +50,14 @@ export const handleexchangerequest = async (type, payload, endpoint) => {
         body: payload,
       });
       if (!response.ok) {
+        alert('something went wrong')
+
         throw new Error("Login failed");
       }
       const datastr = await response.json();
+if (okalert){
+        alert('sucessful')
+      }
       return datastr.message
       console.log(datastr);
       
@@ -67,17 +72,21 @@ export const handleexchangerequest = async (type, payload, endpoint) => {
         body: payload,
       });
       if (!response.ok) {
+        alert('something went wrong')
+
         throw new Error("Login failed");
       }
       const datastr = await response.json();
-
+      if (okalert){
+        alert('sucessful')
+      }
       return datastr.message
 
       console.log(data);
 
     }
 
-    if (type === "GET" || "DELETE") {
+    if (type === "GET" ) {
       const response = await fetch(
         Host_Ip + endpoint +"?"+ payload,
         {
@@ -89,10 +98,14 @@ export const handleexchangerequest = async (type, payload, endpoint) => {
         }
       );
       if (!response.ok) {
+        alert('something went wrong')
+
         throw new Error("Login failed");
       }
       const datastr = await response.json();
-
+if (okalert){
+        alert('sucessful')
+      }
       return  datastr.message
 
       
