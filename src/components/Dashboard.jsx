@@ -63,6 +63,7 @@ const Dashboard = () => {
     const [selectsymbol,setselectsymbol]=useState('')
     const [Symbol,setsymbol]= useState([])
      const [brokers, setBrokers] = useState([])
+     const [isIndexEnabled, setIsIndexEnabled] = useState(false);
 
 
 
@@ -202,6 +203,7 @@ const Dashboard = () => {
 ]
     const [tableData, setTableData] = useState(data1);
 
+    
     const handleLogoutBroker = async () => {
       const payload = JSON.stringify({
         brokerName: brokerName3,
@@ -342,6 +344,28 @@ const handleorders= async (x) => {
         fetchBrokers();
     
       }, []);
+
+      const handleSelectIndex = (value) => {
+         if (brokerName4) {
+      fetchSymbols(brokerName4, value);
+    } else {
+      alert("Please select a broker first");
+    }
+
+    // Enable "Select Index" only for "NFO" or "BFO"
+    if (value === "NFO" || value === "BFO") {
+      setIsIndexEnabled(true);
+    } else {
+      setIsIndexEnabled(false);
+    }
+  }
+  const alertsymbol = (value) => {
+    if (brokerName4) {
+      fetchSymbols(brokerName4, value);
+    } else {
+      alert("Please select a broker first");
+    }
+  }
     
   return (
     <>
@@ -617,104 +641,118 @@ const handleorders= async (x) => {
                 </div>
                 <div className='flex flex-col gap-2'>
                 <Label className =" text-white text-base">Exchange</Label>
-                <Select onValueChange={(value) => {
-                   if (brokerName4) {
-                    fetchSymbols(brokerName4, value);
-                  } else {
-                    alert("Please select a broker first");
-                  }
-                }}
-                >
-                <SelectTrigger className="w-[180px] bg-blue-800 text-white hover:bg-blue-700">
-                  <SelectValue placeholder="" />
-                </SelectTrigger>
-                <SelectContent className="bg-white border border-blue-300">
-                  <SelectItem
-                    value="NSE"
-                    className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-                  >
-                    NSE
-                  </SelectItem>
-                  <SelectItem
-                    value="NFO"
-                    className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-                  >
-                    NFO
-                  </SelectItem>
-                  <SelectItem
-                    value="BSE"
-                    className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-                  >
-                    BSE
-                  </SelectItem>
-                  <SelectItem
-                    value="BFO"
-                    className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-                  >
-                    BFO
-                  </SelectItem>
-                 
-                  
-                </SelectContent>
-              </Select>
+                <Select
+  onValueChange= {(value) => handleSelectIndex(value)}
+>
+  <SelectTrigger className="w-[180px] bg-blue-800 text-white hover:bg-blue-700">
+    <SelectValue placeholder="" />
+  </SelectTrigger>
+  <SelectContent className="bg-white border border-blue-300">
+    <SelectItem
+      value="NSE"
+      className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+    >
+      NSE
+    </SelectItem>
+    <SelectItem
+      value="NFO"
+      className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+    >
+      NFO
+    </SelectItem>
+    <SelectItem
+      value="BSE"
+      className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+    >
+      BSE
+    </SelectItem>
+    <SelectItem
+      value="BFO"
+      className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+    >
+      BFO
+    </SelectItem>
+  </SelectContent>
+</Select>
                 </div>
+                <div className='flex flex-col gap-2'>
+                <Label className =" text-white text-base">Select Index</Label>
+                <Select
+  onValueChange={(value) => {
+    alertsymbol(value);
+  }}
+  disabled={!isIndexEnabled} // Disable when `isIndexEnabled` is false
+>
+  <SelectTrigger
+    className={`w-[130px] ${
+      isIndexEnabled
+        ? "bg-blue-800 text-white hover:bg-blue-700"
+        : "bg-gray-400 text-gray-600 cursor-not-allowed"
+    }`}
+  >
+    <SelectValue placeholder="" />
+  </SelectTrigger>
+  <SelectContent className="bg-white border border-blue-300">
+    <SelectItem
+      value="FUTIDX"
+      className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+    >
+      FUTIDX
+    </SelectItem>
+    <SelectItem
+      value="OPTIDX"
+      className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+    >
+      OPTIDX
+    </SelectItem>
+    <SelectItem
+      value="OPTSTK"
+      className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+    >
+      OPTSTK
+    </SelectItem>
+  </SelectContent>
+</Select>
+                </div>
+                
 
                 
 
               </div>
             <div className='flex gap-2'>
-                <div className='flex flex-col gap-2'>
-                <Label className =" text-white text-base">Symbol</Label>
-                <Popover open={Comboopen} onOpenChange={setComboOpen}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      aria-expanded={Comboopen}
-                      className="w-[200px] justify-between bg-blue-700 text-white hover:bg-blue-600"
-                    >
-                      {selectsymbol || "Select Symbol"}
-                      {/* <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" /> */}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-[200px] p-0">
-                    <Command>
-                      <CommandInput  placeholder="Search symbol..." />
-                      <CommandList>
-                        <CommandEmpty>No symbol found.</CommandEmpty>
-                        <CommandGroup>
-                          <CommandItem value="select-symbol" onChange={(e) => setselectsymbol(e)}>
-                            Select Symbol
-                          </CommandItem>
-                          {Symbol.length > 0 ? (
-                            Symbol.map((symbol, index) => (
-                              <CommandItem
-                                key={index}
-                                value={symbol}
-                                onSelect={() => {
-                                  setselectsymbol(symbol);
-                                  setComboOpen(false);
-                                }}
-                              >
-                                <Check
-                                  className={`mr-2 h-4 w-4 ${
-                                    selectsymbol === symbol ? "opacity-100" : "opacity-0"
-                                  }`}
-                                />
-                                {symbol}
-                              </CommandItem>
-                            ))
-                          ) : (
-                            <CommandItem disabled>
-                              {loading ? "Loading symbols..." : "No symbols available"}
-                            </CommandItem>
-                          )}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-                </div>
+                
+                
+                <div className="flex flex-col gap-2">
+  <Label className="text-white text-base">Symbol</Label>
+  <Select
+    onValueChange={(value) => {
+      setselectsymbol(value); 
+      fetchSymbols(brokerName4, value); 
+    }}
+  >
+    <SelectTrigger className="w-[200px] bg-blue-800 text-white hover:bg-blue-700">
+      <SelectValue placeholder="Select Symbol" />
+    </SelectTrigger>
+    <SelectContent className="bg-white border border-blue-300">
+      {Symbol.length > 0 ? (
+        Symbol.map((symbol, index) => (
+          <SelectItem
+            key={index}
+            value={symbol}
+            className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+          >
+            {symbol}
+          </SelectItem>
+        ))
+      ) : (
+        <SelectItem value="loading" disabled>
+          {loading ? "Loading symbols..." : "No symbols available"}
+        </SelectItem>
+      )}
+    </SelectContent>
+  </Select>
+</div>
+                
             </div>
             <div className=' flex flex-col gap-2'>
                 <Label className =" text-white text-base">Entry Price</Label>
