@@ -183,6 +183,23 @@ const Dashboard = () => {
         { id: 9, name: "Stephen Strange", age: 45 },
         { id: 10, name: "Carol Danvers", age: 38 },
       ];
+
+    const brokerlist=[
+    {"NAME":"ANGEL"},
+    {"NAME":"SHOONYA"},
+    {"NAME":"DHAN"},
+    {"NAME":"FYERS"},
+    {"NAME":"MOTILAL"},
+    {"NAME":"ANANDRATHI"},
+    {"NAME":"GROWW"},
+    {"NAME":"ZERODHA"},
+    {"NAME":"SAMCO"},
+    {"NAME":"FLATTRADE"},
+    {"NAME":"BIGUL"},
+    {"NAME":"STOXKART"}
+
+    
+]
     const [tableData, setTableData] = useState(data1);
 
     const handleLogoutBroker = async () => {
@@ -362,7 +379,6 @@ const handleorders= async (x) => {
       ))
     ):(
     <SelectItem
-      value="dark"
       className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
     >
       {loading ? "Loading brokers..." : "No brokers available"}
@@ -455,7 +471,7 @@ const handleorders= async (x) => {
         </DialogHeader>
         <div className="flex gap-2 items-center justify-between w-full">
         <Label htmlFor="broker-name" className=' mr-2'>Select Broker</Label>
-                <Select onSelect={(value) => setBrokerName2(value)}>
+                <Select onValueChange={(value) => setBrokerName2(value)}>
   <SelectTrigger className="w-[180px] bg-stone-700 text-white hover:bg-stone-600">
     <SelectValue placeholder="Market" / >
   </SelectTrigger>
@@ -498,7 +514,7 @@ const handleorders= async (x) => {
         </DialogHeader>
         <div className="flex gap-2 items-center justify-between w-full">
         <Label htmlFor="broker-name" className=' mr-2'>Select Broker</Label>
-        <Select onSelect={(value) => setBrokerName3(value)}>
+        <Select onValueChange={(value) => setBrokerName3(value)}>
   <SelectTrigger className="w-[180px] bg-stone-700 text-white hover:bg-stone-600"
   
   >
@@ -601,7 +617,7 @@ const handleorders= async (x) => {
                 </div>
                 <div className='flex flex-col gap-2'>
                 <Label className =" text-white text-base">Exchange</Label>
-                <Select onSelect={(value) => {
+                <Select onValueChange={(value) => {
                    if (brokerName4) {
                     fetchSymbols(brokerName4, value);
                   } else {
@@ -778,8 +794,8 @@ const handleorders= async (x) => {
 
         </div>
 
-        <div className="container mx-auto mt-5">
-      <div className="flex gap-4 mb-4">
+        <div className="container mx-auto mt-5 bg-slate-800 p-4 rounded-lg">
+      <div className="flex flex-wrap gap-4 mb-4">
         <Button
           className="w-28 text-sm bg-blue-500 hover:bg-blue-700 text-white"
           onClick={() => handleorders('open')}>
@@ -797,33 +813,58 @@ const handleorders= async (x) => {
         </Button>
               </div>
       <div className="overflow-x-auto h-72 w-full rounded-lg">
-      {/* {loading && <p>Loading...</p>} */}
-      <table className="table-auto border-collapse border border-gray-300 w-full overflow-hidden">
-        <thead>
-          <tr className="bg-gray-200">
-            {tableDatafetch.length > 0 &&
-            Object.keys(tableDatafetch[0]).map((key) => (
-              <th key={key} className="border border-gray-300 px-4 py-2">
-                {key.charAt(0).toUpperCase() + key.slice(1)}
-              </th>
+  {loading ? (
+    <p className="text-center text-white">Loading...</p> // Loading message
+  ) : tableDatafetch.length === 0 ? (
+    <table className="table-auto border-collapse border border-gray-300 w-full overflow-hidden">
+      <thead>
+        <tr className="bg-gray-200">
+          <th className="border border-gray-300 px-4 py-2">Column 1</th>
+          <th className="border border-gray-300 px-4 py-2">Column 2</th>
+          <th className="border border-gray-300 px-4 py-2">Column 3</th>
+        </tr>
+      </thead>
+      <tbody>
+        {[...Array(5)].map((_, index) => (
+          <tr key={index} className="text-center">
+            <td className="border border-gray-300 px-4 py-2 text-gray-400">-</td>
+            <td className="border border-gray-300 px-4 py-2 text-gray-400">-</td>
+            <td className="border border-gray-300 px-4 py-2 text-gray-400">-</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  ) : (
+    <table className="table-auto border-collapse border border-gray-300 w-full overflow-hidden">
+      <thead>
+        <tr className="bg-gray-200">
+          {Object.keys(tableDatafetch[0]).map((key) => (
+            <th key={key} className="border border-gray-300 px-4 py-2">
+              {key.charAt(0).toUpperCase() + key.slice(1)}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {tableDatafetch.map((row) => (
+          <tr key={row.id} className="text-center">
+            {Object.values(row).map((value, index) => (
+              <td key={index} className="border border-gray-300 px-4 py-2">
+                {value}
+              </td>
             ))}
           </tr>
-        </thead>
-        <tbody>
-          {tableDatafetch.map((row) => (
-            <tr key={row.id} className="text-center">
-              {Object.values(row).map((value, index) => (
-                <td key={index} className="border border-gray-300 px-4 py-2">
-                  {value}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      </div>
+        ))}
+      </tbody>
+    </table>
+  )}
+</div>
     </div>
-        
+     {/* <div className="mt-4 text-white">
+        <p>Selected Broker 1: {brokerName1 || "None"}</p>
+        <p>Selected Broker 2: {brokerName2 || "None"}</p>
+      </div>
+         */}
 
     </div>
     </>
