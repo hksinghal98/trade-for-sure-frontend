@@ -928,7 +928,7 @@ const handleorders= async (x) => {
   {loading ? (
     <p className="text-center text-white">Loading...</p> // Loading message
   ) : tableDatafetch.length === 0 ? (
-    <table className="table-auto border-collapse border border-gray-300 w-full overflow-hidden">
+    <table className="table-auto border-collapse border text-gray-400 border-gray-300 w-full overflow-hidden">
       <thead>
         <tr className="bg-gray-200">
           <th className="border border-gray-300 px-4 py-2">Column 1</th>
@@ -961,7 +961,7 @@ const handleorders= async (x) => {
         {tableDatafetch.map((row) => (
           <tr key={row.id} className="text-center">
             {Object.values(row).map((value, index) => (
-              <td key={index} className="border border-gray-300 px-4 py-2">
+              <td key={index} className="border border-white-300 text-gray-400 px-4 py-2">
                 {value}
               </td>
             ))}
