@@ -2,6 +2,13 @@ import React, { useState } from "react";
 import { Button } from "../components/ui/button";
 import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+  } from "../components/ui/select"
 
 const ViewBroker = () => {
   const [brokerName, setBrokerName] = useState("");
@@ -11,6 +18,12 @@ const ViewBroker = () => {
   const [vendorCode, setVendorCode] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
   const [password, setPassword] = useState("");
+  const [brokerName1, setBrokerName1] = useState("");
+  const [brokers, setBrokers] = useState([])
+      const [loading,setLoading]= useState('')
+  
+  
+  
 
   const handleAddBroker = () => {
     const payload = {
@@ -28,10 +41,51 @@ const ViewBroker = () => {
     // Add API call logic here to save the broker details
   };
 
+  const fetchBrokers = async () => {
+          try {
+        const response = await handleexchangerequest("GET", 'Broker=all', "symbols",false); // Replace with your API endpoint
+        if (response) {
+          setBrokers(response); // Assuming response.data contains the broker list
+        } else {
+          console.error("Failed to fetch brokers");
+        }
+      } catch (error) {
+        console.error("Error fetching brokers:", error);
+      }
+    };
+
   return (
     <div className="container mx-auto p-6 bg-gray-100 rounded-lg shadow-md">
       <h1 className="text-2xl font-bold text-blue-800 mb-6">Add Broker</h1>
       <form className="flex flex-col gap-4">
+         <div className="flex items-center gap-4">
+                      <Label htmlFor="broker-name" className="w-1/3 text-lg text-gray-700">
+                        Select Broker
+                      </Label>
+    <Select onValueChange={(value) => setBrokerName1(value)}>
+                                <SelectTrigger className="w-2/3 max-xs:w-20 bg-white  hover:bg-gray-300">
+                                  <SelectValue placeholder="Broker" />
+                                </SelectTrigger>
+                                <SelectContent className="bg-white border border-blue-300">
+                                  {brokers && brokers.length > 0 ? (
+                                    brokers.map((broker, index) => (
+                                      <SelectItem
+                                        key={index}
+                                        value={broker.NAME}
+                                        className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+                                      >
+                                        {broker.NAME}
+                                      </SelectItem>
+                                    ))
+                                  ) : (
+                                    <SelectItem value="loading" disabled>
+                                      {loading ? "Loading brokers..." : "No brokers available"}
+                                    </SelectItem>
+                                  )}
+                                  
+                                </SelectContent>
+                              </Select>
+                    </div>
         {/* Broker Name */}
         <div className="flex items-center gap-4">
           <Label htmlFor="broker-name" className="w-1/3 text-lg text-gray-700">
