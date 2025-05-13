@@ -1,51 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import LoginPage from './components/login'
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { MantineProvider } from "@mantine/core";
-import Dashboard from './components/Dashboard'
+import { MantineProvider } from '@mantine/core';
+import LoginPage from './components/login';
+import Layout from './components/Layout';
+import Dashboard from './components/Dashboard';
 
+import OrderStatus from './components/OrderStatus'; // New Component
+import OrderPunch from './components/OrderPunch'; // New Component
+import AddBroker from './components/AddBroker';
+import ViewBroker from './components/ViewBroker';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-       <MantineProvider>
+    <MantineProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<LoginPage/>} />
-          <Route path="/home" element={<Dashboard/>} />
-  
+          {/* Public Route */}
+          <Route path="/" element={<LoginPage />} />
+          
+          {/* Protected Routes with Layout */}
+          <Route element={<Layout />}>
+            <Route path="/home" element={<Dashboard />} />
+            
+              <Route path="/OrderStatus" element={<OrderStatus />} />
+              <Route path="/OrderPunch" element={<OrderPunch />} />
+            
+            <Route path="/Settings" element={<AddBroker />} />
+            <Route path="/ViewBroker" element={<ViewBroker />} />
+          </Route>
         </Routes>
       </Router>
     </MantineProvider>
-    </>
-  )
+  );
 }
 
-export default App
-
-// import { useEffect } from "react";
-
-// const App = () => {
-//   useEffect(() => {
-//     const handleKeyPress = (event) => {
-//       if (event.key === "F1") {
-//         event.preventDefault(); // Prevent default browser behavior (help menu)
-//         window.open("https://cricbuzz.com/", "_blank"); // Open a page
-//       }
-//     };
-
-//     window.addEventListener("keydown", handleKeyPress);
-//     return () => {
-//       window.removeEventListener("keydown", handleKeyPress);
-//     };
-//   }, []);
-
-//   return <h1>Press F1 to Open a Page</h1>;
-// };
-
-// export default App;
+export default App;
