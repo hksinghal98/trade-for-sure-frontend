@@ -9,6 +9,7 @@ import OrderStatus from './components/OrderStatus'; // New Component
 import OrderPunch from './components/OrderPunch'; // New Component
 import AddBroker from './components/AddBroker';
 import ViewBroker from './components/ViewBroker';
+import Marketwatch from './components/Marketwatch';
 
 function App() {
   return (
@@ -20,7 +21,11 @@ function App() {
           
           {/* Protected Routes with Layout */}
           <Route element={<Layout />}>
-            <Route path="/home" element={<Dashboard />} />
+            <Route path="/home" element={<Marketwatch />} />
+            
+            {/* Add more protected routes here */}
+
+            <Route path="/Instrument" element={<Dashboard />} />
             
               <Route path="/OrderStatus" element={<OrderStatus />} />
               <Route path="/OrderPunch" element={<OrderPunch />} />

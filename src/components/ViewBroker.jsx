@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import { Button } from "../components/ui/button";
 import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
@@ -20,7 +21,46 @@ const ViewBroker = () => {
   const [password, setPassword] = useState("");
   const [brokerName1, setBrokerName1] = useState("");
   const [brokers, setBrokers] = useState([])
-      const [loading,setLoading]= useState('')
+  const [loading,setLoading]= useState('')
+  const [tableDatafetch, setTableDatafetch] = useState([]);
+  
+    useEffect(() => {
+      // Dummy data for testing
+      const dummyData = [
+        {
+          brokerName: "Broker A",
+          apiKey: "API_KEY_A",
+          apiSecret: "API_SECRET_A",
+          authToken: "AUTH_TOKEN_A",
+          vendorCode: "VENDOR_A",
+          accountNumber: "123456",
+          password: "passwordA",
+        },
+        {
+          brokerName: "Broker B",
+          apiKey: "API_KEY_B",
+          apiSecret: "API_SECRET_B",
+          authToken: "AUTH_TOKEN_B",
+          vendorCode: "VENDOR_B",
+          accountNumber: "654321",
+          password: "passwordB",
+        },
+        {
+          brokerName: "Broker C",
+          apiKey: "API_KEY_C",
+          apiSecret: "API_SECRET_C",
+          authToken: "AUTH_TOKEN_C",
+          vendorCode: "VENDOR_C",
+          accountNumber: "789012",
+          password: "passwordC",
+        },
+      ];
+  
+      // Set dummy data to tableDatafetch
+      setTableDatafetch(dummyData);
+      setLoading(false); // Set loading to false since data is already loaded
+    }, []);
+  
   
   
   
@@ -39,6 +79,19 @@ const ViewBroker = () => {
     console.log("Broker Details Submitted:", payload);
     alert("Broker added successfully!");
     // Add API call logic here to save the broker details
+  };
+
+  const handleOpen = (rowIndex) => {
+    const row = tableDatafetch[rowIndex];
+    setSelectedRow(rowIndex);
+    setBrokerName(row.brokerName || "");
+    setApiKey(row.apiKey || "");
+    setApiSecret(row.apiSecret || "");
+    setAuthToken(row.authToken || "");
+    setVendorCode(row.vendorCode || "");
+    setAccountNumber(row.accountNumber || "");
+    setPassword(row.password || "");
+    setIsOpen(true);
   };
 
   const fetchBrokers = async () => {
@@ -60,47 +113,18 @@ const ViewBroker = () => {
       <form className="flex flex-col gap-4">
          <div className="flex items-center gap-4">
                       <Label htmlFor="broker-name" className="w-1/3 text-lg text-gray-700">
-                        Select Broker
+                        Broker Name
                       </Label>
-    <Select onValueChange={(value) => setBrokerName1(value)}>
-                                <SelectTrigger className="w-2/3 max-xs:w-20 bg-white  hover:bg-gray-300">
-                                  <SelectValue placeholder="Broker" />
-                                </SelectTrigger>
-                                <SelectContent className="bg-white border border-blue-300">
-                                  {brokers && brokers.length > 0 ? (
-                                    brokers.map((broker, index) => (
-                                      <SelectItem
-                                        key={index}
-                                        value={broker.NAME}
-                                        className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-                                      >
-                                        {broker.NAME}
-                                      </SelectItem>
-                                    ))
-                                  ) : (
-                                    <SelectItem value="loading" disabled>
-                                      {loading ? "Loading brokers..." : "No brokers available"}
-                                    </SelectItem>
-                                  )}
-                                  
-                                </SelectContent>
-                              </Select>
-                    </div>
-        {/* Broker Name */}
-        <div className="flex items-center gap-4">
-          <Label htmlFor="broker-name" className="w-1/3 text-lg text-gray-700">
-            Broker Name
-          </Label>
-          <Input
-            id="broker-name"
+                      <Input
+            id="vendor-code"
             type="text"
-            placeholder="Enter broker name"
-            value={brokerName}
-            onChange={(e) => setBrokerName(e.target.value)}
-            className="w-2/3 p-2 border border-gray-300 rounded-md"
+            
+            placeholder="Enter Vendor Code"
+            value={"SHOONYA"}
+            className="w-2/3 p-2 border border-gray-300 rounded-md pointer-events-none"
           />
-        </div>
-
+                    </div>
+                                  
         {/* API Key */}
         <div className="flex items-center gap-4">
           <Label htmlFor="api-key" className="w-1/3 text-lg text-gray-700">
@@ -116,20 +140,6 @@ const ViewBroker = () => {
           />
         </div>
 
-        {/* API Secret */}
-        <div className="flex items-center gap-4">
-          <Label htmlFor="api-secret" className="w-1/3 text-lg text-gray-700">
-            API Secret
-          </Label>
-          <Input
-            id="api-secret"
-            type="password"
-            placeholder="Enter API secret"
-            value={apiSecret}
-            onChange={(e) => setApiSecret(e.target.value)}
-            className="w-2/3 p-2 border border-gray-300 rounded-md"
-          />
-        </div>
 
         {/* Auth Token */}
         <div className="flex items-center gap-4">
@@ -202,6 +212,77 @@ const ViewBroker = () => {
           </Button>
         </div>
       </form>
+
+      <div className="overflow-x-auto h-72 w-full rounded-lg">
+                {loading ? (
+                  <p className="text-center text-white">Loading...</p>
+                ) : tableDatafetch.length === 0 ? (
+                  <p className="text-center text-white">No data available</p>
+                ) : (
+                  <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                      <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        {tableDatafetch[0] &&
+                          Object.keys(tableDatafetch[0]).map((key) => (
+                            <th key={key} scope="col" className="px-6 py-3">
+                              {key.charAt(0).toUpperCase() + key.slice(1)}
+                            </th>
+                          ))}
+                        <th className="px-6 py-3">Active</th>
+
+                        <th className="px-6 py-3">Login</th>
+                          
+                        <th className="px-6 py-3">Edit</th>
+                        <th className="px-6 py-3">Delete</th>
+
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {tableDatafetch.map((row, index) => (
+                        <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                          {Object.values(row).map((value, idx) => (
+                            <td key={idx} scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                              {value}
+                            </td>
+                          ))}
+                          <td className="px-6 py-2 text-center">
+                            <Button
+                              className="bg-blue-600 text-white py-2 text-sm rounded-md hover:bg-blue-700"
+                              onClick={() => handleOpen(index)}
+                            >
+                              Active
+                            </Button>
+                          </td>
+                          <td className="px-6 py-2 text-center">
+                            <Button
+                              className="bg-blue-600 text-white py-2 text-sm rounded-md hover:bg-blue-700"
+                              onClick={() => handleOpen(index)}
+                            >
+                              Login
+                            </Button>
+                          </td>
+                          <td className="px-6 py-2 text-center">
+                            <Button
+                              className="bg-blue-600 text-white py-2 text-sm rounded-md hover:bg-blue-700"
+                              onClick={() => handleOpen(index)}
+                            >
+                              Edit
+                            </Button>
+                          </td>
+                          <td className="px-6 py-2 text-center">
+                            <Button
+                              className="bg-blue-600 text-white py-2 text-sm rounded-md hover:bg-blue-700"
+                              onClick={() => handleOpen(index)}
+                            >
+                              Delete
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </div>
     </div>
   );
 };

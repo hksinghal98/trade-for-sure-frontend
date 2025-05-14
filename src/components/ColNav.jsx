@@ -25,6 +25,7 @@ const NavContent = ({ className = '' }) => {
   const [activeLink, setActiveLink] = useState('/home');
   const [showDropdown, setShowDropdown] = useState(false); // State for dropdown visibility
   const [showDropdown2, setShowDropdown2] = useState(false); // State for dropdown visibility
+  const [showDropdown3, setShowDropdown3] = useState(false); // State for dropdown visibility
   const location = useLocation();
 
   const handleLinkClick = (path) => {
@@ -49,8 +50,9 @@ const NavContent = ({ className = '' }) => {
         isActive={activeLink === '/home'}
         onClick={() => handleLinkClick('/home')}
       >
-        Instrument
+        <span className="md:inline">Market Watch</span>
       </NavLink>
+
       <div
         className={`hover:text-sky-500 cursor-pointer flex flex-col gap-2 duration-500 p-2 rounded-md w-full text-blue-500 ${
           location.pathname.startsWith('/') ? 'bg-transparent text-white' : ''
@@ -92,7 +94,7 @@ const NavContent = ({ className = '' }) => {
           onClick={() => setShowDropdown2(!showDropdown2)} // Toggle dropdown visibility
         >
           <BsBoxSeamFill className="size-5" />
-          <span className="md:inline">Settings</span>
+          <span className="md:inline">Broker</span>
         </div>
         {showDropdown2 && (
           <div className="pl-8 flex flex-col gap-2">
@@ -101,8 +103,16 @@ const NavContent = ({ className = '' }) => {
               isActive={location.pathname === '/ViewBroker'}
               onClick={() => handleLinkClick('/ViewBroker')}
             >
-              Add Account
+              Shoonya
             </NavLink>
+             <NavLink
+              // to="/ViewBroker"
+              // isActive={location.pathname === '/ViewBroker'}
+              // onClick={() => handleLinkClick('/ViewBroker')}
+            >
+              Angel
+            </NavLink>
+            
             <NavLink
               to="/Settings"
               isActive={location.pathname === '/Settings'}
@@ -113,6 +123,12 @@ const NavContent = ({ className = '' }) => {
           </div>
         )}
       </div>
+      <NavLink
+        to="/Instrument"
+        icon={CiDeliveryTruck}
+        isActive={activeLink === '/Instrument'}
+        onClick={() => handleLinkClick('/Instrument')}
+      >Instrument</NavLink>
     </div>
   );
 };

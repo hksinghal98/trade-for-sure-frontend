@@ -176,39 +176,18 @@ const OrderPunch = () => {
     <div className="flex flex-col h-screen">
       
       <div className="flex items-center gap-6 p-6 pt-0 bg-transparent text-white">
-        <div className="flex flex-col gap-4">
-        <div className="flex flex-wrap items-center gap-4">
-          <Select onValueChange={(value) => setBrokerName4(value)}>
-            <SelectTrigger className="w-40 max-xs:w-20 bg-blue-800 text-white hover:bg-blue-700">
-              <SelectValue placeholder="Select Account" />
-            </SelectTrigger>
-            <SelectContent className="bg-white border border-blue-300">
-              {brokers && brokers.length > 0 ? (
-                brokers.map((broker, index) => (
-                  <SelectItem
-                    key={index}
-                    value={broker.NAME}
-                    className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-                  >
-                    {broker.NAME}
-                  </SelectItem>
-                ))
-              ) : (
-                <SelectItem value="loading" disabled>
-                  {loading ? "Loading brokers..." : "No brokers available"}
-                </SelectItem>
-              )}
-            </SelectContent>
-          </Select>
+        <div className="flex flex-col gap-4 h-full"> 
+        <div className="flex flex-wrap items-start gap-4">
+
 
           <Dialog open={Loginopen} onOpenChange={setLoginOpen}>
             <DialogTrigger asChild>
-              <Button onClick={() => setLoginOpen(true)}>Login</Button>
+              <Button onClick={() => setLoginOpen(true)}>Login Account</Button>
             </DialogTrigger>
 
             <DialogContent className="bg-zinc-400 w-2/5">
               <DialogHeader>
-                <DialogTitle>Login</DialogTitle>
+                <DialogTitle>Login Account</DialogTitle>
               </DialogHeader>
               <div className="flex gap-2 items-center justify-between w-full">
                 <Label htmlFor="broker-name" className="mr-2">
@@ -243,7 +222,7 @@ const OrderPunch = () => {
                 className="bg-green-700 hover:bg-green-900"
                 onClick={() => handlelogin()}
               >
-                LogIn
+                LogIn Account
               </Button>
             </DialogContent>
           </Dialog>
@@ -403,7 +382,33 @@ const OrderPunch = () => {
                               </SelectItem>
                             </SelectContent>
                           </Select>
+                          
                                           </div>
+                                          <div className="flex flex-col gap-2">
+                                                    <Select onValueChange={(value) => setBrokerName4(value)}>
+            <SelectTrigger className="w-36 max-xs:w-20 bg-blue-800 text-white hover:bg-blue-700">
+              <SelectValue placeholder="Select Account" />
+            </SelectTrigger>
+            <SelectContent className="bg-white border border-blue-300">
+              {brokers && brokers.length > 0 ? (
+                brokers.map((broker, index) => (
+                  <SelectItem
+                    key={index}
+                    value={broker.NAME}
+                    className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+                  >
+                    {broker.NAME}
+                  </SelectItem>
+                ))
+              ) : (
+                <SelectItem value="loading" disabled>
+                  {loading ? "Loading brokers..." : "No brokers available"}
+                </SelectItem>
+              )}
+            </SelectContent>
+          </Select>
+          <Button className="w-36">Select All</Button>
+          </div>
               
             </div>
             <div className="flex gap-2 w-full items-center ">
