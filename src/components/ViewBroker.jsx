@@ -65,6 +65,61 @@ const ViewBroker = ({ defaultBrokerName = "Shoonya" }) => {
     alert("Broker added successfully!");
   };
 
+
+  const handlelogin = async (brokerid) => {
+        const payload = JSON.stringify({brokerid });
+        const type = "POST"
+        const endpoint= "loginbroker"
+        handleexchangerequest(type, payload, endpoint,true)
+    .then(response => {
+    console.log(response) 
+    
+    window.location.reload()
+    })
+    
+        };
+
+
+
+  const handleactivebroker=(brokerid)=>{
+
+     const payload = JSON.stringify({brokerid });
+        const type = "PUT"
+        const endpoint= "broker"
+        handleexchangerequest(type, payload, endpoint,true)
+    .then(response => {
+    console.log(response) 
+    
+    window.location.reload()
+    })
+
+  }
+
+  const handleEdit = (index) => {
+    const payload = JSON.stringify({brokerid });
+        const type = "PUT"
+        const endpoint= "broker"
+        handleexchangerequest(type, payload, endpoint,true)
+    .then(response => {
+    console.log(response) 
+    
+    window.location.reload()
+    })
+  };
+
+  const handleadelete=(brokerid)=>{
+
+     const payload = JSON.stringify({brokerid });
+        const type = "PUT"
+        const endpoint= "broker"
+        handleexchangerequest(type, payload, endpoint,true)
+    .then(response => {
+    console.log(response) 
+    
+    window.location.reload()
+    })
+
+  }
   return (
     <div className="container mx-auto p-6 bg-gray-100 rounded-lg shadow-md max-w-7xl">
       <h1 className="text-2xl font-bold text-blue-800 mb-6">Add {defaultBrokerName} Broker</h1>
@@ -202,7 +257,7 @@ const ViewBroker = ({ defaultBrokerName = "Shoonya" }) => {
                     <td className="px-6 py-4 text-center">
                       <Button
                         className="bg-blue-600 text-white py-2 text-sm rounded-md hover:bg-blue-700"
-                        onClick={() => handleActive(index)}
+                        onClick={() => handleactivebroker(index)}
                       >
                         Active
                       </Button>
@@ -210,7 +265,7 @@ const ViewBroker = ({ defaultBrokerName = "Shoonya" }) => {
                     <td className="px-6 py-4 text-center">
                       <Button
                         className="bg-blue-600 text-white py-2 text-sm rounded-md hover:bg-blue-700"
-                        onClick={() => handleLogin(index)}
+                        onClick={() => handlelogin(index)}
                       >
                         Login
                       </Button>
@@ -226,7 +281,7 @@ const ViewBroker = ({ defaultBrokerName = "Shoonya" }) => {
                     <td className="px-6 py-4 text-center">
                       <Button
                         className="bg-blue-600 text-white py-2 text-sm rounded-md hover:bg-blue-700"
-                        onClick={() => handleDelete(index)}
+                        onClick={() => handleadelete(index)}
                       >
                         Delete
                       </Button>
