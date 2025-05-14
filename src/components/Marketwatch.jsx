@@ -12,6 +12,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "../components/ui/popove
 import { Command, CommandInput, CommandList, CommandItem, CommandEmpty, CommandGroup } from "../components/ui/command"
 import { Input } from "../components/ui/input"
 import debounce from "lodash.debounce";
+import { handleexchangerequest } from "../utility/Api";
+import { Check, ChevronsUpDown } from "lucide-react"
+
 
 const Marketwatch = () => {
     const [brokerName4, setBrokerName4] = useState(""); 
@@ -22,6 +25,23 @@ const Marketwatch = () => {
     const [loading, setLoading] = useState('');
     const [tableDatafetch, setTableDatafetch] = useState([]);
     const [symbolCount, setSymbolCount] = useState(0); // Track the number of symbols added
+         const[exchange,setExchange]= useState("")
+         const [query, setQuery] = useState("");
+        const [Symbol,setsymbol]= useState([])
+        const [token,setToken]= useState([])
+        const [data,setdata]= useState([])
+
+
+
+       const  handletoken = (index)=>{
+
+        setToken(data['Token'][index])
+
+
+        }
+    
+     const [instrument, setInstrument] = useState('EQ');
+
 
     const fetchBrokers = async () => {
         try {
@@ -35,6 +55,12 @@ const Marketwatch = () => {
           console.error("Error fetching brokers:", error);
         }
       };
+
+
+        useEffect(() => {
+        fetchBrokers();
+    
+      }, []);
     
  const fetchSymbols = async (broker, exchange,instrument,symbol) => {
         setLoading(true);
@@ -42,6 +68,7 @@ const Marketwatch = () => {
           const queryParams = `Broker=${broker}&exchange=${exchange}&instrument=${instrument}&name=${symbol}`;
           const response = await handleexchangerequest("GET", queryParams, "symbols",false);
           if (response) {
+            setdata(response)
             const removeDuplicatsymbol = [...new Set(response.TradingSymbol)];
 
             setsymbol(removeDuplicatsymbol);
@@ -57,10 +84,7 @@ const Marketwatch = () => {
       };
 
       // Fetch brokers on component mount
-      useEffect(() => {
-        fetchBrokers();
     
-      }, []);
 const handleSelectIndex = (value) => {
      if (brokerName4) {
   // fetchSymbols(brokerName4, value)
@@ -90,6 +114,32 @@ if (brokerName4) {
 }
 }
 
+ const handleAddSymbol = ()=>{
+    if (symbolCount >= 50) {
+        alert("You cannot add more than 50 symbols.");
+        return;
+    }
+         const payload = JSON.stringify({
+          brokerName4,
+          exchange,
+          instrument,
+          selectsymbol,
+          token
+        
+
+
+        });
+        const type = "POST"
+        const endpoint= "watchlist"
+        handleexchangerequest(type, payload, endpoint,true)
+    .then(response => {
+    console.log(response) 
+    setSymbolCount(response); // Increment the symbol count
+    
+    window.location.reload()
+    })
+    
+    }
 const handleorders= async (x) => {
    
       const type = "GET"
@@ -113,14 +163,7 @@ const handleSearch = debounce((value) => {
 
       }, 600); // Wait 300ms before executing the search
 
-const handleAddSymbol = () => {
-    if (symbolCount >= 50) {
-        alert("You cannot add more than 50 symbols.");
-        return;
-    }
-    // Logic to add the symbol
-    setSymbolCount(symbolCount + 1); // Increment the symbol count
-};
+
 
 return (
 <>
@@ -277,6 +320,7 @@ return (
                                             onSelect={() => {
                                               setselectsymbol(symbol);
                                               setComboOpen(false);
+                                              handletoken(index)
                                             }}
                                           >
                                             <Check

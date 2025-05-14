@@ -30,7 +30,6 @@ function App() {
               <Route path="/OrderStatus" element={<OrderStatus />} />
               <Route path="/OrderPunch" element={<OrderPunch />} />
             
-            <Route path="/Settings" element={<AddBroker />} />
             <Route path="/ViewBroker" element={<ViewBroker />} />
           </Route>
         </Routes>

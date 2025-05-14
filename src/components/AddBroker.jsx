@@ -92,13 +92,35 @@ const AddBroker = () => {
       vendorCode,
       accountNumber,
       password,
+      
     };
+    
 
-    console.log("Broker Details Submitted:", payload);
-    alert("Broker added successfully!");
+    const type = "POST"
+    const endpoint= "broker"
+    handleexchangerequest(type, payload, endpoint,true)
+    .then(response => {
+    console.log(response) 
+    
+    // window.location.reload()
+    })
+  
+
     // Add API call logic here to save the broker details
   };
 
+
+
+
+
+  
+
+  
+
+ 
+
+    
+        };
   const handleOpen = (rowIndex) => {
     const row = tableDatafetch[rowIndex];
     setSelectedRow(rowIndex);
@@ -110,20 +132,24 @@ const AddBroker = () => {
     setAccountNumber(row.accountNumber || "");
     setPassword(row.password || "");
     setIsOpen(true);
-  };
+    
 
-  const fetchBrokers = async () => {
-    try {
-      const response = await handleexchangerequest("GET", 'Broker=all', "symbols", false); // Replace with your API endpoint
-      if (response) {
-        setBrokers(response); // Assuming response.data contains the broker list
-      } else {
-        console.error("Failed to fetch brokers");
-      }
-    } catch (error) {
-      console.error("Error fetching brokers:", error);
-    }
-  };
+
+
+
+  
+
+
+
+  const fetchaccountlist=()=>{
+
+
+
+
+    
+
+  }
+  
 
   return (
     <>

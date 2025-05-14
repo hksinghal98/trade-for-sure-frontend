@@ -113,13 +113,7 @@ const NavContent = ({ className = '' }) => {
               Angel
             </NavLink>
             
-            <NavLink
-              to="/Settings"
-              isActive={location.pathname === '/Settings'}
-              onClick={() => handleLinkClick('/Settings')}
-            >
-              View/Edit Account Detail 
-            </NavLink>
+            
           </div>
         )}
       </div>

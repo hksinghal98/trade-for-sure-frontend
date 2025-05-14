@@ -11,12 +11,14 @@ import {
     SelectValue,
   } from "../components/ui/select"
 
+
+ import {handleexchangerequest}  from '../utility/Api'
 const ViewBroker = () => {
-  const [brokerName, setBrokerName] = useState("");
-  const [apiKey, setApiKey] = useState("");
-  const [apiSecret, setApiSecret] = useState("");
-  const [authToken, setAuthToken] = useState("");
-  const [vendorCode, setVendorCode] = useState("");
+  const [brokerName, setBrokerName] = useState('SHOONYA');
+  const [apikey, setapikey] = useState("");
+  const [secretkey, setsecretkey] = useState("");
+  const [AuthToken, setAuthToken] = useState("");
+  const [vendorcode, setvendorcode] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
   const [password, setPassword] = useState("");
   const [brokerName1, setBrokerName1] = useState("");
@@ -29,28 +31,28 @@ const ViewBroker = () => {
       const dummyData = [
         {
           brokerName: "Broker A",
-          apiKey: "API_KEY_A",
-          apiSecret: "API_SECRET_A",
-          authToken: "AUTH_TOKEN_A",
-          vendorCode: "VENDOR_A",
+          apikey: "API_KEY_A",
+          secretkey: "API_SECRET_A",
+          AuthToken: "AUTH_TOKEN_A",
+          vendorcode: "VENDOR_A",
           accountNumber: "123456",
           password: "passwordA",
         },
         {
           brokerName: "Broker B",
-          apiKey: "API_KEY_B",
-          apiSecret: "API_SECRET_B",
-          authToken: "AUTH_TOKEN_B",
-          vendorCode: "VENDOR_B",
+          apikey: "API_KEY_B",
+          secretkey: "API_SECRET_B",
+          AuthToken: "AUTH_TOKEN_B",
+          vendorcode: "VENDOR_B",
           accountNumber: "654321",
           password: "passwordB",
         },
         {
           brokerName: "Broker C",
-          apiKey: "API_KEY_C",
-          apiSecret: "API_SECRET_C",
-          authToken: "AUTH_TOKEN_C",
-          vendorCode: "VENDOR_C",
+          apikey: "API_KEY_C",
+          secretkey: "API_SECRET_C",
+          AuthToken: "AUTH_TOKEN_C",
+          vendorcode: "VENDOR_C",
           accountNumber: "789012",
           password: "passwordC",
         },
@@ -65,47 +67,96 @@ const ViewBroker = () => {
   
   
 
+  
+
   const handleAddBroker = () => {
-    const payload = {
+    const payload = JSON.stringify({
       brokerName,
-      apiKey,
-      apiSecret,
-      authToken,
-      vendorCode,
+      apikey,
+      secretkey,
+      AuthToken,
+      vendorcode,
       accountNumber,
       password,
-    };
+    });
+    
+      const type = "POST"
+        const endpoint= "broker"
+        handleexchangerequest(type, payload, endpoint,true)
+    .then(response => {
+    console.log(response) 
+    
+    window.location.reload()
+    })
+  
 
-    console.log("Broker Details Submitted:", payload);
-    alert("Broker added successfully!");
+
+
+
+
+
+  
+ 
     // Add API call logic here to save the broker details
   };
+const handlelogin = async (brokerid) => {
+        const payload = JSON.stringify({brokerid });
+        const type = "POST"
+        const endpoint= "loginbroker"
+        handleexchangerequest(type, payload, endpoint,true)
+    .then(response => {
+    console.log(response) 
+    
+    window.location.reload()
+    })
+  }
+
+
+  
+  
+
+   const handleadelete=(brokerid)=>{
+
+     const payload = JSON.stringify({brokerid });
+        const type = "DELETE"
+        const endpoint= "broker"
+        handleexchangerequest(type, payload, endpoint,true)
+    .then(response => {
+    console.log(response) 
+    
+    window.location.reload()
+    })
+
+  }
+  const handleactivebroker=(brokerid)=>{
+
+     const payload = JSON.stringify({brokerid });
+        const type = "PUT"
+        const endpoint= "broker"
+        handleexchangerequest(type, payload, endpoint,true)
+    .then(response => {
+    console.log(response) 
+    
+    window.location.reload()
+    })
+
+  }
+
 
   const handleOpen = (rowIndex) => {
     const row = tableDatafetch[rowIndex];
     setSelectedRow(rowIndex);
     setBrokerName(row.brokerName || "");
-    setApiKey(row.apiKey || "");
-    setApiSecret(row.apiSecret || "");
-    setAuthToken(row.authToken || "");
-    setVendorCode(row.vendorCode || "");
+    setapikey(row.apikey || "");
+    setsecretkey(row.secretkey || "");
+    setAuthToken(row.AuthToken || "");
+    setvendorcode(row.vendorcode || "");
     setAccountNumber(row.accountNumber || "");
     setPassword(row.password || "");
     setIsOpen(true);
   };
 
-  const fetchBrokers = async () => {
-          try {
-        const response = await handleexchangerequest("GET", 'Broker=all', "symbols",false); // Replace with your API endpoint
-        if (response) {
-          setBrokers(response); // Assuming response.data contains the broker list
-        } else {
-          console.error("Failed to fetch brokers");
-        }
-      } catch (error) {
-        console.error("Error fetching brokers:", error);
-      }
-    };
+ 
 
   return (
     <div className="container mx-auto p-6 bg-gray-100 rounded-lg shadow-md">
@@ -134,8 +185,8 @@ const ViewBroker = () => {
             id="api-key"
             type="text"
             placeholder="Enter API key"
-            value={apiKey}
-            onChange={(e) => setApiKey(e.target.value)}
+            value={apikey}
+            onChange={(e) => setapikey(e.target.value)}
             className="w-2/3 p-2 border border-gray-300 rounded-md"
           />
         </div>
@@ -150,7 +201,7 @@ const ViewBroker = () => {
             id="auth-token"
             type="text"
             placeholder="Enter Auth Token"
-            value={authToken}
+            value={AuthToken}
             onChange={(e) => setAuthToken(e.target.value)}
             className="w-2/3 p-2 border border-gray-300 rounded-md"
           />
@@ -165,8 +216,8 @@ const ViewBroker = () => {
             id="vendor-code"
             type="text"
             placeholder="Enter Vendor Code"
-            value={vendorCode}
-            onChange={(e) => setVendorCode(e.target.value)}
+            value={vendorcode}
+            onChange={(e) => setvendorcode(e.target.value)}
             className="w-2/3 p-2 border border-gray-300 rounded-md"
           />
         </div>
@@ -205,7 +256,7 @@ const ViewBroker = () => {
         <div className="flex justify-end">
           <Button
             type="button"
-            onClick={handleAddBroker}
+            onClick={()=>handleAddBroker()}
             className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
           >
             Add Broker
