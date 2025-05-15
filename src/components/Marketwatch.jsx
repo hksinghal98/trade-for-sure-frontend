@@ -13,6 +13,7 @@ import { Command, CommandInput, CommandList, CommandItem, CommandEmpty, CommandG
 import { Input } from "../components/ui/input"
 import debounce from "lodash.debounce";
 import { handleexchangerequest } from "../utility/Api";
+import{WSHOST} from "../utility/Host"
 import { Check, ChevronsUpDown } from "lucide-react"
 
 
@@ -31,6 +32,7 @@ const Marketwatch = () => {
         const [token,setToken]= useState([])
         const [data,setdata]= useState([])
 
+    const [messages, setMessages] = useState([]);
 
 
        const  handletoken = (index)=>{
@@ -83,7 +85,98 @@ const Marketwatch = () => {
         }
       };
 
-      // Fetch brokers on component mount
+      // Fetch brokers on component mou
+      // 
+      // 
+      // 
+      // nt
+
+
+
+ useEffect(  () => {
+      // Create a WebSocket connection
+  
+      
+  
+      const newSocket = new WebSocket(WSHOST);
+      
+     
+  
+      newSocket.onopen = async() => {
+        // const client = await AsyncStorage.getItem('chatid');
+        // const id = await AsyncStorage.getItem('id');
+        console.log('WebSocket connection established');
+        // const message = {
+          
+        //   user:'46',
+        //   sendEvent:'True',
+        //   text: '',
+        //   chatpairid:'ok'
+        // };
+        newSocket.send(JSON.stringify({message:'LTPFEEDS'}))
+        // newSocket.send('');
+        // setSocket(newSocket);
+  
+      };
+      
+  
+      newSocket.onmessage = (event) => {
+        console.log(event.data,'EVENT')   
+        // const receivedBlob = event.data
+
+        // const reader = new FileReader();
+        // reader.onload = function () {
+        //   const receivedData = reader.result; // This   will be a string
+        //   console.log(receivedData);
+       
+        
+        // const message = JSON.parse(receivedData);
+        // console.log('Received event :', message);
+        // // Handle incoming messages
+          setMessages(event.data.message)
+        // }
+        
+      // reader.readAsText(receivedBlob)
+       
+     
+       
+       
+      };
+  
+      newSocket.onclose = () => {
+        console.log('WebSocket connection closed');
+      };
+  
+      // Clean up the WebSocket connection when the component unmounts
+      return () => {
+        newSocket.close();
+      };
+
+    }, []);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
 const handleSelectIndex = (value) => {
      if (brokerName4) {
@@ -363,7 +456,7 @@ return (
   <div className="overflow-x-auto h-72 w-full rounded-lg">
 {loading ? (
 <p className="text-center text-white">Loading...</p> // Loading message
-) : tableDatafetch.length === 0 ? (
+) : messages.length === 0 ? (
 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
   <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
     <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
@@ -399,7 +492,7 @@ return (
   <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
 
     <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-      {Object.keys(tableDatafetch[0]).map((key) => (
+      {Object.keys(messages).map((key) => (
         <th key={key} scope="col" className="px-6 py-3">
           {key.charAt(0).toUpperCase() + key.slice(1)}
         </th>
@@ -411,7 +504,7 @@ return (
     </tr>
   </thead>
   <tbody>
-    {tableDatafetch.map((row) => (
+    {messages.map((row) => (
       <tr key={row.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
         {Object.values(row).map((value, index) => (
           <td key={index} scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">

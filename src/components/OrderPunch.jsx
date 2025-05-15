@@ -73,6 +73,27 @@ const OrderPunch = () => {
   { id: 7, message: 'Payment processed successfully', timestamp: '2025-05-13 19:50:00' },
 ];
 
+
+
+ const fetchBrokers = async () => {
+        try {
+      const response = await handleexchangerequest("GET", 'Broker=all', "symbols",false); // Replace with your API endpoint
+      if (response) {
+        setBrokers(response); // Assuming response.data contains the broker list
+      } else {
+        console.error("Failed to fetch brokers");
+      }
+    } catch (error) {
+      console.error("Error fetching brokers:", error);
+    }
+  };
+
+    // Fetch brokers on component mount
+        useEffect(() => {
+          fetchBrokers();
+      
+        }, []);
+
   const fetchTableData = async () => {
     setLoading(true);
     try {
@@ -384,8 +405,8 @@ const OrderPunch = () => {
                           </Select>
                           
                                           </div>
-                                          <div className="flex flex-col gap-2">
-                                                    <Select onValueChange={(value) => setBrokerName4(value)}>
+            <div className="flex flex-col gap-2">
+            <Select onValueChange={(value) => setBrokerName4(value)}>
             <SelectTrigger className="w-36 max-xs:w-20 bg-blue-800 text-white hover:bg-blue-700">
               <SelectValue placeholder="Select Account" />
             </SelectTrigger>
@@ -407,7 +428,29 @@ const OrderPunch = () => {
               )}
             </SelectContent>
           </Select>
-          <Button className="w-36">Select All</Button>
+         
+            <Select onValueChange={(value) => setBrokerName4(value)}>
+            <SelectTrigger className="w-36 max-xs:w-20 bg-blue-800 text-white hover:bg-blue-700">
+              <SelectValue placeholder="All in Broker" />
+            </SelectTrigger>
+            <SelectContent className="bg-white border border-blue-300">
+              {brokers && brokers.length > 0 ? (
+                brokers.map((broker, index) => (
+                  <SelectItem
+                    key={index}
+                    value={broker.NAME}
+                    className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+                  >
+                    {broker.NAME}
+                  </SelectItem>
+                ))
+              ) : (
+                <SelectItem value="loading" disabled>
+                  {loading ? "Loading brokers..." : "No brokers available"}
+                </SelectItem>
+              )}
+            </SelectContent>
+          </Select>
           </div>
               
             </div>

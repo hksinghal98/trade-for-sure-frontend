@@ -25,32 +25,32 @@ const ViewBroker = () => {
 
   useEffect(() => {
     // Dummy data for testing
-    const dummyData = [
-      {
-        brokerId: 1,
-        brokerName: `${defaultBrokerName} A`,
-        apiKey: "API_KEY_A",
-        apiSecret: "API_SECRET_A",
-        authToken: "AUTH_TOKEN_A",
-        vendorCode: "VENDOR_A",
-        accountNumber: "123456",
-        password: "passwordA",
-      },
-      {
-        brokerId: 2,
-        brokerName: `${defaultBrokerName} B`,
-        apiKey: "API_KEY_B",
-        apiSecret: "API_SECRET_B",
-        authToken: "AUTH_TOKEN_B",
-        vendorCode: "VENDOR_B",
-        accountNumber: "654321",
-        password: "passwordB",
-      },
-    ];
+   fetchaccountlist()
+  }, []);
 
-    setTableDatafetch(dummyData);
-    setLoading(false);
-  }, [defaultBrokerName]);
+
+  const fetchaccountlist = async () => {
+    const type = "GET";
+    const endpoint = "loadaccount";
+    const payload = "broker=SHOONYA";
+    setLoading(true); // Set loading to true before fetching data
+    handleexchangerequest(type, payload, endpoint, true)
+      .then((response) => {
+        console.log(response);
+        setTableDatafetch(response || []); // Ensure response is an array
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      })
+      .finally(() => {
+        setLoading(false); // Set loading to false after fetching data
+      });
+  };
+
+  
+
+
+    
 
   
 
@@ -129,7 +129,7 @@ const handlelogin = async (brokerid) => {
 
 
 
-
+ 
 
   const handleEdit = (index) => {
     const payload = JSON.stringify({brokerid });
@@ -146,7 +146,7 @@ const handlelogin = async (brokerid) => {
 
   return (
     <div className="container mx-auto p-6 bg-gray-100 rounded-lg shadow-md max-w-7xl">
-      <h1 className="text-2xl font-bold text-blue-800 mb-6">Add {defaultBrokerName} Broker</h1>
+      <h1 className="text-2xl font-bold text-blue-800 mb-6">Add Broker</h1>
       <form className="flex flex-col gap-4">
         <div className="flex items-center gap-4">
           <Label htmlFor="broker-name" className="w-1/3 text-lg text-gray-700">
@@ -261,7 +261,7 @@ const handlelogin = async (brokerid) => {
                       {key.charAt(0).toUpperCase() + key.slice(1)}
                     </th>
                   ))}
-                  <th className="px-6 py-3">Active</th>
+                  <th   className="px-6 py-3"> Active</th>
                   <th className="px-6 py-3">Login</th>
                   <th className="px-6 py-3">Edit</th>
                   <th className="px-6 py-3">Delete</th>
@@ -281,9 +281,9 @@ const handlelogin = async (brokerid) => {
                     <td className="px-6 py-4 text-center">
                       <Button
                         className="bg-blue-600 text-white py-2 text-sm rounded-md hover:bg-blue-700"
-                        onClick={() => handleactivebroker(index)}
+                        onClick={() => handleactivebroker(row.brokerid)}
                       >
-                        Active
+                        {row.active?"Deactivate":"Activate"}
                       </Button>
                     </td>
                     <td className="px-6 py-4 text-center">
