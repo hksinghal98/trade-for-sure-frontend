@@ -15,6 +15,8 @@ import debounce from "lodash.debounce";
 import { handleexchangerequest } from "../utility/Api";
 import{WSHOST} from "../utility/Host"
 import { Check, ChevronsUpDown } from "lucide-react"
+import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 const Marketwatch = () => {
@@ -31,6 +33,9 @@ const Marketwatch = () => {
         const [Symbol,setsymbol]= useState([])
         const [token,setToken]= useState([])
         const [data,setdata]= useState([])
+        const [instrument,setInstrument]= useState([])
+
+        
 
     const [messages, setMessages] = useState([]);
 
@@ -42,7 +47,12 @@ const Marketwatch = () => {
 
         }
     
-     const [instrument, setInstrument] = useState('EQ');
+
+
+
+     const navigate = useNavigate();
+     const location = useLocation();
+
 
 
     const fetchBrokers = async () => {
@@ -63,6 +73,23 @@ const Marketwatch = () => {
         fetchBrokers();
     
       }, []);
+    useEffect(() => {
+    const dummyBrokers = [
+      { NAME: "Broker1" },
+      { NAME: "Broker2" },
+      { NAME: "Broker3" },
+    ];
+    const dummySymbols = ["AAPL", "GOOGL", "MSFT", "TSLA", "AMZN"];
+    const dummyTableData = [
+      { id: 1, column1: "Row1-Col1", column2: "Row1-Col2", column3: "Row1-Col3" },
+      { id: 2, column1: "Row2-Col1", column2: "Row2-Col2", column3: "Row2-Col3" },
+      { id: 3, column1: "Row3-Col1", column2: "Row3-Col2", column3: "Row3-Col3" },
+    ];
+
+    setBrokers(dummyBrokers);
+    setsymbol(dummySymbols);
+    setTableDatafetch(dummyTableData);
+  }, []);
     
  const fetchSymbols = async (broker, exchange,instrument,symbol) => {
         setLoading(true);
@@ -122,7 +149,12 @@ const Marketwatch = () => {
   
       newSocket.onmessage = (event) => {
         console.log(event.data,'EVENT')   
-        // const receivedBlob = event.data
+        console.log('EVENT')   
+        
+        
+        const receivedBlob = event.data
+        const message = JSON.parse(receivedBlob);
+          setMessages(message.message)
 
         // const reader = new FileReader();
         // reader.onload = function () {
@@ -133,7 +165,6 @@ const Marketwatch = () => {
         // const message = JSON.parse(receivedData);
         // console.log('Received event :', message);
         // // Handle incoming messages
-          setMessages(event.data.message)
         // }
         
       // reader.readAsText(receivedBlob)
@@ -152,13 +183,14 @@ const Marketwatch = () => {
         newSocket.close();
       };
 
-    }, []);
+    }, [setMessages,messages]);
 
 
 
 
 
 
+        console.log(messages,'messages')
 
 
 
@@ -258,6 +290,23 @@ const handleSearch = debounce((value) => {
 
 
 
+const handleBuyOrSell = (data,action) => {
+  console.log(action,'action')
+    navigate("/OrderPunch",{
+        state: {
+            data: data,
+            action: action
+        },
+    });
+
+};
+
+const handleDelete = (id) => {
+  const updatedTableData = tableDatafetch.filter((item) => item.id !== id);
+  setTableDatafetch(updatedTableData);
+}
+
+
 return (
 <>
 <div>
@@ -265,9 +314,9 @@ return (
 <div className='flex justify-between flex-wrap gap-2'>
                         <div className='flex gap-2 flex-wrap'>
                           <div className='flex flex-col gap-2'>
-                            <Label className =" text-white text-base">Broker</Label>
+                            <Label className =" text-slate-800 text-base">Broker</Label>
                             <Select onValueChange={(value) => setBrokerName4(value)}>
-                            <SelectTrigger className="w-40 max-xs:w-20 bg-blue-800 text-white hover:bg-blue-700">
+                            <SelectTrigger className="w-40 max-xs:w-20 bg-sky-700/85 text-white hover:bg-sky-700">
                               <SelectValue placeholder="Broker" />
                             </SelectTrigger>
                             <SelectContent className="bg-white border border-blue-300">
@@ -291,11 +340,11 @@ return (
                           </Select>
                             </div>
                             <div className='flex flex-col gap-2'>
-                            <Label className =" text-white text-base">Exchange</Label>
+                            <Label className =" text-slate-800 text-base">Exchange</Label>
                             <Select
               onValueChange= {(value) => handleSelectIndex(value)}
             >
-              <SelectTrigger className="w-40 max-xs:w-20 bg-blue-800 text-white hover:bg-blue-700">
+              <SelectTrigger className="w-40 max-xs:w-20 bg-sky-700/85 text-white hover:bg-sky-700">
                 <SelectValue placeholder="Exchange" />
               </SelectTrigger>
               <SelectContent className="bg-white border border-blue-300">
@@ -327,7 +376,7 @@ return (
             </Select>
                             </div>
                             <div className='flex flex-col gap-2'>
-                            <Label className =" text-white text-base">Type</Label>
+                            <Label className =" text-slate-800 text-base">Type</Label>
                             <Select
               onValueChange={(value) => {
                 alertsymbol(value);
@@ -337,8 +386,8 @@ return (
               <SelectTrigger
                 className={`w-[130px] ${
                   isIndexEnabled
-                    ? "bg-blue-800 text-white hover:bg-blue-700"
-                    : "bg-gray-400 text-gray-600 cursor-not-allowed"
+                    ? "bg-blue-800  bg-sky-700/85 text-white hover:bg-sky-700"
+                    : "bg-gray-400 text-blak cursor-not-allowed"
                 }`}
               >
                 <SelectValue placeholder="Type" />
@@ -381,14 +430,14 @@ return (
                             
                 <div className='flex gap-2 items-end'>
                             <div className='flex flex-col gap-2'>
-                            <Label className =" text-white text-base">Symbol</Label>
+                            <Label className =" text-slate-800 text-base">Symbol</Label>
                             <Popover open={Comboopen} onOpenChange={setComboOpen}>
                               <PopoverTrigger asChild>
                                 <Button
                                   variant="outline"
                                   role="combobox"
                                   aria-expanded={Comboopen}
-                                  className="w-48 max-xs:w-20 justify-between bg-blue-700 text-white hover:bg-blue-600"
+                                  className="w-48 max-xs:w-20 justify-between bg-sky-700/85 text-white hover:bg-sky-700"
                                 >
                                   {selectsymbol || "Select Symbol"}
                                   {/* <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" /> */}
@@ -416,11 +465,11 @@ return (
                                               handletoken(index)
                                             }}
                                           >
-                                            <Check
+                                            {/* <Check
                                               className={`mr-2 h-4 w-4 ${
                                                 selectsymbol === symbol ? "opacity-100" : "opacity-0"
                                               }`}
-                                            />
+                                            /> */}
                                             {symbol}
                                           </CommandItem>
                                         ))
@@ -436,7 +485,7 @@ return (
                             </Popover>
                             </div>
                             <Button
-                                className={`bg-green-800 text-white hover:bg-green-700 w-44 max-xs:w-20 ${
+                                className={`bg-green-700/85 text-white hover:bg-green-700 w-44 max-xs:w-20 ${
                                     symbolCount >= 50 ? "opacity-50 cursor-not-allowed" : ""
                                 }`}
                                 onClick={handleAddSymbol}
@@ -451,13 +500,13 @@ return (
                         </div>
                         
                         </div>
-                        <div className="container mx-auto mt-5 bg-slate-800 p-4 rounded-lg">
-<div className="container mx-auto mt-6 p-6 bg-gray-100 rounded-lg shadow-md max-w-6xl">
-  <div className="overflow-x-auto h-72 w-full rounded-lg">
+                        <div className="container mx-auto mt-2 bg-transparent rounded-lg h-full">
+<div className="container mx-auto mt-6 p-6 h-full bg-gray-100 rounded-lg shadow-md max-w-6xl">
+  <div className="overflow-x-auto h-full w-full rounded-lg">
 {loading ? (
-<p className="text-center text-white">Loading...</p> // Loading message
-) : messages.length === 0 ? (
-<table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+<p className="text-center text-slate-800">Loading...</p> // Loading message
+) : tableDatafetch.length === 0 ? (
+<table className="w-full h-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
   <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
     <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
       <th scope="col" className="px-6 py-3">Column 1</th>
@@ -471,17 +520,17 @@ return (
   <tbody>
     {[...Array(5)].map((_, index) => (
       <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-        <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">-</td>
-        <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">-</td>
-        <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">-</td>
-<td scope="row" className="px-3 py-2 font-medium text-center text-gray-900 whitespace-nowrap dark:text-white">
-          <Button className="bg-green-800  text-white hover:bg-green-700">Buy</Button>
+        <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-slate-800">-</td>
+        <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-slate-800">-</td>
+        <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-slate-800">-</td>
+<td scope="row" className="px-3 py-2 font-medium text-center text-gray-900 whitespace-nowrap dark:text-slate-800">
+         <Button className="bg-green-600 text-white hover:bg-green-700">Buy</Button>
         </td>
-        <td scope="row" className="px-3 py-2 text-center font-medium text-gray-900 whitespace-nowrap dark:text-white">
-          <Button className="bg-red-800 text-white hover:bg-red-700">Sell</Button>
+        <td scope="row" className="px-3 py-2 text-center font-medium text-gray-900 whitespace-nowrap dark:text-slate-800">
+         <Button className="bg-red-600/90 text-white hover:bg-red-700">Sell</Button>
         </td>
-        <td scope="row" className="px-3 py-2 text-center font-medium text-gray-900 whitespace-nowrap dark:text-white">
-          <Button className="bg-red-800 text-white hover:bg-red-700">Delete</Button>    
+        <td scope="row" className="px-3 py-2 text-center font-medium text-gray-900 whitespace-nowrap dark:text-slate-800">
+           <Button className="bg-red-700 text-white hover:bg-red-700">Delete</Button>    
         </td>
       </tr>
     ))}
@@ -489,41 +538,71 @@ return (
 </table>
 ) : (
 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-  <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-
-    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-      {Object.keys(messages).map((key) => (
+<thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+    {messages.length > 0 &&
+      Object.keys(messages[0]).map((key) => (
         <th key={key} scope="col" className="px-6 py-3">
           {key.charAt(0).toUpperCase() + key.slice(1)}
         </th>
-        
       ))}
-      <th scope="col" className="px-6 py-3">Buy</th>
-      <th scope="col" className="px-6 py-3">Sell</th>
-      <th scope="col" className="px-6 py-3">Delete</th>
+    <th scope="col" className="px-6 py-3">Buy</th>
+    <th scope="col" className="px-6 py-3">Sell</th>
+    <th scope="col" className="px-6 py-3">Delete</th>
+  </tr>
+</thead>
+<tbody>
+  {messages.map((row, rowIndex) => (
+    <tr
+      key={rowIndex}
+      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
+    >
+      {Object.keys(row).map((key, colIndex) => (
+        <td
+          key={colIndex}
+          scope="row"
+          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-slate-800"
+        >
+          {row[key]}
+        </td>
+      ))}
+      {/* Add static action buttons */}
+      <td
+        scope="row"
+        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-slate-800"
+      >
+        <Button
+          className="bg-green-600 text-white hover:bg-green-700"
+          onClick={() => handleBuyOrSell(row,'BUY')}
+        >
+          Buy
+        </Button>
+      </td>
+      <td
+        scope="row"
+        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-slate-800"
+      >
+        <Button
+          className="bg-red-600/90 text-white hover:bg-red-700"
+          onClick={() => handleBuyOrSell(row,"SELL")}
+        >
+          Sell
+        </Button>
+      </td>
+      <td
+        scope="row"
+        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-slate-800"
+      >
+        <Button
+          className="bg-red-700 text-white hover:bg-red-700"
+          onClick={() => handleDelete(row.id)}
+        >
+          Delete
+        </Button>
+      </td>
     </tr>
-  </thead>
-  <tbody>
-    {messages.map((row) => (
-      <tr key={row.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-        {Object.values(row).map((value, index) => (
-          <td key={index} scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-            {value}
-          </td>
-        ))}
-
-        <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-          <Button className="bg-green-800 text-white hover:bg-green-700">Buy</Button>
-        </td>
-        <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-          <Button className="bg-red-800 text-white hover:bg-red-700">Sell</Button>
-        </td>
-        <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-          <Button className="bg-red-800 text-white hover:bg-red-700">Delete</Button>    
-        </td>
-      </tr>
-    ))}
-  </tbody>
+  ))}
+</tbody>
 </table>
 )}
 </div>

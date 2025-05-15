@@ -22,6 +22,8 @@ const ViewBroker = () => {
   const [password, setPassword] = useState("");
   const [tableDatafetch, setTableDatafetch] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [brokerid, setBrokerid] = useState(false);
+
 
   useEffect(() => {
     // Dummy data for testing
@@ -127,20 +129,17 @@ const handlelogin = async (brokerid) => {
 
   }
 
-
-
- 
-
-  const handleEdit = (index) => {
-    const payload = JSON.stringify({brokerid });
-        const type = "PUT"
-        const endpoint= "broker"
-        handleexchangerequest(type, payload, endpoint,true)
-    .then(response => {
-    console.log(response) 
-    
-    window.location.reload()
-    })
+  const handleEdit = (brokerid) => {
+    const rowData = tableDatafetch[brokerid];
+    console.log(rowData,'rowdata')
+    setBrokerName(rowData.brokername);
+    setapikey(rowData.apikey);
+    setsecretkey(rowData.secretkey);
+    setAuthToken(rowData.AuthToken);
+    setvendorcode(rowData.vendorcode);
+    setAccountNumber(rowData.accountnumber);
+    setPassword(rowData.password);
+    setBrokerid(rowData.brokerid)
   };
 
 
