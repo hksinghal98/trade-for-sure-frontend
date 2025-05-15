@@ -36,7 +36,7 @@ const ViewBroker = () => {
     const endpoint = "loadaccount";
     const payload = "broker=SHOONYA";
     setLoading(true); // Set loading to true before fetching data
-    handleexchangerequest(type, payload, endpoint, true)
+    handleexchangerequest(type, payload, endpoint, false)
       .then((response) => {
         console.log(response);
         setTableDatafetch(response || []); // Ensure response is an array

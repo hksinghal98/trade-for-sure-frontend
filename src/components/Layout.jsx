@@ -37,7 +37,7 @@ const Layout = () => {
         </div>
 <Accordion type="single" collapsible className='bg-gray-300 rounded-md '>
   <AccordionItem value="item-1">
-    <AccordionTrigger className=" text-black px-3">Active LOGS(press here)</AccordionTrigger>
+    <AccordionTrigger className=" text-black px-3">SYSTEM LOGS (Click here)</AccordionTrigger>
     <AccordionContent className=" text-black px-3 overflow-scroll h-44 scrollbar-hide">
       <ul >
         {dummyLogs.map((log) => (

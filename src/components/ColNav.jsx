@@ -111,27 +111,42 @@ const NavContent = ({ className = '' }) => {
               isActive={location.pathname === '/ViewBroker'}
               onClick={() => handleLinkClick('/ViewBroker')}
             >
-              Shoonya
+              SHOONYA
             </NavLink>
              <NavLink
               to="/ViewAngel"
               isActive={location.pathname === '/ViewAngel'}
               onClick={() => handleLinkClick('/ViewAngel')}
             >
-              Angel
+              ANGEL
             </NavLink>
+            <NavLink
+              to="/ViewAngel"
+              isActive={location.pathname === '/ViewAngel'}
+              onClick={() => handleLinkClick('/ViewAngel')}
+            >
+              DHAN
+            </NavLink>
+            <NavLink
+              to="/ViewAngel"
+              isActive={location.pathname === '/ViewAngel'}
+              onClick={() => handleLinkClick('/ViewAngel')}
+            >
+              FYRES
+            </NavLink>
+            
             
             
           </div>
         )}
       </div>
-      <NavLink
+      {/* <NavLink
         to="/Instrument"
         icon={CiDeliveryTruck}
         isActive={activeLink === '/Instrument'}
         onClick={() => handleLinkClick('/Instrument')}
         className="text-slate-800 hover:text-gray-700"
-      >Instrument</NavLink>
+      >Instrument</NavLink> */}
     </div>
   );
 };

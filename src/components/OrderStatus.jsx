@@ -53,6 +53,7 @@ const OrderStatus = () => {
     const [value, setValue] = React.useState(0);
     const [tableDatafetch2, setTableDatafetch2] = useState([]);
     const [tableDatafetch3, setTableDatafetch3] = useState([]);
+    const[filtereddata,setfiltereddata]= useState([])
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -61,41 +62,71 @@ const OrderStatus = () => {
 
 
 
-  // const fetchTableData = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const type = "GET";
-  //     const endpoint = "position"; // Replace with your API endpoint
-  //     const payload = "type=all"; // Example payload
-  //     const response = await handleexchangerequest(type, payload, endpoint, true);
-  //     if (response) {
-  //       setTableDatafetch(response);
-  //     } else {
-  //       console.error("Failed to fetch table data");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching table data:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+  const fetchTableData = async (t,setdata) => {
+    setLoading(true);
+    try {
+      const type = "GET";
+      const endpoint = "position"; // Replace with your API endpoint
+      const payload = "type="+t; // Example payload
+      const response = await handleexchangerequest(type, payload, endpoint, false);
+      if (response) {
+        setdata(response);
+        console.log(response,'response')
+      } else {
+        console.error("Failed to fetch table data");
+      }
+    } catch (error) {
+      console.error("Error fetching table data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // useEffect(() => {
-  //   fetchTableData();
-  // }, []);
+  useEffect(() => {
+    fetchTableData('all',setTableDatafetch);
+    fetchTableData('open',setTableDatafetch2);
+    fetchTableData('close',setTableDatafetch3);
 
 
+  }, []);
 
 
+  useEffect(()=>{
+
+      setfiltereddata(tableDatafetch)
+      console.log(tableDatafetch,'filteredAndSortedProjects')
+
+  },[tableDatafetch])
     
-      const handleSelectIndex = (value) => {
-         if (value === "Complete") {
-      // fetchSymbols(brokerName4, value)
-        setExchange(value)
+
+  const handleSelectIndex = (value) => {
+      if (value) {
+
+
+    const fill = tableDatafetch.filter((item) =>
+    item.orderstatus.toLowerCase().includes(value.toLowerCase())
+  );
+      console.log(fill,value.toLowerCase())
+
+      setfiltereddata(fill)
+
+     
 
 
     }
-  }
+
+    };
+
+
+    
+  //     const handleSelectIndex = (value) => {
+  //        if (value === "Complete") {
+  //     // fetchSymbols(brokerName4, value)
+  //       setExchange(value)
+
+
+  //   }
+  // }
   return (
     <>
      <Box sx={{ width: '100%' }}>
@@ -120,13 +151,13 @@ const OrderStatus = () => {
                   value="Complete"
                   className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
                 >
-                  Complete
+                  Completed
                 </SelectItem>
                 <SelectItem
-                  value="NFO"
+                  value="Rejected"
                   className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
                 >
-                  Reject
+                  Rejected
                 </SelectItem>
                 <SelectItem
                   value="Open"
@@ -147,22 +178,21 @@ const OrderStatus = () => {
           <div className="overflow-x-auto h-72 w-full rounded-lg">
   {loading ? (
     <p className="text-center text-white">Loading...</p> // Loading message
-  ) : tableDatafetch.length === 0 ? (
+  ) : filtereddata.length === 0 ? (
     <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
       <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
 
         <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-          <th className="px-6 py-3" scope="col">Column 1</th>
-          <th className="px-6 py-3" scope="col">Column 2</th>
-          <th className="px-6 py-3" scope="col">Column 3</th>
+          <th className="px-6 py-3" scope="col">No data found</th>
+      
         </tr>
       </thead>
       <tbody>
-        {[...Array(5)].map((_, index) => (
+        {[...Array(1)].map((_, index) => (
           <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
             <td scope="row" className="px-6 py-2 text-center">-</td>
-            <td scope="row" className="px-6 py-2 text-center">-</td>
-            <td scope="row" className="px-6 py-2 text-center">-</td>
+            {/* <td scope="row" className="px-6 py-2 text-center">-</td>
+            <td scope="row" className="px-6 py-2 text-center">-</td> */}
           </tr>
         ))}
       </tbody>
@@ -171,7 +201,7 @@ const OrderStatus = () => {
     <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
       <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
         <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-          {Object.keys(tableDatafetch[0]).map((key) => (
+          {Object.keys(filtereddata[0]).map((key) => (
             <th key={key} className="px-6 py-3" scope="col">
               {key.charAt(0).toUpperCase() + key.slice(1)}
             </th>
@@ -179,7 +209,7 @@ const OrderStatus = () => {
         </tr>
       </thead>
       <tbody>
-        {tableDatafetch.map((row) => (
+        {filtereddata.map((row) => (
           <tr key={row.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
             {Object.values(row).map((value, index) => (
               <td key={index} className="px-6 py-2 text-center">
@@ -199,7 +229,8 @@ const OrderStatus = () => {
         Open Position
         {/* Render the Select component only when the "Open Position" tab is selected */}
 
-      <div className="overflow-x-auto h-72 w-full rounded-lg">
+           <div className='container mx-auto mt-6 p-6 bg-trasparent rounded-lg max-w-6xl'>
+          <div className="overflow-x-auto h-72 w-full rounded-lg">
   {loading ? (
     <p className="text-center text-white">Loading...</p> // Loading message
   ) : tableDatafetch2.length === 0 ? (
@@ -207,27 +238,26 @@ const OrderStatus = () => {
       <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
 
         <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-          <th className="px-6 py-3" scope="col">Column 1</th>
-          <th className="px-6 py-3" scope="col">Column 2</th>
-          <th className="px-6 py-3" scope="col">Column 3</th>
+          <th className="px-6 py-3" scope="col">No data found</th>
+      
         </tr>
       </thead>
       <tbody>
-        {[...Array(5)].map((_, index) => (
+        {[...Array(1)].map((_, index) => (
           <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-            <td className="px-6 py-2 text-center">-</td>
-            <td className="px-6 py-2 text-center">-</td>
-            <td className="px-6 py-2 text-center">-</td>
+            <td scope="row" className="px-6 py-2 text-center">-</td>
+            {/* <td scope="row" className="px-6 py-2 text-center">-</td>
+            <td scope="row" className="px-6 py-2 text-center">-</td> */}
           </tr>
         ))}
       </tbody>
     </table>
   ) : (
-    <table className="table-auto border-collapse border border-gray-300 w-full overflow-hidden">
+    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
       <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
         <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
           {Object.keys(tableDatafetch2[0]).map((key) => (
-            <th key={key} scope="col" className="px-6 py-3">
+            <th key={key} className="px-6 py-3" scope="col">
               {key.charAt(0).toUpperCase() + key.slice(1)}
             </th>
           ))}
@@ -247,39 +277,42 @@ const OrderStatus = () => {
     </table>
   )}
 </div>
+</div>
+ 
     
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         Close Position
 
-        <div className="overflow-x-auto h-72 w-full rounded-lg">
+             <div className='container mx-auto mt-6 p-6 bg-trasparent rounded-lg max-w-6xl'>
+          <div className="overflow-x-auto h-72 w-full rounded-lg">
   {loading ? (
     <p className="text-center text-white">Loading...</p> // Loading message
   ) : tableDatafetch3.length === 0 ? (
     <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
       <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+
         <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-          <th scope="col" className="px-6 py-3">Column 1</th>
-          <th scope="col" className="px-6 py-3">Column 2</th>
-          <th scope="col" className="px-6 py-3">Column 3</th>
+          <th className="px-6 py-3" scope="col">No data found</th>
+      
         </tr>
       </thead>
       <tbody>
-        {[...Array(5)].map((_, index) => (
-           <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-            <td className="px-6 py-2 text-center">-</td>
-            <td className="px-6 py-2 text-center">-</td>
-            <td className="px-6 py-2 text-center">-</td>
+        {[...Array(1)].map((_, index) => (
+          <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+            <td scope="row" className="px-6 py-2 text-center">-</td>
+            {/* <td scope="row" className="px-6 py-2 text-center">-</td>
+            <td scope="row" className="px-6 py-2 text-center">-</td> */}
           </tr>
         ))}
       </tbody>
     </table>
   ) : (
-    <table className="table-auto border-collapse border border-gray-300 w-full overflow-hidden">
-      <thead>
+    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+      <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
         <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
           {Object.keys(tableDatafetch3[0]).map((key) => (
-            <th key={key} className="border border-gray-300 px-4 py-2">
+            <th key={key} className="px-6 py-3" scope="col">
               {key.charAt(0).toUpperCase() + key.slice(1)}
             </th>
           ))}
@@ -289,7 +322,7 @@ const OrderStatus = () => {
         {tableDatafetch3.map((row) => (
           <tr key={row.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
             {Object.values(row).map((value, index) => (
-              <td key={index} scope="row" className="px-6 py-2 text-center">
+              <td key={index} className="px-6 py-2 text-center">
                 {value}
               </td>
             ))}
@@ -299,7 +332,8 @@ const OrderStatus = () => {
     </table>
   )}
 </div>
-      </CustomTabPanel>
+</div>
+    </CustomTabPanel>
     </Box>
     </>
   )

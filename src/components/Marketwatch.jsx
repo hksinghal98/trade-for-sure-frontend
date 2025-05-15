@@ -79,7 +79,7 @@ const Marketwatch = () => {
       { NAME: "Broker2" },
       { NAME: "Broker3" },
     ];
-    const dummySymbols = ["AAPL", "GOOGL", "MSFT", "TSLA", "AMZN"];
+    const dummySymbols = [];
     const dummyTableData = [
       { id: 1, column1: "Row1-Col1", column2: "Row1-Col2", column3: "Row1-Col3" },
       { id: 2, column1: "Row2-Col1", column2: "Row2-Col2", column3: "Row2-Col3" },
@@ -214,6 +214,12 @@ const handleSelectIndex = (value) => {
      if (brokerName4) {
   // fetchSymbols(brokerName4, value)
     setExchange(value)
+    if (value=='NSE'){
+  setInstrument('EQ')
+      
+
+    }
+
   // ;
 
 } else {
