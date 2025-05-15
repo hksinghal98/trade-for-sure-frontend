@@ -95,16 +95,15 @@ const ViewBroker = ({ defaultBrokerName = "Shoonya" }) => {
 
   }
 
-  const handleEdit = (index) => {
-    const payload = JSON.stringify({brokerid });
-        const type = "PUT"
-        const endpoint= "broker"
-        handleexchangerequest(type, payload, endpoint,true)
-    .then(response => {
-    console.log(response) 
-    
-    window.location.reload()
-    })
+  const handleEdit = (brokerid) => {
+    const rowData = tableDatafetch[brokerid];
+    setBrokerName(rowData.brokerName);
+    setApiKey(rowData.apiKey);
+    setApiSecret(rowData.apiSecret);
+    setAuthToken(rowData.authToken);
+    setVendorCode(rowData.vendorCode);
+    setAccountNumber(rowData.accountNumber);
+    setPassword(rowData.password);
   };
 
   const handleadelete=(brokerid)=>{

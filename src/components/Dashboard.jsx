@@ -398,225 +398,14 @@ const handleorders= async (x) => {
     
   return (
     <>
-    <div className="container-fluid bg-slate-700 h-screen flex flex-col gap-4 min-h-screen  px-4 sm:px-6 lg:px-8">
+    <div className="container-fluid bg-transparent h-screen flex flex-col gap-4 min-h-screen  px-4 sm:px-6 lg:px-8">
         <div className='flex gap-5 flex-wrap pt-3 items-center'>
-        {/* <Dialog open={AddBropen} onOpenChange={setAddBrOpen}>
-      <DialogTrigger asChild>
-        <Button onClick={() => setAddBrOpen(true)}>Add Broker</Button>
-      </DialogTrigger>
-
-      <DialogContent className=" bg-zinc-400 w-full max-w-md mx-auto">
-        <DialogHeader>
-          <DialogTitle>Add Broker</DialogTitle>
-          <DialogDescription>
-            Enter the broker details below:
-          </DialogDescription>
-        </DialogHeader>
-        <div className="flex gap-2 items-center justify-between w-full">
-        <Label htmlFor="broker-name" className=' mr-2'>Select Broker</Label>
-    <Select onValueChange ={(value) => setBrokerName1(value)}>
-  <SelectTrigger className="w-[180px] bg-stone-700 text-white hover:bg-stone-600" 
-  >
-    <SelectValue placeholder="Broker Name" / >
-  </SelectTrigger>
-  <SelectContent className="bg-white border border-blue-300">
-    {brokers && brokers.length > 0 ? (
-      brokers.map((broker, index) => (
-    <SelectItem
-      value={broker.NAME}
-
-      className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-    >
-      {broker.NAME}
-    </SelectItem>
-      ))
-    ):(
-    <SelectItem
-      className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-    >
-      {loading ? "Loading brokers..." : "No brokers available"}
-    </SelectItem>
-    )}
-  </SelectContent>
-</Select>
-        </div>
-        <div className="flex gap-2 items-center justify-between w-full">
-        <Label htmlFor="broker-name" className=' mr-2'>API Key</Label>
-        <input
-          type="text"
-          placeholder="API Key"
-          className="border p-1 rounded items-center placeholder:text-sm"
-          value={apikey}
-          onChange={(e) => setapikey(e.target.value)}
-        />
-        </div>
-        <div className="flex gap-2 items-center justify-between w-full">
-        <Label htmlFor="broker-name" className=' mr-2'>API Secret</Label>
-        <input
-          type="Password"
-          placeholder="API Secret"
-          className="border p-1 rounded items-center placeholder:text-sm"
-          value={secretkey}
-        onChange={(e) => setsecretkey(e.target.value)}
-        />
-        </div>
-       
- 
-        <div className="flex gap-2 items-center justify-between w-full">
-        <Label htmlFor="broker-name" className=' mr-2'>AuthToken Token</Label>
-        <input
-          type="text"
-          placeholder="AuthToken Token"
-          className="border p-1 rounded items-center placeholder:text-sm"
-          value={AuthToken}
-        onChange={(e) => setAuthToken(e.target.value)}
-        />
-        </div>
-<div className="flex gap-2 items-center justify-between w-full">
-        <Label htmlFor="broker-name" className=' mr-2'>Vendor_code</Label>
-        <input
-          type="text"
-          placeholder="Vendor_code"
-          className="border p-1 rounded items-center placeholder:text-sm"
-          value={vendorcode}
-        onChange={(e) => setvendorcode(e.target.value)}
-        />
-        </div>
-
-        <div className="flex gap-2 items-center justify-between w-full">
-        <Label htmlFor="broker-name" className=' mr-2'>LOGIN ID</Label>
-        <input
-          type="text"
-          placeholder="LOGIN ID"
-          className="border p-1 rounded items-center placeholder:text-sm"
-          value={accountnumber}
-        onChange={(e) => setaccountnumber(e.target.value)}
-        />
-        </div>
-
-
-        <div className="flex gap-2 items-center justify-between w-full">
-        <Label htmlFor="broker-name" className=' mr-2'>Password</Label>
-        <input
-          type="Password"
-          placeholder="Password"
-          className="border p-1 rounded items-center placeholder:text-sm"
-          value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        />
-        </div>
-
-
-       
-
-        <Button className = " bg-green-700 hover:bg-green-900"  onClick={()=>handleexchange()}> Save</Button>
-        
-
-
-      </DialogContent>
-    </Dialog>
-        
-
-
-
-<Dialog open={Loginopen} onOpenChange={setLoginOpen}>
-      <DialogTrigger asChild>
-        <Button onClick={() => setLoginOpen(true)}>Broker Login</Button>
-      </DialogTrigger>
-
-      <DialogContent className=" bg-zinc-400 w-2/5">
-        <DialogHeader>
-          <DialogTitle>Broker Login</DialogTitle>
-          <DialogDescription>
-            Broker Login
-          </DialogDescription>
-        </DialogHeader>
-        <div className="flex gap-2 items-center justify-between w-full">
-        <Label htmlFor="broker-name" className=' mr-2'>Select Broker</Label>
-                <Select onValueChange={(value) => setBrokerName2(value)}>
-  <SelectTrigger className="w-[180px] bg-stone-700 text-white hover:bg-stone-600">
-    <SelectValue placeholder="Market" / >
-  </SelectTrigger>
-  <SelectContent className="bg-white border border-blue-300">
-    {brokers && brokers.length > 0 ? (
-      brokers.map((broker, index) => (
-        <SelectItem
-          key={index}
-          value={broker.NAME}
-          className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-        >
-          {broker.NAME}
-        </SelectItem>
-      ))
-    ) : (
-      <SelectItem value="loading" disabled>
-        {loading ? "Loading brokers..." : "No brokers available"}
-      </SelectItem>
-    )}
-  </SelectContent>
-</Select>
-        </div>
-                <Button className = " bg-green-700 hover:bg-green-900" onClick={()=>handlelogin()}> LogIn</Button>
-
-
-
-      </DialogContent>
-    </Dialog>
-    <Dialog open={Logoutopen} onOpenChange={setLogoutOpen}>
-      <DialogTrigger asChild>
-        <Button onClick={() => setLogoutOpen(true)}>Broker Logout</Button>
-      </DialogTrigger>
-
-      <DialogContent className=" bg-zinc-400 w-2/5">
-        <DialogHeader>
-          <DialogTitle>Broker Logout</DialogTitle>
-          <DialogDescription>
-            Broker Logout
-          </DialogDescription>
-        </DialogHeader>
-        <div className="flex gap-2 items-center justify-between w-full">
-        <Label htmlFor="broker-name" className=' mr-2'>Select Broker</Label>
-        <Select onValueChange={(value) => setBrokerName3(value)}>
-  <SelectTrigger className="w-[180px] bg-stone-700 text-white hover:bg-stone-600"
-  
-  >
-    <SelectValue placeholder="Market" />
-  </SelectTrigger>
-  <SelectContent className="bg-white border border-blue-300">
-   {brokers && brokers.length > 0 ? (
-      brokers.map((broker, index) => (
-        <SelectItem
-          key={index}
-          value={broker.NAME}
-          className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-        >
-          {broker.NAME}
-        </SelectItem>
-      ))
-    ) : (
-      <SelectItem value="loading" disabled>
-        {loading ? "Loading brokers..." : "No brokers available"}
-      </SelectItem>
-    )}
-  </SelectContent>
-</Select>
-        </div>
-        
-        <Button className = " bg-green-700 hover:bg-green-900" onClick={()=>handlelogout()}> LogOut</Button>
-
-
-
-      </DialogContent>
-    </Dialog>
-
-
-        <Button onClick={() => dashlogout()} className ="  bg-blue-600 text-white hover:bg-blue-700">Dashboard LogOut</Button> */}
         <div className='flex justify-between flex-wrap gap-2'>
                         <div className='flex gap-2 flex-wrap'>
                           <div className='flex flex-col gap-2'>
-                            <Label className =" text-white text-base">Broker</Label>
+                            <Label className =" text-slate-800 text-base">Broker</Label>
                             <Select onValueChange={(value) => setBrokerName4(value)}>
-                            <SelectTrigger className="w-40 max-xs:w-20 bg-blue-800 text-white hover:bg-blue-700">
+                            <SelectTrigger className="w-40 max-xs:w-20 bg-sky-700/85 text-white hover:bg-sky-700">
                               <SelectValue placeholder="Broker" />
                             </SelectTrigger>
                             <SelectContent className="bg-white border border-blue-300">
@@ -640,11 +429,11 @@ const handleorders= async (x) => {
                           </Select>
                             </div>
                             <div className='flex flex-col gap-2'>
-                            <Label className =" text-white text-base">Exchange</Label>
+                            <Label className =" text-slate-800 text-base">Exchange</Label>
                             <Select
               onValueChange= {(value) => handleSelectIndex(value)}
             >
-              <SelectTrigger className="w-40 max-xs:w-20 bg-blue-800 text-white hover:bg-blue-700">
+              <SelectTrigger className="w-40 max-xs:w-20 bg-sky-700/85 text-white hover:bg-sky-700">
                 <SelectValue placeholder="Exchange" />
               </SelectTrigger>
               <SelectContent className="bg-white border border-blue-300">
@@ -676,7 +465,7 @@ const handleorders= async (x) => {
             </Select>
                             </div>
                             <div className='flex flex-col gap-2'>
-                            <Label className =" text-white text-base">Type</Label>
+                            <Label className =" text-slate-800 text-base">Type</Label>
                             <Select
               onValueChange={(value) => {
                 alertsymbol(value);
@@ -686,7 +475,7 @@ const handleorders= async (x) => {
               <SelectTrigger
                 className={`w-[130px] ${
                   isIndexEnabled
-                    ? "bg-blue-800 text-white hover:bg-blue-700"
+                    ? "bg-sky-700/85 text-white hover:bg-sky-700"
                     : "bg-gray-400 text-gray-600 cursor-not-allowed"
                 }`}
               >
@@ -737,7 +526,7 @@ const handleorders= async (x) => {
                                   variant="outline"
                                   role="combobox"
                                   aria-expanded={Comboopen}
-                                  className="w-48 max-xs:w-20 justify-between bg-blue-700 text-white hover:bg-blue-600"
+                                  className="w-48 max-xs:w-20 justify-between bg-sky-700/85 text-white hover:bg-sky-600"
                                 >
                                   {selectsymbol || "Select Symbol"}
                                   {/* <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" /> */}
@@ -790,26 +579,26 @@ const handleorders= async (x) => {
                         </div>
         </div>
 
-        <div className="container mx-auto mt-5 bg-slate-800 p-4 rounded-lg">
+        <div className="container mx-auto mt-6 p-6 bg-gray-100 rounded-lg shadow-md max-w-6xl">
 
       <div className="overflow-x-auto h-72 w-full rounded-lg">
   {loading ? (
     <p className="text-center text-white">Loading...</p> // Loading message
   ) : tableDatafetch.length === 0 ? (
-    <table className="table-auto border-collapse border text-gray-400 border-gray-300 w-full overflow-hidden">
-      <thead>
+    <table className="min-w-full table-auto">
+      <thead className="text-xs text-gray-700 uppercase bg-gray-350 dark:bg-gray-700 dark:text-gray-400">
         <tr className="bg-gray-200">
-          <th className="border border-gray-300 px-4 py-2 text-gray-700">Column 1</th>
-          <th className="border border-gray-300 px-4 py-2 text-gray-700">Column 2</th>
-          <th className="border border-gray-300 px-4 py-2 text-gray-700">Column 3</th>
+          <th className="px-3 py-2">Column 1</th>
+          <th className="px-3 py-2">Column 2</th>
+          <th className="px-3 py-2">Column 3</th>
         </tr>
       </thead>
       <tbody>
         {[...Array(5)].map((_, index) => (
           <tr key={index} className="text-center">
-            <td className="border border-gray-300 px-4 py-2 text-gray-400">-</td>
-            <td className="border border-gray-300 px-4 py-2 text-gray-400">-</td>
-            <td className="border border-gray-300 px-4 py-2 text-gray-400">-</td>
+            <td className="px-3 py-2 text-center">-</td>
+            <td className="px-3 py-2 text-center">-</td>
+            <td className="px-3 py-2 text-center">-</td>
           </tr>
         ))}
       </tbody>

@@ -37,20 +37,21 @@ import {
   DialogTrigger,
 } from "../components/ui/dialog";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import debounce from "lodash.debounce";
 
 const OrderPunch = () => {
+  const location = useLocation();
+  const passedState = location.state || {};
+
   const [placeorderopen, setPlaceOrderOpen] = useState(false);
   const [dialogTheme, setDialogTheme] = useState("");
-  const [brokerName4, setBrokerName4] = useState("");
   const [loading, setLoading] = useState("");
   const [Comboopen, setComboOpen] = useState(false);
-  const [selectsymbol, setselectsymbol] = useState("");
   const [Symbol, setsymbol] = useState([]);
   const [brokers, setBrokers] = useState([]);
   const [ordertype, setOrdertype] = useState("");
   const [product, setProduct] = useState("");
-  const [side, setside] = useState("");
   const [brokerName, setBrokerName] = useState("");
   const [orderType, setOrderType] = useState("");
   const [Loginopen, setLoginOpen] = useState(false);
@@ -59,8 +60,18 @@ const OrderPunch = () => {
   const [quantity, setQuantity] = useState("");
   const [isIndexEnabled, setIsIndexEnabled] = useState(true);
   const [tableDatafetch, setTableDatafetch] = useState([]);
-  const[exchange,setExchange]= useState("")
-  
+
+  const [brokerName4, setBrokerName4] = useState(passedState.broker || "");
+  const [exchange, setExchange] = useState(passedState.exchange || "");
+  const [instrument, setInstrument] = useState(passedState.type || "");
+  const [selectsymbol, setselectsymbol] = useState(passedState.symbol || "");
+  const [side, setside] = useState(passedState.action || ""); // "Buy" or "Sell"
+
+  useEffect(() => {
+    if (passedState.action) {
+      setside(passedState.action.toUpperCase());
+    }
+  }, [passedState]);
 
 
   const dummyLogs = [
@@ -175,7 +186,7 @@ const OrderPunch = () => {
     <>
     <div className="flex flex-col h-screen">
       
-      <div className="flex items-center gap-6 p-6 pt-0 bg-transparent text-white">
+      <div className="flex items-center gap-6 p-6 pt-0 bg-transparent text-slate-800">
         <div className="flex flex-col gap-4 h-full"> 
         <div className="flex flex-wrap items-start gap-4">
 
@@ -196,10 +207,10 @@ const OrderPunch = () => {
                   Select Broker
                 </Label>
                 <Select onValueChange={(value) => setBrokerName2(value)}>
-                  <SelectTrigger className="w-[180px] bg-stone-700 text-white hover:bg-stone-600">
+                  <SelectTrigger className="w-[180px] bg-stone-700 text-slate-800 hover:bg-stone-600">
                     <SelectValue placeholder="Market" />
                   </SelectTrigger>
-                  <SelectContent className="bg-white border border-blue-300">
+                  <SelectContent className="bg-slate-800text-slate-800 border border-blue-300">
                     {brokers && brokers.length > 0 ? (
                       brokers.map((broker, index) => (
                         <SelectItem
@@ -233,17 +244,17 @@ const OrderPunch = () => {
         {/* Buy/Sell Radio Buttons */}
 
         <div
-          className={`flex outline-1 outline w-3/4 items-center justify-center p-4 rounded-lg ${
+          className={`flex outline-1 bg-neutral-300/20 outline w-4/5 items-center justify-center p-4 rounded-lg ${
             side === "BUY"
               ? "outline-green-500 shadow-green-500/75 shadow-xl"
               : side === "SELL"
               ? "outline-red-500 shadow-xl shadow-red-500"
-              : "outline-white"
+              : "outline-slate-800text-slate-800"
           }`}
         >
           
           <div className="flex flex-col gap-2 w-full items-center justify-center">
-            <h1 className="text-3xl font-bold text-slate-300">Order Punch</h1>
+            <h1 className="text-3xl font-bold text-slate-800">Order Punch</h1>
             <div className="flex gap-3 w-full ite">
               
               <div className="flex gap-6">
@@ -272,7 +283,7 @@ const OrderPunch = () => {
               </div>
 
               <div className="flex flex-col gap-2 w-full items-center ">
-                  <Label className="text-lg text-white text-center">Exchange</Label>
+                  <Label className="text-lg text-slate-800 text-center">Exchange</Label>
                 <div className="flex gap-6">
                   <Label className="flex items-center gap-2">
                     <input
@@ -282,9 +293,9 @@ const OrderPunch = () => {
                       defaultChecked
                       // checked={exchange === "NFO"}
                       onChange={(e) => handleSelectIndex(e.target.value)}
-                      className="w-4 h-4"
+                      className="w-4 h-4 "
                     />
-                    <span className="text-lg text-white">NFO</span>
+                    <span className="text-lg text-slate-800">NFO</span>
                   </Label>
                   <div className="flex gap-6">
                     <Label className="flex items-center gap-2">
@@ -297,7 +308,7 @@ const OrderPunch = () => {
                         onChange={(e) => handleSelectIndex(e.target.value)}
                         className="w-4 h-4"
                       />
-                      <span className="text-lg text-white">NSE</span>
+                      <span className="text-lg text-slate-800">NSE</span>
                     </Label>
                     <Label className="flex items-center gap-2">
                       <input
@@ -308,7 +319,7 @@ const OrderPunch = () => {
                         onChange={(e) => handleSelectIndex(e.target.value)}
                         className="w-4 h-4"
                       />
-                      <span className="text-lg text-white">BSE</span>
+                      <span className="text-lg text-slate-800">BSE</span>
                     </Label>
                     <Label className="flex items-center gap-2">
                       <input
@@ -319,7 +330,7 @@ const OrderPunch = () => {
                         onChange={(e) => handleSelectIndex(e.target.value)}
                         className="w-4 h-4"
                       />
-                      <span className="text-lg text-white">BFO</span>
+                      <span className="text-lg text-slate-800">BFO</span>
                     </Label>
                     <Label className="flex items-center gap-2">
                       <input
@@ -330,7 +341,7 @@ const OrderPunch = () => {
                         onChange={(e) => handleSelectIndex(e.target.value)}
                         className="w-4 h-4"
                       />
-                      <span className="text-lg text-white">MCX</span>
+                      <span className="text-lg text-slate-800">MCX</span>
                     </Label>
                   </div>
                 </div>
@@ -338,7 +349,7 @@ const OrderPunch = () => {
 
               {/* Entry Price */}
               <div className='flex flex-col gap-2'>
-                                          <Label className =" text-white text-base">Type</Label>
+                                          <Label className =" text-slate-800 text-base">Type</Label>
                                           <Select
                             onValueChange={(value) => {
                               alertsymbol(value);
@@ -348,13 +359,13 @@ const OrderPunch = () => {
                             <SelectTrigger
                               className={`w-[130px] ${
                                 isIndexEnabled
-                                  ? "bg-blue-800 text-white hover:bg-blue-700"
+                                  ? "bg-sky-700/85 text-white hover:bg-sky-700"
                                   : "bg-gray-400 text-gray-600 cursor-not-allowed"
                               }`}
                             >
                               <SelectValue placeholder="Type" />
                             </SelectTrigger>
-                            <SelectContent className="bg-white border border-blue-300">
+                            <SelectContent className="bg-white text-slate-800 border border-blue-300">
                               
                               <SelectItem
                                 value="FUTSTK"
@@ -386,10 +397,10 @@ const OrderPunch = () => {
                                           </div>
                                           <div className="flex flex-col gap-2">
                                                     <Select onValueChange={(value) => setBrokerName4(value)}>
-            <SelectTrigger className="w-36 max-xs:w-20 bg-blue-800 text-white hover:bg-blue-700">
+            <SelectTrigger className="w-36 max-xs:w-20 bg-sky-700/85 text-white hover:bg-sky-700">
               <SelectValue placeholder="Select Account" />
             </SelectTrigger>
-            <SelectContent className="bg-white border border-blue-300">
+            <SelectContent className="bg-slate-800text-slate-800 border border-blue-300">
               {brokers && brokers.length > 0 ? (
                 brokers.map((broker, index) => (
                   <SelectItem
@@ -407,19 +418,19 @@ const OrderPunch = () => {
               )}
             </SelectContent>
           </Select>
-          <Button className="w-36">Select All</Button>
+          <Button className="w-36 bg-sky-700/85 hover:bg-sky-700">Select All</Button>
           </div>
               
             </div>
             <div className="flex gap-2 w-full items-center ">
               <div className="flex flex-col gap-2 w-full ">
-                <Label className="text-lg text-white">Quantity</Label>
+                <Label className="text-lg text-slate-800">Quantity</Label>
                 <div className="flex items-center gap-2">
                   <Button
                     onClick={() =>
                       setQuantity((prev) => Math.max(0, Number(prev) - 1))
                     } // Convert to number before decrementing
-                    className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+                    className="bg-red-500 text-slate-800 px-4 py-2 rounded-md hover:bg-red-600"
                   >
                     -
                   </Button>
@@ -429,19 +440,19 @@ const OrderPunch = () => {
                     value={quantity}
                     onChange={(e) => setQuantity(Number(e.target.value))} // Ensure the value is a number
                     placeholder="Enter quantity"
-                    className="w-full p-2 border border-gray-300 rounded-md text-center"
+                    className="w-full p-2 border border-gray-300 rounded-md text-center bg-slate-300/65 shadow-md"
                   />
                   {/* Increment Button */}
                   <Button
                     onClick={() => setQuantity((prev) => Number(prev) + 1)} // Convert to number before incrementing
-                    className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+                    className="bg-green-500 text-slate-800 px-4 py-2 rounded-md hover:bg-green-600"
                   >
                     +
                   </Button>
                 </div>
               </div>
               <div className="flex flex-col gap-2">
-                <Label className="text-white text-base">Symbol</Label>
+                <Label className="text-slate-800 text-base">Symbol</Label>
                 <Popover open={Comboopen} onOpenChange={setComboOpen}>
                   <PopoverTrigger asChild>
                     <Button
@@ -503,13 +514,13 @@ const OrderPunch = () => {
                 </Popover>
               </div>
               <div className="flex flex-col gap-2 w-full ">
-                <Label className="text-lg text-white">Entry Price</Label>
+                <Label className="text-lg text-slate-800">Entry Price</Label>
                 <Input
                   type="number"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
                   placeholder="Enter price"
-                  className="w-full p-2 border border-gray-300 rounded-md"
+                  className="w-full p-2 border border-gray-300 rounded-md bg-slate-300/65 shadow-md"
                 />
               </div>
               
@@ -519,7 +530,7 @@ const OrderPunch = () => {
             <div className="flex gap-2 w-full ">
               <div className="flex flex-col gap-2 w-full ">
               {/* Product */}
-                <Label className="text-lg text-white">Product</Label>
+                <Label className="text-lg text-slate-800">Product</Label>
                 <div className="flex gap-6">
                   <Label className="flex items-center gap-2">
                     <input
@@ -530,7 +541,7 @@ const OrderPunch = () => {
                       onChange={(e) => setProduct(e.target.value)}
                       className="w-4 h-4"
                     />
-                    <span className="text-lg text-white">Intraday</span>
+                    <span className="text-lg text-slate-800">Intraday</span>
                   </Label>
                   <div className="flex gap-6">
                     <Label className="flex items-center gap-2">
@@ -542,7 +553,7 @@ const OrderPunch = () => {
                         onChange={(e) => setProduct(e.target.value)}
                         className="w-4 h-4"
                       />
-                      <span className="text-lg text-white">Carry Forward</span>
+                      <span className="text-lg text-slate-800">Carry Forward</span>
                     </Label>
                     <Label className="flex items-center gap-2">
                       <input
@@ -553,13 +564,13 @@ const OrderPunch = () => {
                         onChange={(e) => setProduct(e.target.value)}
                         className="w-4 h-4"
                       />
-                      <span className="text-lg text-white">Delivery</span>
+                      <span className="text-lg text-slate-800">Delivery</span>
                     </Label>
                   </div>
                 </div>
               </div>
               <div className="flex flex-col gap-2 w-full ">
-                <Label className="text-lg text-white">Order Type</Label>
+                <Label className="text-lg text-slate-800">Order Type</Label>
                 <div className="flex gap-6">
                   <Label className="flex items-center gap-2">
                     <input
@@ -570,7 +581,7 @@ const OrderPunch = () => {
                       onChange={(e) => setOrderType(e.target.value)}
                       className="w-4 h-4"
                     />
-                    <span className="text-lg text-white">Limit</span>
+                    <span className="text-lg text-slate-800">Limit</span>
                   </Label>
                   <Label className="flex items-center gap-2">
                     <input
@@ -581,7 +592,7 @@ const OrderPunch = () => {
                       onChange={(e) => setOrderType(e.target.value)}
                       className="w-4 h-4"
                     />
-                    <span className="text-lg text-white">Market</span>
+                    <span className="text-lg text-slate-800">Market</span>
                   </Label>
                 </div>
               </div>
@@ -605,7 +616,7 @@ const OrderPunch = () => {
 
       {/* Table Section */}
       
-      <div className="overflow-x-auto h-56 text-black w-full rounded-lg bg-white p-4">
+      <div className="overflow-x-auto h-56 text-black w-full rounded-lg bg-gray-200 text-slate-800 p-4">
         <ul>
         {dummyLogs.map((log) => (
           <li key={log.id}>[{log.timestamp}] {log.message}</li> // Adjust based on your data structure

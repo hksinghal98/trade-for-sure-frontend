@@ -50,6 +50,8 @@ const OrderStatus = () => {
     const [brokerName4, setBrokerName4] = React.useState(null);
     const [exchange, setExchange] = React.useState(null);
     const [value, setValue] = React.useState(0);
+    const [tableDatafetch2, setTableDatafetch2] = useState([]);
+    const [tableDatafetch3, setTableDatafetch3] = useState([]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -72,18 +74,18 @@ const OrderStatus = () => {
      <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="Order Book" className='text-white' {...a11yProps(0)} />
-          <Tab label="Open Position"className='text-white' {...a11yProps(1)} />
-          <Tab label="Close Position"className='text-white' {...a11yProps(2)} />
+          <Tab label="Order Book" className='text-slate-900 font-bold' {...a11yProps(0)} />
+          <Tab label="Open Position"className='text-slate-900 font-bold' {...a11yProps(1)} />
+          <Tab label="Close Position"className='text-slate-900 font-bold' {...a11yProps(2)} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        Order Book
+        <span>Order Book</span>
         {/* Render the Select component only when the "Order Book" tab is selected */}
         <div className='flex flex-wrap items-center justify-around gap-4'>
           {value === 0 && (
             <Select onValueChange={(value) => handleSelectIndex(value)}>
-              <SelectTrigger className="w-40 max-xs:w-20 bg-blue-800 text-white hover:bg-blue-700">
+              <SelectTrigger className="w-40 max-xs:w-20 bg-sky-700/85 text-white hover:bg-sky-700">
                 <SelectValue placeholder="Select Status" />
               </SelectTrigger>
               <SelectContent className="bg-white border border-blue-300">
@@ -114,34 +116,36 @@ const OrderStatus = () => {
               </SelectContent>
             </Select>
           )}
+          <div className='container mx-auto mt-6 p-6 bg-trasparent rounded-lg max-w-6xl'>
           <div className="overflow-x-auto h-72 w-full rounded-lg">
   {loading ? (
     <p className="text-center text-white">Loading...</p> // Loading message
   ) : tableDatafetch.length === 0 ? (
-    <table className="table-auto border-collapse border text-gray-400 border-gray-300 w-full overflow-hidden">
-      <thead>
-        <tr className="bg-gray-200">
-          <th className="border border-gray-300 px-4 py-2 text-gray-700">Column 1</th>
-          <th className="border border-gray-300 px-4 py-2 text-gray-700">Column 2</th>
-          <th className="border border-gray-300 px-4 py-2 text-gray-700">Column 3</th>
+    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+      <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+
+        <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+          <th className="px-6 py-3" scope="col">Column 1</th>
+          <th className="px-6 py-3" scope="col">Column 2</th>
+          <th className="px-6 py-3" scope="col">Column 3</th>
         </tr>
       </thead>
       <tbody>
         {[...Array(5)].map((_, index) => (
-          <tr key={index} className="text-center">
-            <td className="border border-gray-300 px-4 py-2 text-gray-400">-</td>
-            <td className="border border-gray-300 px-4 py-2 text-gray-400">-</td>
-            <td className="border border-gray-300 px-4 py-2 text-gray-400">-</td>
+          <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+            <td scope="row" className="px-6 py-2 text-center">-</td>
+            <td scope="row" className="px-6 py-2 text-center">-</td>
+            <td scope="row" className="px-6 py-2 text-center">-</td>
           </tr>
         ))}
       </tbody>
     </table>
   ) : (
-    <table className="table-auto border-collapse border border-gray-300 w-full overflow-hidden">
-      <thead>
-        <tr className="bg-gray-200">
+    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+      <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
           {Object.keys(tableDatafetch[0]).map((key) => (
-            <th key={key} className="border border-gray-300 px-4 py-2">
+            <th key={key} className="px-6 py-3" scope="col">
               {key.charAt(0).toUpperCase() + key.slice(1)}
             </th>
           ))}
@@ -149,9 +153,9 @@ const OrderStatus = () => {
       </thead>
       <tbody>
         {tableDatafetch.map((row) => (
-          <tr key={row.id} className="text-center">
+          <tr key={row.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
             {Object.values(row).map((value, index) => (
-              <td key={index} className="border border-white-300 text-gray-400 px-4 py-2">
+              <td key={index} className="px-6 py-2 text-center">
                 {value}
               </td>
             ))}
@@ -160,6 +164,7 @@ const OrderStatus = () => {
       </tbody>
     </table>
   )}
+</div>
 </div>
         </div>
       </CustomTabPanel>
@@ -170,41 +175,42 @@ const OrderStatus = () => {
       <div className="overflow-x-auto h-72 w-full rounded-lg">
   {loading ? (
     <p className="text-center text-white">Loading...</p> // Loading message
-  ) : tableDatafetch.length === 0 ? (
-    <table className="table-auto border-collapse border text-gray-400 border-gray-300 w-full overflow-hidden">
-      <thead>
-        <tr className="bg-gray-200">
-          <th className="border border-gray-300 px-4 py-2 text-gray-700">Column 1</th>
-          <th className="border border-gray-300 px-4 py-2 text-gray-700">Column 2</th>
-          <th className="border border-gray-300 px-4 py-2 text-gray-700">Column 3</th>
+  ) : tableDatafetch2.length === 0 ? (
+    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+      <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+
+        <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+          <th className="px-6 py-3" scope="col">Column 1</th>
+          <th className="px-6 py-3" scope="col">Column 2</th>
+          <th className="px-6 py-3" scope="col">Column 3</th>
         </tr>
       </thead>
       <tbody>
         {[...Array(5)].map((_, index) => (
-          <tr key={index} className="text-center">
-            <td className="border border-gray-300 px-4 py-2 text-gray-400">-</td>
-            <td className="border border-gray-300 px-4 py-2 text-gray-400">-</td>
-            <td className="border border-gray-300 px-4 py-2 text-gray-400">-</td>
+          <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+            <td className="px-6 py-2 text-center">-</td>
+            <td className="px-6 py-2 text-center">-</td>
+            <td className="px-6 py-2 text-center">-</td>
           </tr>
         ))}
       </tbody>
     </table>
   ) : (
     <table className="table-auto border-collapse border border-gray-300 w-full overflow-hidden">
-      <thead>
-        <tr className="bg-gray-200">
-          {Object.keys(tableDatafetch[0]).map((key) => (
-            <th key={key} className="border border-gray-300 px-4 py-2">
+      <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+          {Object.keys(tableDatafetch2[0]).map((key) => (
+            <th key={key} scope="col" className="px-6 py-3">
               {key.charAt(0).toUpperCase() + key.slice(1)}
             </th>
           ))}
         </tr>
       </thead>
       <tbody>
-        {tableDatafetch.map((row) => (
-          <tr key={row.id} className="text-center">
+        {tableDatafetch2.map((row) => (
+          <tr key={row.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
             {Object.values(row).map((value, index) => (
-              <td key={index} className="border border-white-300 text-gray-400 px-4 py-2">
+              <td key={index} className="px-6 py-2 text-center">
                 {value}
               </td>
             ))}
@@ -222,21 +228,21 @@ const OrderStatus = () => {
         <div className="overflow-x-auto h-72 w-full rounded-lg">
   {loading ? (
     <p className="text-center text-white">Loading...</p> // Loading message
-  ) : tableDatafetch.length === 0 ? (
-    <table className="table-auto border-collapse border text-gray-400 border-gray-300 w-full overflow-hidden">
-      <thead>
-        <tr className="bg-gray-200">
-          <th className="border border-gray-300 px-4 py-2 text-gray-700">Column 1</th>
-          <th className="border border-gray-300 px-4 py-2 text-gray-700">Column 2</th>
-          <th className="border border-gray-300 px-4 py-2 text-gray-700">Column 3</th>
+  ) : tableDatafetch3.length === 0 ? (
+    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+      <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+          <th scope="col" className="px-6 py-3">Column 1</th>
+          <th scope="col" className="px-6 py-3">Column 2</th>
+          <th scope="col" className="px-6 py-3">Column 3</th>
         </tr>
       </thead>
       <tbody>
         {[...Array(5)].map((_, index) => (
-          <tr key={index} className="text-center">
-            <td className="border border-gray-300 px-4 py-2 text-gray-400">-</td>
-            <td className="border border-gray-300 px-4 py-2 text-gray-400">-</td>
-            <td className="border border-gray-300 px-4 py-2 text-gray-400">-</td>
+           <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+            <td className="px-6 py-2 text-center">-</td>
+            <td className="px-6 py-2 text-center">-</td>
+            <td className="px-6 py-2 text-center">-</td>
           </tr>
         ))}
       </tbody>
@@ -244,8 +250,8 @@ const OrderStatus = () => {
   ) : (
     <table className="table-auto border-collapse border border-gray-300 w-full overflow-hidden">
       <thead>
-        <tr className="bg-gray-200">
-          {Object.keys(tableDatafetch[0]).map((key) => (
+        <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+          {Object.keys(tableDatafetch3[0]).map((key) => (
             <th key={key} className="border border-gray-300 px-4 py-2">
               {key.charAt(0).toUpperCase() + key.slice(1)}
             </th>
@@ -253,10 +259,10 @@ const OrderStatus = () => {
         </tr>
       </thead>
       <tbody>
-        {tableDatafetch.map((row) => (
-          <tr key={row.id} className="text-center">
+        {tableDatafetch3.map((row) => (
+          <tr key={row.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
             {Object.values(row).map((value, index) => (
-              <td key={index} className="border border-white-300 text-gray-400 px-4 py-2">
+              <td key={index} scope="row" className="px-6 py-2 text-center">
                 {value}
               </td>
             ))}

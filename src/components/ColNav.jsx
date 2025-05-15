@@ -7,12 +7,19 @@ import { IoIosLogOut } from 'react-icons/io';
 import { Button } from '../components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '../components/ui/sheet';
 import { Menu } from 'lucide-react';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../components/ui/accordion"
+
 
 const NavLink = ({ to, icon: Icon, children, isActive, onClick }) => (
   <Link to={to} onClick={onClick} className="w-full">
     <div
-      className={`hover:text-sky-500 cursor-pointer flex items-center gap-3 duration-500 p-2 rounded-md ${
-        isActive ? 'bg-cyan-700 text-white' : ''
+      className={`hover:text-slate-800 cursor-pointer flex items-center gap-3 duration-500 p-2 rounded-md ${
+        isActive ? 'bg-violet-600/20 text-gray-800' : ''
       }`}
     >
       {Icon && <Icon className="size-5" />}
@@ -35,7 +42,7 @@ const NavContent = ({ className = '' }) => {
   };
 
   return (
-    <div className={`flex flex-col items-center gap-9 text-base p-4 ${className}`}>
+    <div className={`flex flex-col items-center gap-9 text-gray-800 text-base p-4 ${className}`}>
       <Link to="/">
         <img
           src="https://www.visualcinnamon.com/img/site/visual_cinnamon_logo_512.png"
@@ -49,13 +56,14 @@ const NavContent = ({ className = '' }) => {
         icon={MdDashboard}
         isActive={activeLink === '/home'}
         onClick={() => handleLinkClick('/home')}
+
       >
-        <span className="md:inline">Market Watch</span>
+        <span className="md:inline text-gray-800 hover:text-gray-700">Market Watch</span>
       </NavLink>
 
       <div
-        className={`hover:text-sky-500 cursor-pointer flex flex-col gap-2 duration-500 p-2 rounded-md w-full text-blue-500 ${
-          location.pathname.startsWith('/') ? 'bg-transparent text-white' : ''
+        className={`hover:text-slate-800 cursor-pointer flex flex-col gap-2 duration-500 p-2 rounded-md w-full text-gray-800 ${
+          location.pathname.startsWith('/') ? 'bg-transparent text-gray-800 hover:text-gray-700' : ''
         }`}
       >
         <div
@@ -85,8 +93,8 @@ const NavContent = ({ className = '' }) => {
         )}
       </div>
        <div
-        className={`hover:text-sky-500 cursor-pointer flex flex-col gap-2 duration-500 p-2 rounded-md w-full text-blue-500 ${
-          location.pathname.startsWith('/') ? 'bg-transparent text-white' : ''
+        className={`hover:text-slate-800 cursor-pointer flex flex-col gap-2 duration-500 p-2 rounded-md w-full text-slate-800 ${
+          location.pathname.startsWith('/') ? 'bg-transparent hover:text-gray-700 text-gray-800' : ''
         }`}
       >
         <div
@@ -128,6 +136,7 @@ const NavContent = ({ className = '' }) => {
         icon={CiDeliveryTruck}
         isActive={activeLink === '/Instrument'}
         onClick={() => handleLinkClick('/Instrument')}
+        className="text-slate-800 hover:text-gray-700"
       >Instrument</NavLink>
     </div>
   );
@@ -137,11 +146,11 @@ const ColNav = () => {
   return (
     <div className="flex">
       {/* Desktop Navigation */}
-      <div className="hidden tablet-md:flex flex-col justify-between h-screen w-16 md:w-60">
+      <div className="hidden tablet-md:flex flex-col justify-between h-screen w-16 md:w-60 overflow-y-scroll scrollbar-hide ">
         <NavContent />
-        <div className="flex flex-col md:flex-row justify-evenly text-blue-500 p-7 gap-4 items-center">
-          <IoIosLogOut className="size-7 cursor-pointer text-white hover:text-cyan-500 duration-500" />
-          <Button className="hidden md:flex text-lg hover:text-cyan-500 cursor-pointer items-center gap-3 duration-500">
+        <div className="flex flex-col md:flex-row justify-evenly text-slate-800 p-7 gap-4 items-center">
+          <IoIosLogOut className="size-7 cursor-pointer text-black hover:text-slate-800 duration-500" />
+          <Button className="hidden md:flex text-lg text-black bg-green-600/90 hover:text-slate-800 cursor-pointer items-center gap-3 duration-500">
             LogOut
           </Button>
         </div>
@@ -154,7 +163,7 @@ const ColNav = () => {
             <Menu className="h-6 w-6" />
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="w-[300px] sm:w-[400px] bg-black text-white">
+        <SheetContent side="left" className="w-[300px] sm:w-[400px] bg-black text-gray-800">
           <NavContent className="w-full" />
           <div className="flex justify-center mt-8">
             <Button className="text-lg hover:text-cyan-500 cursor-pointer flex items-center gap-3 duration-500">
