@@ -30,7 +30,9 @@ function App() {
               <Route path="/OrderStatus" element={<OrderStatus />} />
               <Route path="/OrderPunch" element={<OrderPunch />} />
             
-            <Route path="/ViewBroker" element={<ViewBroker />} />
+            {/* <Route path="/Settings" element={<AddBroker />} /> */}
+            <Route path="/ViewBroker" element={<ViewBroker defaultBrokerName="Shoonya" />} />
+            <Route path="/ViewAngel" element={<ViewBroker defaultBrokerName="Angel" />} />
           </Route>
         </Routes>
       </Router>

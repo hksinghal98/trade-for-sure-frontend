@@ -106,9 +106,9 @@ const NavContent = ({ className = '' }) => {
               Shoonya
             </NavLink>
              <NavLink
-              // to="/ViewBroker"
-              // isActive={location.pathname === '/ViewBroker'}
-              // onClick={() => handleLinkClick('/ViewBroker')}
+              to="/ViewAngel"
+              isActive={location.pathname === '/ViewAngel'}
+              onClick={() => handleLinkClick('/ViewAngel')}
             >
               Angel
             </NavLink>

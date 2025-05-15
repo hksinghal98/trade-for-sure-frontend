@@ -359,7 +359,7 @@ return (
                         
                         </div>
                         <div className="container mx-auto mt-5 bg-slate-800 p-4 rounded-lg">
-
+<div className="container mx-auto mt-6 p-6 bg-gray-100 rounded-lg shadow-md max-w-6xl">
   <div className="overflow-x-auto h-72 w-full rounded-lg">
 {loading ? (
 <p className="text-center text-white">Loading...</p> // Loading message
@@ -433,6 +433,7 @@ return (
   </tbody>
 </table>
 )}
+</div>
 </div>
 </div>
 </div>

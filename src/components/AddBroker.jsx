@@ -271,6 +271,7 @@ const AddBroker = () => {
         )}
 
         {/* Table Section */}
+        <div className="container mx-auto mt-6 p-6 bg-trasparent rounded-lg max-w-6xl">
         <div className="overflow-x-auto h-72 w-full rounded-lg">
           {loading ? (
             <p className="text-center text-white">Loading...</p>
@@ -310,6 +311,7 @@ const AddBroker = () => {
               </tbody>
             </table>
           )}
+        </div>
         </div>
       </div>
     </>
