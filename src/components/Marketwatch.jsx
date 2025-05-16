@@ -36,14 +36,21 @@ const Marketwatch = () => {
         const [instrument,setInstrument]= useState([])
 
         
+              console.log(data['token'])
 
     const [messages, setMessages] = useState([]);
 
-
        const  handletoken = (index)=>{
-
+        if (brokerName4=='SHOONYA'){
         setToken(data['Token'][index])
+        }
 
+
+        else if (brokerName4=='ANGEL'){
+
+        setToken(data['token'][index])
+
+       }
 
         }
     
@@ -93,12 +100,19 @@ const Marketwatch = () => {
     
  const fetchSymbols = async (broker, exchange,instrument,symbol) => {
         setLoading(true);
+        let removeDuplicatsymbol
         try {
           const queryParams = `Broker=${broker}&exchange=${exchange}&instrument=${instrument}&name=${symbol}`;
           const response = await handleexchangerequest("GET", queryParams, "symbols",false);
           if (response) {
             setdata(response)
-            const removeDuplicatsymbol = [...new Set(response.TradingSymbol)];
+            if(broker=='SHOONYA'){
+             removeDuplicatsymbol = [...new Set(response.TradingSymbol)];
+            }
+
+             if(broker=='ANGEL'){
+             removeDuplicatsymbol = [...new Set(response.symbol)];
+            }
 
             setsymbol(removeDuplicatsymbol);
             console.log("Symbols fetched successfully:", removeDuplicatsymbol);
@@ -307,9 +321,19 @@ const handleBuyOrSell = (data,action) => {
 
 };
 
-const handleDelete = (id) => {
-  const updatedTableData = tableDatafetch.filter((item) => item.id !== id);
-  setTableDatafetch(updatedTableData);
+const handleDelete = (id,name) => {
+
+
+
+
+ 
+      const type = "DELETE"
+      const endpoint= "watchlist"
+      const payload= "id="+id+"&brokername="+name
+      handleexchangerequest(type, payload, endpoint,true)
+      .then(response => {
+        console.log(response) 
+    })
 }
 
 
@@ -601,7 +625,7 @@ return (
       >
         <Button
           className="bg-red-700 text-white hover:bg-red-700"
-          onClick={() => handleDelete(row.id)}
+          onClick={() => handleDelete(row.token,row.broker)}
         >
           Delete
         </Button>

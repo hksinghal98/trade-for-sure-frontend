@@ -111,6 +111,31 @@ if (okalert){
       
     }
 
+
+    if (type === "DELETE" ) {
+      const response = await fetch(
+        Host_Ip + endpoint +"?"+ payload,
+        {
+          method: type,
+          headers: {  
+            "Content-Type": "application/json",
+            Authorization: t,
+          },
+        }
+      );
+      if (!response.ok) {
+        alert('something went wrong')
+
+        throw new Error("Login failed");
+      }
+      const datastr = await response.json();
+if (okalert){
+        alert('sucessful')
+      }
+      return  datastr.message
+
+      
+    }
     // if (!response.ok) {
     //   throw new Error('Login failed');
     // }

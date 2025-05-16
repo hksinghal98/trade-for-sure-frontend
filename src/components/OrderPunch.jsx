@@ -50,6 +50,8 @@ const OrderPunch = () => {
   const [Comboopen, setComboOpen] = useState(false);
   const [Symbol, setsymbol] = useState([]);
   const [brokers, setBrokers] = useState([]);
+  const [accountlist, setAccountlist] = useState([]);
+  
   const [ordertype, setOrdertype] = useState("");
   const [product, setProduct] = useState("");
   const [brokerName, setBrokerName] = useState("");
@@ -67,22 +69,29 @@ const OrderPunch = () => {
   const[token,settoken]=useState( "");
   const [side, setside] = useState(""); // "Buy" or "Sell"
   const [price, setPrice] = useState('');
+  const [accountname, setAccountname] = useState('');
+  const [lotsize, setlotsize] = useState('');
+
+
   
 
   useEffect(() => {
     if (passedState.action) {
       setside(passedState.action.toUpperCase());
-      setBrokerName4(passedState.data.brokername)
+      // setBrokerName4(passedState.data.brokername)
       setExchange(passedState.data.exchange)
       setInstrument(passedState.data.instrument)
       setselectsymbol(passedState.data.Tradingsymbol)
       settoken(passedState.data.token )
       setPrice(passedState.data.LTP )
+      setlotsize(passedState.data.Lotsize )
+      console.log(passedState.data.Lotsize)
+
 
 
 
     }
-  }, [passedState]);
+  }, [passedState,setlotsize]);
 
 
   const dummyLogs = [
@@ -110,25 +119,59 @@ const OrderPunch = () => {
     }
   };
 
+
+  const fetchaccountlist = async () => {
+        try {
+      const response = await handleexchangerequest("GET", 'broker=all', "broker",false); // Replace with your API endpoint
+      if (response) {
+        setAccountlist(response); // Assuming response.data contains the broker list
+        console.error(response,'account');
+
+      } else {
+        console.error("Failed to fetch brokers");
+      }
+    } catch (error) {
+      console.error("Error fetching brokers:", error);
+    }
+  };
+
+
+
     // Fetch brokers on component mount
         useEffect(() => {
           fetchBrokers();
+          fetchaccountlist()
       
         }, []);
 
   
-  const handlePlaceOrder = () => {
-    // Logic to handle placing the order
-    console.log({
-      side,
-      brokerName,
-      price,
-      quantity,
-      product,
-      orderType,
-    });
-    alert("Order placed successfully!");
-  };
+
+   
+    const handlePlaceOrder = ()=>{
+         const payload = JSON.stringify({
+          brokerName4,
+          selectsymbol,
+          ordertype,
+          product,
+          quantity,
+          price,
+          exchange,
+          side,
+          accountname
+
+
+        });
+        const type = "POST"
+        const endpoint= "placeorder"
+        handleexchangerequest(type, payload, endpoint,true)
+    .then(response => {
+    console.log(response) 
+    
+    window.location.reload()
+    })
+    
+    }
+  
 
   const handleSelectChange = (value) => {
     if (value === "Buy") {
@@ -406,19 +449,19 @@ const OrderPunch = () => {
                           
                                           </div>
                                           <div className="flex flex-col gap-2">
-                                                    <Select onValueChange={(value) => setBrokerName4(value)}>
+                                                    <Select onValueChange={(value) => setAccountname(value)}>
             <SelectTrigger className="w-36 max-xs:w-20 bg-sky-700/85 text-white hover:bg-sky-700">
               <SelectValue placeholder="Select Account" />
             </SelectTrigger>
             <SelectContent className="bg-slate-800text-slate-800 border border-blue-300">
-              {brokers && brokers.length > 0 ? (
-                brokers.map((broker, index) => (
+              {accountlist && accountlist.length > 0 ? (
+                accountlist.map((broker, index) => (
                   <SelectItem
                     key={index}
-                    value={broker.NAME}
+                    value={broker}
                     className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
                   >
-                    {broker.NAME}
+                    {broker.accountnumber}
                   </SelectItem>
                 ))
               ) : (
@@ -460,7 +503,7 @@ const OrderPunch = () => {
                 <div className="flex items-center gap-2">
                   <Button
                     onClick={() =>
-                      setQuantity((prev) => Math.max(0, Number(prev) - 1))
+                      setQuantity((prev) => Math.min(0, Number(prev) - 1))
                     } // Convert to number before decrementing
                     className="bg-red-500 text-slate-800 px-4 py-2 rounded-md hover:bg-red-600"
                   >
@@ -481,6 +524,8 @@ const OrderPunch = () => {
                   >
                     +
                   </Button>
+                  <p>lotsize:{lotsize}</p>
+
                 </div>
               </div>
               <div className="flex flex-col gap-2">
