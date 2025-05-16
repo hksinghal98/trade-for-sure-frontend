@@ -67,6 +67,7 @@ const OrderPunch = () => {
   const[token,settoken]=useState( "");
   const [side, setside] = useState(""); // "Buy" or "Sell"
   const [price, setPrice] = useState('');
+  const [isindexEQ,setIsIndexEQ] = useState(false);
   
 
   useEffect(() => {
@@ -177,6 +178,13 @@ const OrderPunch = () => {
     } else {
       setIsIndexEnabled(false);
     }
+    if (value === "BSE" || value === "NSE") {
+      setIsIndexEQ(true);
+    }
+    else {
+      setIsIndexEQ(false);
+      
+    }
   }
   const alertsymbol = (value) => {
 
@@ -190,13 +198,31 @@ const OrderPunch = () => {
     }
   }
 
+  const navigate = useNavigate();
+ const handleLoginaccount = () => {
+    if (brokerName2 === "SHOONYA") {
+      navigate("/ViewBroker"); // Redirect to AddBroker page
+    } 
+    if (brokerName2 === "ANGEL") {
+      navigate("/ViewAngel"); // Redirect to AddBroker page
+    }
+  };
+
+  const handleReset = () => {
+    setside("");
+    setPrice("");
+    setQuantity("");
+    setProduct("");
+    setOrderType("");
+  }
+
   
 
   return (
     <>
     <div className="flex flex-col h-screen">
       
-      <div className="flex items-center gap-6 p-6 pt-0 bg-transparent text-slate-800">
+      <div className="flex flex-col items-start gap-6 p-6 pt-0 bg-transparent text-slate-800">
         <div className="flex flex-col gap-4 h-full"> 
         <div className="flex flex-wrap items-start gap-4">
 
@@ -220,12 +246,13 @@ const OrderPunch = () => {
                   <SelectTrigger className="w-[180px] bg-stone-700 text-slate-800 hover:bg-stone-600">
                     <SelectValue placeholder="Market" />
                   </SelectTrigger>
-                  <SelectContent className="bg-slate-800text-slate-800 border border-blue-300">
-                    {brokers && brokers.length > 0 ? (
+                  <SelectContent className="bg-white text-slate-800 border border-blue-300">
+                    {/* {brokers && brokers.length > 0 ? (
                       brokers.map((broker, index) => (
                         <SelectItem
                           key={index}
                           value={broker.NAME}
+                          // value = "SHOONYA"
                           className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
                         >
                           {broker.NAME}
@@ -235,13 +262,16 @@ const OrderPunch = () => {
                       <SelectItem value="loading" disabled>
                         {loading ? "Loading brokers..." : "No brokers available"}
                       </SelectItem>
-                    )}
+                    )} */}
+                    <SelectItem value="SHOONYA">SHOONYA</SelectItem>
+                    <SelectItem value="ANGEL">ANGEL</SelectItem>
+                    
                   </SelectContent>
                 </Select>
               </div>
               <Button
                 className="bg-green-700 hover:bg-green-900"
-                onClick={() => handlelogin()}
+                onClick={handleLoginaccount}
               >
                 LogIn Account
               </Button>
@@ -254,7 +284,7 @@ const OrderPunch = () => {
         {/* Buy/Sell Radio Buttons */}
 
         <div
-          className={`flex outline-1 bg-neutral-300/20 outline w-4/5 items-center justify-center p-4 rounded-lg ${
+          className={`flex outline-1 bg-neutral-300/20 outline w-full items-center justify-center p-4 rounded-lg ${
             side === "BUY"
               ? "outline-green-500 shadow-green-500/75 shadow-xl"
               : side === "SELL"
@@ -263,34 +293,67 @@ const OrderPunch = () => {
           }`}
         >
           
+          
           <div className="flex flex-col gap-2 w-full items-center justify-center">
             <h1 className="text-3xl font-bold text-slate-800">Order Punch</h1>
-            <div className="flex gap-3 w-full ite">
+            <div className="flex gap-3 w-full items-end">
+
+              <div className="flex items-center gap-2 justify-center">
+      <Select onValueChange={(value) => setBrokerName4(value)}>
+            {/* <SelectTrigger className="w-36 max-xs:w-20 bg-sky-700/85 text-white hover:bg-sky-700"> */}
+            <SelectTrigger
+      className={`w-36 max-xs:w-20 ${
+        brokerName4
+          ? "bg-blue-800 text-white hover:bg-blue-700"
+          : "bg-gray-400 text-gray-700 cursor-not-allowed"
+      }`}
+    >
+              <SelectValue placeholder="Select Account" />
+            </SelectTrigger>
+            <SelectContent className="bg-white text-slate-800 border border-blue-300">
+              {brokers && brokers.length > 0 ? (
+                brokers.map((broker, index) => (
+                  <SelectItem
+                    key={index}
+                    value={broker.NAME}
+                    className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+                  >
+                    {broker.NAME}
+                  </SelectItem>
+                ))
+              ) : (
+                <SelectItem value="loading" disabled>
+                  {loading ? "Loading brokers..." : "No brokers available"}
+                </SelectItem>
+              )}
+            </SelectContent>
+          </Select>
+         
+            <Select onValueChange={(value) => setBrokerName4(value)}>
+            <SelectTrigger className="w-36 max-xs:w-20 bg-blue-800 text-white hover:bg-blue-700">
+              <SelectValue placeholder="All in Broker" />
+            </SelectTrigger>
+            <SelectContent className="bg-white border border-blue-300">
+              {brokers && brokers.length > 0 ? (
+                brokers.map((broker, index) => (
+                  <SelectItem
+                    key={index}
+                    value={broker.NAME}
+                    className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+                  >
+                    {broker.NAME}
+                  </SelectItem>
+                ))
+              ) : (
+                <SelectItem value="loading" disabled>
+                  {loading ? "Loading brokers..." : "No brokers available"}
+                </SelectItem>
+              )}
+            </SelectContent>
+          </Select>
+          </div>
               
-              <div className="flex gap-6">
-                <Label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name="side"
-                    value="BUY"
-                    checked={side === "BUY"}
-                    onChange={(e) => setside(e.target.value)}
-                    className="w-4 h-4"
-                  />
-                  <span className="text-lg text-green-600">Buy</span>
-                </Label>
-                <Label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name="side"
-                    value="SELL"
-                    checked={side === "SELL"}
-                    onChange={(e) => setside(e.target.value)}
-                    className="w-4 h-4"
-                  />
-                  <span className="text-lg text-red-600">Sell</span>
-                </Label>
-              </div>
+              
 
               <div className="flex flex-col gap-2 w-full items-center ">
                   <Label className="text-lg text-slate-800 text-center">Exchange</Label>
@@ -342,7 +405,7 @@ const OrderPunch = () => {
                       />
                       <span className="text-lg text-slate-800">BFO</span>
                     </Label>
-                    <Label className="flex items-center gap-2">
+                    {/* <Label className="flex items-center gap-2">
                       <input
                         type="radio"
                         name="exchange"
@@ -352,106 +415,120 @@ const OrderPunch = () => {
                         className="w-4 h-4"
                       />
                       <span className="text-lg text-slate-800">MCX</span>
-                    </Label>
+                    </Label> */}
                   </div>
                 </div>
               </div>
 
               {/* Entry Price */}
-              <div className='flex flex-col gap-2'>
-                                          <Label className =" text-slate-800 text-base">Type</Label>
-                                          <Select
-                            onValueChange={(value) => {
-                              alertsymbol(value);
-                            }}
-                            disabled={!isIndexEnabled} // Disable when `isIndexEnabled` is false
-                          >
-                            <SelectTrigger
-                              className={`w-[130px] ${
-                                isIndexEnabled
-                                  ? "bg-sky-700/85 text-white hover:bg-sky-700"
-                                  : "bg-gray-400 text-gray-600 cursor-not-allowed"
-                              }`}
-                            >
-                              <SelectValue placeholder="Type" />
-                            </SelectTrigger>
-                            <SelectContent className="bg-white text-slate-800 border border-blue-300">
-                              
-                              <SelectItem
-                                value="FUTSTK"
-                                className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-                              >
-                                FUTSTK
-                              </SelectItem>
-                              <SelectItem
-                                value="FUTIDX"
-                                className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-                              >
-                                FUTIDX
-                              </SelectItem>
-                              <SelectItem
-                                value="OPTIDX"
-                                className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-                              >
-                                OPTIDX
-                              </SelectItem>
-                              <SelectItem
-                                value="OPTSTK"
-                                className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-                              >
-                                OPTSTK
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                          
-                                          </div>
-                                          <div className="flex flex-col gap-2">
-                                                    <Select onValueChange={(value) => setBrokerName4(value)}>
-            <SelectTrigger className="w-36 max-xs:w-20 bg-sky-700/85 text-white hover:bg-sky-700">
-              <SelectValue placeholder="Select Account" />
-            </SelectTrigger>
-            <SelectContent className="bg-slate-800text-slate-800 border border-blue-300">
-              {brokers && brokers.length > 0 ? (
-                brokers.map((broker, index) => (
-                  <SelectItem
-                    key={index}
-                    value={broker.NAME}
-                    className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-                  >
-                    {broker.NAME}
-                  </SelectItem>
-                ))
-              ) : (
-                <SelectItem value="loading" disabled>
-                  {loading ? "Loading brokers..." : "No brokers available"}
-                </SelectItem>
-              )}
-            </SelectContent>
-          </Select>
-         
-            <Select onValueChange={(value) => setBrokerName4(value)}>
-            <SelectTrigger className="w-36 max-xs:w-20 bg-blue-800 text-white hover:bg-blue-700">
-              <SelectValue placeholder="All in Broker" />
-            </SelectTrigger>
-            <SelectContent className="bg-white border border-blue-300">
-              {brokers && brokers.length > 0 ? (
-                brokers.map((broker, index) => (
-                  <SelectItem
-                    key={index}
-                    value={broker.NAME}
-                    className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-                  >
-                    {broker.NAME}
-                  </SelectItem>
-                ))
-              ) : (
-                <SelectItem value="loading" disabled>
-                  {loading ? "Loading brokers..." : "No brokers available"}
-                </SelectItem>
-              )}
-            </SelectContent>
-          </Select>
-          </div>
+              <div>
+               <div className={`flex flex-col gap-2 w-full items-center ${!isIndexEnabled ? "text-gray-400 hidden" : "text-slate-800 flex"}`}>
+  <Label className="text-slate-800 text-center">Type</Label>
+  <div className="flex gap-4">
+    <div className="flex  flex-xl-column ">
+    <Label className="flex items-center gap-2">
+      <input
+        type="radio"
+        name="type"
+        value="FUTSTK"
+        onChange={(e) => alertsymbol(e.target.value)}
+        disabled={!isIndexEnabled} // Disable when `isIndexEnabled` is false
+        className="w-4 h-4"
+      />
+      <span className={`text-lg ${!isIndexEnabled ? "text-gray-400" : "text-slate-800"}`}>
+        FUTSTK
+      </span>
+    </Label>
+    <Label className="flex items-center gap-2">
+      <input
+        type="radio"
+        name="type"
+        value="FUTIDX"
+        onChange={(e) => alertsymbol(e.target.value)}
+        disabled={!isIndexEnabled}
+        className="w-4 h-4"
+      />
+      <span className={`text-lg ${!isIndexEnabled ? "text-gray-400" : "text-slate-800"}`}>
+        FUTIDX
+      </span>
+    </Label>
+    </div>
+
+      <div className="flex  flex-xl-column ">
+    <Label className="flex items-center gap-2">
+      <input
+        type="radio"
+        name="type"
+        value="OPTIDX"
+        onChange={(e) => alertsymbol(e.target.value)}
+        disabled={!isIndexEnabled}
+        className="w-4 h-4"
+      />
+      <span className={`text-lg ${!isIndexEnabled ? "text-gray-400 hidden" : "text-slate-800 flex"}`}>
+        OPTIDX
+      </span>
+    </Label>
+    <Label className="flex items-center gap-2">
+      <input
+        type="radio"
+        name="type"
+        value="OPTSTK"
+        onChange={(e) => alertsymbol(e.target.value)}
+        disabled={!isIndexEnabled}
+        className={"w-4 h-4"}
+      />
+      <span className={`text-lg ${!isIndexEnabled ? "text-gray-400" : "text-slate-800"}`}>
+        OPTSTK
+      </span>
+    </Label>
+   
+    </div>
+  </div>
+</div>
+  <div>
+     <Label className="flex items-center gap-2">
+      <input
+        type="radio"
+        name="type"
+        value="EQ"
+        onChange={(e) => alertsymbol(e.target.value)}
+        disabled={!isindexEQ}
+        className={"w-4 h-4"}
+      />
+      <span className={`text-lg ${!isindexEQ ? "text-gray-400" : "text-slate-800"}`}>
+        EQ
+      </span>
+    </Label>
+  </div>
+  </div>
+
+                                          
+
+          
+          <div className="flex gap-6">
+                <Label className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="side"
+                    value="BUY"
+                    checked={side === "BUY"}
+                    onChange={(e) => setside(e.target.value)}
+                    className="w-4 h-4"
+                  />
+                  <span className="text-lg text-green-600">Buy</span>
+                </Label>
+                <Label className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="side"
+                    value="SELL"
+                    checked={side === "SELL"}
+                    onChange={(e) => setside(e.target.value)}
+                    className="w-4 h-4"
+                  />
+                  <span className="text-lg text-red-600">Sell</span>
+                </Label>
+              </div>
               
             </div>
             <div className="flex gap-2 w-full items-center ">
@@ -630,6 +707,7 @@ const OrderPunch = () => {
               </div>
             </div>
 
+           
             {/* Place Order Button */}
             <div className="flex gap-4 w-full justify-end">
               <Button
@@ -638,7 +716,7 @@ const OrderPunch = () => {
               >
                 Submit
               </Button>
-              <Button className="bg-gray-600 text-white px-6 py-2 rounded-md hover:bg-gray-700">
+              <Button className="bg-gray-600 text-white px-6 py-2 rounded-md hover:bg-gray-700" onClick={handleReset}>
                 Reset
               </Button>
             </div>
