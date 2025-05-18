@@ -12,8 +12,9 @@ import {
 
 
  import {handleexchangerequest}  from '../utility/Api'
-const ViewBroker = () => {
-  const [brokerName, setBrokerName] = useState('SHOONYA');
+import { Type } from "lucide-react";
+const Angel = () => {
+  const [brokerName, setBrokerName] = useState('ANGEL');
   const [apikey, setapikey] = useState("");
   const [secretkey, setsecretkey] = useState("");
   const [AuthToken, setAuthToken] = useState("");
@@ -23,9 +24,8 @@ const ViewBroker = () => {
   const [tableDatafetch, setTableDatafetch] = useState([]);
   const [loading, setLoading] = useState(false);
   const [brokerid, setBrokerid] = useState(false);
-  const [REtype, setREType] = useState('POST');
 
-
+      const [REType, setREType] = useState('POST');
 
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const ViewBroker = () => {
   const fetchaccountlist = async () => {
     const type = "GET";
     const endpoint = "loadaccount";
-    const payload = "broker=SHOONYA";
+    const payload = "broker=ANGEL";
     setLoading(true); // Set loading to true before fetching data
     handleexchangerequest(type, payload, endpoint, false)
       .then((response) => {
@@ -61,7 +61,7 @@ const ViewBroker = () => {
 
   const handleAddBroker = () => {
     let put= false
-    if (REtype=="PUT"){
+     if (REType=="PUT"){
       put = true
     }
     const payload = JSON.stringify({
@@ -74,17 +74,13 @@ const ViewBroker = () => {
       password,
       put,
       brokerid
-
     });
     
-      const Rtype = REtype
+      const Rtype = REType
         const endpoint= "broker"
         handleexchangerequest(Rtype, payload, endpoint,true)
     .then(response => {
     console.log(response) 
-    setREType('POST')
-    setBrokerid(false)
-
     
     window.location.reload()
     })
@@ -107,41 +103,38 @@ const handlelogin = async (brokerid) => {
     .then(response => {
     console.log(response) 
     setBrokerid(false)
-
     
     window.location.reload()
     })
   }
 
 
-  const handleadelete=(brokerid)=>{
   
-       const payload = 'brokerid='+brokerid;
-          const type = "DELETE"
-          const endpoint= "broker"
-          handleexchangerequest(type, payload, endpoint,true)
-      .then(response => {
-      console.log(response) 
-      setBrokerid(false)
-      
-      window.location.reload()
-      })
-  
-    }
   
 
-   
-  
+   const handleadelete=(brokerid)=>{
+
+     const payload = 'brokerid='+brokerid;
+        const type = "DELETE"
+        const endpoint= "broker"
+        handleexchangerequest(type, payload, endpoint,true)
+    .then(response => {
+    console.log(response) 
+    setBrokerid(false)
+    
+    window.location.reload()
+    })
+
+  }
   const handleactivebroker=(brokerid)=>{
-    const put= false;
-     const payload = JSON.stringify({brokerid, put});
+    const put = false
+     const payload = JSON.stringify({brokerid,put });
         const type = "PUT"
         const endpoint= "broker"
         handleexchangerequest(type, payload, endpoint,true)
     .then(response => {
     console.log(response) 
     setBrokerid(false)
-
     
     window.location.reload()
     })
@@ -160,6 +153,7 @@ const handlelogin = async (brokerid) => {
     setPassword(rowData.password);
     setBrokerid(rowData.brokerid)
     setREType('PUT')
+    
   };
 
 
@@ -211,14 +205,14 @@ const handlelogin = async (brokerid) => {
         {/* Vendor Code */}
         <div className="flex items-center gap-4">
           <Label htmlFor="vendor-code" className="w-1/3 text-lg text-gray-700">
-            Vendor Code
+            Secret Key
           </Label>
           <Input
             id="vendor-code"
             type="text"
             placeholder="Enter Vendor Code"
-            value={vendorcode}
-            onChange={(e) => setvendorcode(e.target.value)}
+            value={secretkey    }
+            onChange={(e) => setsecretkey(e.target.value)}
             className="w-2/3 p-2 border border-gray-300 rounded-md"
           />
         </div>
@@ -284,7 +278,6 @@ const handlelogin = async (brokerid) => {
                   <th className="px-6 py-3">Login</th>
                   <th className="px-6 py-3">Edit</th>
                   <th className="px-6 py-3">Delete</th>
-                  
                 </tr>
               </thead>
               <tbody>
@@ -307,7 +300,7 @@ const handlelogin = async (brokerid) => {
                       </Button>
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <Button
+                         <Button
                         className="bg-blue-600 text-white py-2 text-sm rounded-md hover:bg-blue-700"
                         onClick={() => handlelogin(row.brokerid)}
                       >
@@ -341,4 +334,4 @@ const handlelogin = async (brokerid) => {
   );
 };
 
-export default ViewBroker;
+export default Angel;

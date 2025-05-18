@@ -7,6 +7,8 @@ import { IoIosLogOut } from 'react-icons/io';
 import { Button } from '../components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '../components/ui/sheet';
 import { Menu } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
+
 import {
   Accordion,
   AccordionContent,
@@ -134,6 +136,8 @@ const NavContent = ({ className = '' }) => {
             >
               FYRES
             </NavLink>
+
+
             
             
             
@@ -152,6 +156,16 @@ const NavContent = ({ className = '' }) => {
 };
 
 const ColNav = () => {
+    const navigate = useNavigate();
+
+  const handlelogout=()=>{  
+
+        localStorage.clear()
+        navigate('/')
+      
+
+
+  }
   return (
     <div className="flex">
       {/* Desktop Navigation */}
@@ -159,7 +173,7 @@ const ColNav = () => {
         <NavContent />
         <div className="flex flex-col md:flex-row justify-evenly text-slate-800 p-7 gap-4 items-center">
           <IoIosLogOut className="size-7 cursor-pointer text-black hover:text-slate-800 duration-500" />
-          <Button className="hidden md:flex text-lg text-black bg-green-600/90 hover:text-slate-800 cursor-pointer items-center gap-3 duration-500">
+          <Button  onClick={()=>handlelogout()}className="hidden md:flex text-lg text-black bg-green-600/90 hover:text-slate-800 cursor-pointer items-center gap-3 duration-500">
             LogOut
           </Button>
         </div>

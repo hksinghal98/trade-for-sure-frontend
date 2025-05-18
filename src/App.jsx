@@ -10,6 +10,7 @@ import OrderPunch from './components/OrderPunch'; // New Component
 import AddBroker from './components/AddBroker';
 import ViewBroker from './components/ViewBroker';
 import Marketwatch from './components/Marketwatch';
+import Angel from './components/Angelbroker';
 
 function App() {
   return (
@@ -32,7 +33,7 @@ function App() {
             
             {/* <Route path="/Settings" element={<AddBroker />} /> */}
             <Route path="/ViewBroker" element={<ViewBroker defaultBrokerName="Shoonya" />} />
-            <Route path="/ViewAngel" element={<ViewBroker defaultBrokerName="Angel" />} />
+            <Route path="/ViewAngel" element={<Angel />} />
           </Route>
         </Routes>
       </Router>

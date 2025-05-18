@@ -34,6 +34,8 @@ const Marketwatch = () => {
         const [token,setToken]= useState([])
         const [data,setdata]= useState([])
         const [instrument,setInstrument]= useState([])
+        const [lotsize,setlotsize]= useState('')
+
 
         
               console.log(data['token'])
@@ -43,12 +45,16 @@ const Marketwatch = () => {
        const  handletoken = (index)=>{
         if (brokerName4=='SHOONYA'){
         setToken(data['Token'][index])
+        setlotsize(data['LotSize'][index])
+
         }
 
 
         else if (brokerName4=='ANGEL'){
 
         setToken(data['token'][index])
+        setlotsize(data['lotsize'][index])
+
 
        }
 
@@ -269,7 +275,7 @@ if (brokerName4) {
           exchange,
           instrument,
           selectsymbol,
-          token
+          token,lotsize
         
 
 
@@ -306,7 +312,7 @@ const handleSearch = debounce((value) => {
     fetchSymbols(brokerName4, exchange,instrument,value); 
 }
 
-      }, 600); // Wait 300ms before executing the search
+      }, 800); // Wait 300ms before executing the search
 
 
 
@@ -521,7 +527,7 @@ return (
                                 onClick={handleAddSymbol}
                                 disabled={symbolCount >= 50} // Disable button if symbol count exceeds 50
                             >
-                                Add Symbol
+                                Subscribe
                             </Button>
                         </div>
                             
@@ -544,7 +550,7 @@ return (
       <th scope="col" className="px-6 py-3">Column 3</th>
       <th scope="col" className="px-6 py-3">Buy</th>
       <th scope="col" className="px-6 py-3">Sell</th>
-      <th scope="col" className="px-6 py-3">Delete</th>
+      <th scope="col" className="px-6 py-3">Unsubscribe</th>
     </tr>
   </thead>
   <tbody>
@@ -560,7 +566,7 @@ return (
          <Button className="bg-red-600/90 text-white hover:bg-red-700">Sell</Button>
         </td>
         <td scope="row" className="px-3 py-2 text-center font-medium text-gray-900 whitespace-nowrap dark:text-slate-800">
-           <Button className="bg-red-700 text-white hover:bg-red-700">Delete</Button>    
+           <Button className="bg-red-700 text-white hover:bg-red-700">Unsubscribe</Button>    
         </td>
       </tr>
     ))}
@@ -578,7 +584,7 @@ return (
       ))}
     <th scope="col" className="px-6 py-3">Buy</th>
     <th scope="col" className="px-6 py-3">Sell</th>
-    <th scope="col" className="px-6 py-3">Delete</th>
+    <th scope="col" className="px-6 py-3">Unsubscribe</th>
   </tr>
 </thead>
 <tbody>
@@ -627,7 +633,7 @@ return (
           className="bg-red-700 text-white hover:bg-red-700"
           onClick={() => handleDelete(row.token,row.broker)}
         >
-          Delete
+          Unsubscribe
         </Button>
       </td>
     </tr>

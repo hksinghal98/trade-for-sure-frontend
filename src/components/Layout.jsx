@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import ColNav from './ColNav';
+import { handleauth } from './auth';
 import {
   Accordion,
   AccordionContent,
@@ -9,6 +10,8 @@ import {
 } from "../components/ui/accordion"
 
 
+
+import { handleexchangerequest } from '../utility/Api';
 const Layout = () => {
 
   const dummyLogs = [
@@ -25,6 +28,47 @@ const Layout = () => {
  
 ];
 
+const [data,setdata]= useState([])
+const [loading,setLoading]= useState([])
+
+const fetchlogsdata = async () => {
+    setLoading(true);
+    try {
+      const type = "GET";
+      const endpoint = "sendlog"; // Replace with your API endpoint
+      const payload = ""     
+      const response = await handleexchangerequest(type, payload, endpoint, false);
+      if (response) {
+        setdata(response);
+        console.log(response,'response')
+      } else {
+        console.error("Failed to fetch table data");
+      }
+    } catch (error) {
+      console.error("Error fetching table data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+useEffect( ()=>{
+  
+
+  fetchlogsdata()
+
+
+
+
+
+},[])
+
+const isAuthExpired = handleauth();
+  console.log(isAuthExpired,'checktimestamp')
+
+  {if (isAuthExpired) (
+    navigate('/')
+  )}
+
 
   return (
     <div className="bg-blue-300/15 text-black h-screen w-screen overflow-hidden flex flex-row">
@@ -40,8 +84,8 @@ const Layout = () => {
     <AccordionTrigger className=" text-black px-3">SYSTEM LOGS (Click here)</AccordionTrigger>
     <AccordionContent className=" text-black px-3 overflow-scroll h-44 scrollbar-hide">
       <ul >
-        {dummyLogs.map((log) => (
-          <li key={log.id}>[{log.timestamp}] {log.message}</li> // Adjust based on your data structure
+        {data.map((log,index) => (
+          <li key={index}>{log}</li> // Adjust based on your data structure
         ))}
       </ul>
     </AccordionContent>
