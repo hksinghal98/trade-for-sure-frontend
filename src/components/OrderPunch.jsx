@@ -39,6 +39,10 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import debounce from "lodash.debounce";
+import { MultiSelect } from './ui/multi-select'
+import { HomeIcon, Code, Laptop, Palette, Zap, Database, Cloud, Settings, Lock } from "lucide-react"
+
+
 
 const OrderPunch = () => {
   const location = useLocation();
@@ -58,6 +62,7 @@ const OrderPunch = () => {
   const [Loginopen, setLoginOpen] = useState(false);
   const [brokerName2, setBrokerName2] = useState("");
   const [quantity, setQuantity] = useState("");
+  const [discloseqty, setdiscolseqty] = useState("");
   const [isIndexEnabled, setIsIndexEnabled] = useState(true);
   const [tableDatafetch, setTableDatafetch] = useState([]);
 
@@ -74,6 +79,8 @@ const OrderPunch = () => {
 
   const [query, setQuery] = useState('');
  const [data,setdata]= useState([])
+  const [selected, setSelected] = useState([])
+
 
 
   const [isindexEQ,setIsIndexEQ] = useState(false);
@@ -108,6 +115,17 @@ const OrderPunch = () => {
   { id: 7, message: 'Payment processed successfully', timestamp: '2025-05-13 19:50:00' },
 ];
 
+    const frameworks = [
+  { value: "react", label: "React", icon: Code },
+  { value: "next", label: "Next.js", icon: Zap },
+  { value: "vue", label: "Vue", icon: Laptop },
+  { value: "nuxt", label: "Nuxt.js", icon: Cloud },
+  { value: "svelte", label: "Svelte", icon: Palette },
+  { value: "angular", label: "Angular", icon: Settings },
+  { value: "solid", label: "Solid", icon: Database },
+  { value: "ember", label: "Ember", icon: HomeIcon },
+  { value: "alpine", label: "Alpine", icon: Lock },
+]
 
 
  const fetchBrokers = async () => {
@@ -309,6 +327,7 @@ const OrderPunch = () => {
 
   const handleaccountselect=(value)=>{
     setBrokerName4(value.brokername)
+    // console.log('Selected accounts:', selectedAccounts);
     setAccountname(value)
 
   }
@@ -409,9 +428,33 @@ const OrderPunch = () => {
           <div className="flex flex-col gap-2 w-full items-center justify-center">
             <h1 className="text-3xl font-bold text-slate-800">Order Punch</h1>
             <div className="flex gap-3 w-full items-end">
-
+              <div className="flex flex-col gap-2 items-center justify-center">
+                <Label className="text-lg text-slate-800 text-center">Accounts</Label>
                 <div className="flex items-center gap-2 justify-center">
-          <Select
+
+                  <Select onValueChange={(value) => {setBrokerName4(value),setIsAccountDisabled(true),setAccountname('')}}>
+            <SelectTrigger className="w-36 max-xs:w-20 bg-blue-800 text-white hover:bg-blue-700">
+              <SelectValue placeholder="All in Broker" />
+            </SelectTrigger>
+            <SelectContent className="bg-white border border-blue-300">
+              {brokers && brokers.length > 0 ? (
+                brokers.map((broker, index) => (
+                  <SelectItem
+                    key={index}
+                    value={broker.NAME}
+                    className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
+                  >
+                    {broker.NAME}
+                  </SelectItem>
+                ))
+              ) : (
+                <SelectItem value="loading" disabled>
+                  {loading ? "Loading brokers..." : "No brokers available"}
+                </SelectItem>
+              )}
+            </SelectContent>
+          </Select>
+          {/* <Select
                 onValueChange={(value) => {
                   handleaccountselect(value);
 
@@ -446,30 +489,29 @@ const OrderPunch = () => {
                 </SelectItem>
               )}
             </SelectContent>
-          </Select>
+          </Select> */}
+
+       
+        <div className="space-y-4">
+          <MultiSelect
+            options={accountlist.map((broker)=>{
+              return {
+                value: broker.accountnumber,
+                label: broker.accountnumber,
+              }
+            })}
+            // className="text-black"
+            onValueChange={(value) => {handleaccountselect(value);}}
+            placeholder="Select Account"
+            animation={0.5}
+            maxCount={3}
+            variant="default"
+          />
+        </div>
+     
          
-            <Select onValueChange={(value) => {setBrokerName4(value),setIsAccountDisabled(true),setAccountname('')}}>
-            <SelectTrigger className="w-36 max-xs:w-20 bg-blue-800 text-white hover:bg-blue-700">
-              <SelectValue placeholder="All in Broker" />
-            </SelectTrigger>
-            <SelectContent className="bg-white border border-blue-300">
-              {brokers && brokers.length > 0 ? (
-                brokers.map((broker, index) => (
-                  <SelectItem
-                    key={index}
-                    value={broker.NAME}
-                    className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-                  >
-                    {broker.NAME}
-                  </SelectItem>
-                ))
-              ) : (
-                <SelectItem value="loading" disabled>
-                  {loading ? "Loading brokers..." : "No brokers available"}
-                </SelectItem>
-              )}
-            </SelectContent>
-          </Select>
+            
+          </div>
           </div>
               
               
@@ -683,6 +725,36 @@ const OrderPunch = () => {
                   {/* Increment Button */}
                   <Button
                     onClick={() => setQuantity((prev) => Number(prev) + 1)} // Convert to number before incrementing
+                    className="bg-green-500 text-slate-800 px-4 py-2 rounded-md hover:bg-green-600"
+                  >
+                    +
+                  </Button>
+                  <p>lotsize:{lotsize}</p>
+
+                </div>
+              </div>
+              <div className="flex flex-col gap-2 w-full ">
+                <Label className="text-lg text-slate-800">Disclose Quantity</Label>
+                <div className="flex items-center gap-2">
+                  <Button
+                    onClick={() =>
+                      setdiscolseqty((prev) => Math.min(0, Number(prev) - 1))
+                    } // Convert to number before decrementing
+                    className="bg-red-500 text-slate-800 px-4 py-2 rounded-md hover:bg-red-600"
+                  >
+                    -
+                  </Button>
+                  {/* Quantity Input */}
+                  <Input
+                    type="number"
+                    value={discloseqty}
+                    onChange={(e) => setdiscolseqty(Number(e.target.value))} // Ensure the value is a number
+                    placeholder="Enter quantity"
+                    className="w-full p-2 border border-gray-300 rounded-md text-center bg-slate-300/65 shadow-md"
+                  />
+                  {/* Increment Button */}
+                  <Button
+                    onClick={() => setdiscolseqty((prev) => Number(prev) + 1)} // Convert to number before incrementing
                     className="bg-green-500 text-slate-800 px-4 py-2 rounded-md hover:bg-green-600"
                   >
                     +

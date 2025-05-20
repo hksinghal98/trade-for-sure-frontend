@@ -91,6 +91,28 @@ const NavContent = ({ className = '' }) => {
             >
               Order Status
             </NavLink>
+            <NavLink
+              to="/Funds"
+              isActive={location.pathname === '/Funds'}
+              onClick={() => handleLinkClick('/Funds')}
+            >
+              Funds
+            </NavLink>
+            <NavLink
+              to="/NetPosition"
+              isActive={location.pathname === '/NetPosition'}
+              onClick={() => handleLinkClick('/NetPosition')}
+            >
+              Net Position
+            </NavLink>
+            <NavLink
+              to="/Holdings"
+              isActive={location.pathname === '/Holdings'}
+              onClick={() => handleLinkClick('/Holdings')}
+            >
+              Holdings
+            </NavLink>
+            
           </div>
         )}
       </div>
