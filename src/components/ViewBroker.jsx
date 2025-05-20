@@ -24,6 +24,7 @@ const ViewBroker = () => {
   const [loading, setLoading] = useState(false);
   const [brokerid, setBrokerid] = useState(false);
   const [REtype, setREType] = useState('POST');
+  const [nickname, setnickname] = useState('');
 
 
 
@@ -177,6 +178,19 @@ const handlelogin = async (brokerid) => {
             value={brokerName}
             readOnly
             className="w-2/3 p-2 border border-gray-300 rounded-md bg-gray-200 pointer-events-none"
+          />
+        </div>
+        <div className="flex items-center gap-4">
+          <Label htmlFor="broker-name" className="w-1/3 text-lg text-gray-700">
+            Nick Name
+          </Label>
+          <Input
+            id="broker-name"
+            type="text"
+            placeholder="Enter Nick Name"
+            value={nickname}
+            onChange={(e) => setnickname(e.target.value)}
+            className="w-2/3 p-2 border border-gray-300 rounded-md"
           />
         </div>
         {/* Other input fields */}
