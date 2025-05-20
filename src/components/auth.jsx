@@ -17,9 +17,14 @@ import React, { useEffect, useState} from 'react';
         const authexpired = Date.now()>(parseFloat(expiry) * 1000)
         console.log(Date.now(),expiry)
         setIsAuthExpired(authexpired)
-        
+        if (!expiry){
+        setIsAuthExpired(true)
+
+        }
 
     } 
+
+    
 
     
 

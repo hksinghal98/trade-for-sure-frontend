@@ -234,7 +234,13 @@ const handleSelectIndex = (value) => {
      if (brokerName4) {
   // fetchSymbols(brokerName4, value)
     setExchange(value)
-    if (value=='NSE'){
+    if (value==='NSE'){
+  setInstrument('EQ')
+      
+
+    }
+
+    if (value==='BSE'){
   setInstrument('EQ')
       
 
@@ -317,7 +323,7 @@ const handleSearch = debounce((value) => {
 
 
 const handleBuyOrSell = (data,action) => {
-  console.log(action,'action')
+  console.log(data,'action')
     navigate("/OrderPunch",{
         state: {
             data: data,
@@ -527,8 +533,9 @@ return (
                                 onClick={handleAddSymbol}
                                 disabled={symbolCount >= 50} // Disable button if symbol count exceeds 50
                             >
-                                Subscribe
+                                Add Symbol
                             </Button>
+                            <p>New subscriptions will reflect below on market open.</p>
                         </div>
                             
                         </div>
@@ -550,7 +557,7 @@ return (
       <th scope="col" className="px-6 py-3">Column 3</th>
       <th scope="col" className="px-6 py-3">Buy</th>
       <th scope="col" className="px-6 py-3">Sell</th>
-      <th scope="col" className="px-6 py-3">Unsubscribe</th>
+      <th scope="col" className="px-6 py-3">Delete</th>
     </tr>
   </thead>
   <tbody>
@@ -566,7 +573,7 @@ return (
          <Button className="bg-red-600/90 text-white hover:bg-red-700">Sell</Button>
         </td>
         <td scope="row" className="px-3 py-2 text-center font-medium text-gray-900 whitespace-nowrap dark:text-slate-800">
-           <Button className="bg-red-700 text-white hover:bg-red-700">Unsubscribe</Button>    
+           <Button className="bg-red-700 text-white hover:bg-red-700">Delete</Button>    
         </td>
       </tr>
     ))}
@@ -584,7 +591,7 @@ return (
       ))}
     <th scope="col" className="px-6 py-3">Buy</th>
     <th scope="col" className="px-6 py-3">Sell</th>
-    <th scope="col" className="px-6 py-3">Unsubscribe</th>
+    <th scope="col" className="px-6 py-3">Delete</th>
   </tr>
 </thead>
 <tbody>
@@ -631,9 +638,9 @@ return (
       >
         <Button
           className="bg-red-700 text-white hover:bg-red-700"
-          onClick={() => handleDelete(row.token,row.broker)}
+          onClick={() => handleDelete(row.symboltoken,row.broker)}
         >
-          Unsubscribe
+          Delete
         </Button>
       </td>
     </tr>

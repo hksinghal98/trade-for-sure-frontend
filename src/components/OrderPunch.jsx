@@ -62,7 +62,7 @@ const OrderPunch = () => {
   const [tableDatafetch, setTableDatafetch] = useState([]);
 
   const [brokerName4, setBrokerName4] = useState( "");
-  const [exchange, setExchange] = useState('NFO');
+  const [exchange, setExchange] = useState('');
   const [instrument, setInstrument] = useState( "");
   const [selectsymbol, setselectsymbol] = useState("");
   const[token,settoken]=useState( "");
@@ -81,15 +81,16 @@ const OrderPunch = () => {
 
   useEffect(() => {
     if (passedState.action) {
+      console.log(passedState.data,'data')
       setside(passedState.action.toUpperCase());
-      // setBrokerName4(passedState.data.brokername)
+      setBrokerName4(passedState.data.broker)
       setExchange(passedState.data.exchange)
       setInstrument(passedState.data.instrument)
-      setselectsymbol(passedState.data.Tradingsymbol)
-      settoken(passedState.data.token )
-      setPrice(passedState.data.LTP )
-      setlotsize(passedState.data.Lotsize )
-      console.log(passedState.data.Lotsize)
+      setselectsymbol(passedState.data.tradingsymbol)
+      settoken(passedState.data.symboltoken )
+      setPrice(passedState.data.ltp )
+      setlotsize(passedState.data.lotsize )
+      console.log(passedState.data.lotsize)
 
 
 
@@ -172,7 +173,7 @@ const OrderPunch = () => {
     .then(response => {
     console.log(response) 
     
-    window.location.reload()
+    // window.location.reload()
     })
     
     }
@@ -204,7 +205,7 @@ const OrderPunch = () => {
     const endpoint = "loginbroker";
     handleexchangerequest(type, payload, endpoint, true).then((response) => {
       console.log(response);
-      window.location.reload();
+      // window.location.reload();
     });
   };
 
@@ -218,6 +219,9 @@ const OrderPunch = () => {
       // ;
 
     } 
+    else {
+      alert("Please select a broker first");
+    }
 
     // Enable "Select Index" only for "NFO" or "BFO"
     if (value === "NFO" || value === "BFO") {
@@ -305,6 +309,9 @@ const OrderPunch = () => {
     setQuantity("");
     setProduct("");
     setOrderType("");
+    setExchange("")
+    setInstrument("")
+
   }
 
   const handleaccountselect=(value)=>{
@@ -482,8 +489,8 @@ const OrderPunch = () => {
                       type="radio"
                       name="exchange"
                       value="NFO"
-                      defaultChecked
-                      // checked={exchange === "NFO"}
+                      
+                      checked={exchange === "NFO"}
                       onChange={(e) => handleSelectIndex(e.target.value)}
                       className="w-4 h-4 "
                     />
@@ -496,7 +503,7 @@ const OrderPunch = () => {
                         name="exchange"
                         
                         value="NSE"
-                        // checked={exchange === "NSE"}
+                        checked={exchange === "NSE"}
                         onChange={(e) => handleSelectIndex(e.target.value)}
                         className="w-4 h-4"
                       />
@@ -507,7 +514,7 @@ const OrderPunch = () => {
                         type="radio"
                         name="exchange"
                         value="BSE"
-                        // checked={exchange === "BSE"}
+                        checked={exchange === "BSE"}
                         onChange={(e) => handleSelectIndex(e.target.value)}
                         className="w-4 h-4"
                       />
@@ -518,7 +525,7 @@ const OrderPunch = () => {
                         type="radio"
                         name="exchange"
                         value="BFO"
-                        // checked={exchange === "BFO"}
+                        checked={exchange === "BFO"}
                         onChange={(e) => handleSelectIndex(e.target.value)}
                         className="w-4 h-4"
                       />

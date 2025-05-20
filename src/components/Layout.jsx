@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet,useNavigate } from 'react-router-dom';
 import ColNav from './ColNav';
 import { handleauth } from './auth';
 import {
@@ -14,6 +14,7 @@ import {
 import { handleexchangerequest } from '../utility/Api';
 const Layout = () => {
 
+
   const dummyLogs = [
   { id: 1, message: 'User logged in successfully', timestamp: '2025-05-13 19:45:32' },
   { id: 2, message: 'API request failed: Invalid token', timestamp: '2025-05-13 19:46:10' },
@@ -27,6 +28,9 @@ const Layout = () => {
 
  
 ];
+
+const navigate= useNavigate()
+
 
 const [data,setdata]= useState([])
 const [loading,setLoading]= useState([])
@@ -51,23 +55,24 @@ const fetchlogsdata = async () => {
     }
   };
 
-useEffect( ()=>{
-  
+      useEffect( ()=>{
+        
 
-  fetchlogsdata()
+        fetchlogsdata()
+      
+      },[])
 
 
 
-
-
-},[])
-
-const isAuthExpired = handleauth();
+     const isAuthExpired = handleauth();
   console.log(isAuthExpired,'checktimestamp')
 
   {if (isAuthExpired) (
     navigate('/')
   )}
+ 
+
+
 
 
   return (
