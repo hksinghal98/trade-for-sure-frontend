@@ -14,9 +14,12 @@ import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridColumnHeaderSeparatorSides } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
 import { Flex } from '@mantine/core';
+import { columnGroupsStateInitializer } from '@mui/x-data-grid/internals';
+import { useNavigate } from 'react-router-dom';
+
 
 
 
@@ -58,6 +61,9 @@ const OrderStatus = () => {
     const [tableDatafetch2, setTableDatafetch2] = useState([]);
     const [tableDatafetch3, setTableDatafetch3] = useState([]);
     const[filtereddata,setfiltereddata]= useState([])
+    const [selectedRows, setSelectedRows] = useState([]);
+
+    const navigate  = useNavigate();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -124,6 +130,23 @@ const paginationModel = { page: 0, pageSize: 5 };
     }
 
     };
+    const handleDelete = () => {
+  // Ensure selectedRows is an array
+  
+  const selectedIds = Array.isArray(selectedRows) ? selectedRows : Array.from(selectedRows);
+  console.log(selectedIds, 'selectedIds');
+  // Filter out the selected rows
+  const updatedData = filtereddata.filter((row) => !selectedIds.includes(row.id));
+
+  // Update the state
+  setfiltereddata(updatedData);
+  setSelectedRows([]); // Clear the selection
+};
+
+const handleModify = (row) => {
+
+  navigate('/OrderPunch', { state: { data: row } });
+};
 
 
     
@@ -183,80 +206,42 @@ const paginationModel = { page: 0, pageSize: 5 };
             </Select>
           )}
           <div className='container flex items-end gap-2 flex-col  mx-auto mt-6 p-6 bg-trasparent rounded-lg max-w-6xl'>
-            <Button className=" bg-red-600/95">Delete </Button>
+            <Button className=" bg-red-600/95" onClick={handleDelete}>Delete </Button>
              <Paper sx={{ height: 400, width: '100%' }}>
   <DataGrid
     className='text-black overflow-x-scroll scrollbar-hide'
     rows={filtereddata} // Use filtereddata as rows
-    getRowId={(row) => row.orderid}
+    getRowId={(row) => row.id} // Ensure this matches the unique identifier
+    disableSelectionOnClick
+    
     columns={[...Object.keys(filtereddata[0] || {}).map((key) => ({
       field: key,
       headerName: key.charAt(0).toUpperCase() + key.slice(1),
-      flex: 1, // Adjust column width
+      // flex: 1, // Adjust column width
+      width:250
     })),
     {
       field: 'Modify',
       headerName: 'Modify',
       // flex: 1, // Adjust column width
+      width:150,
       renderCell: (params) =>(
-        <Button   color="primary" className="p-3 bg-teal-700/85">
+        <Button   color="primary" className="p-3 bg-teal-700/85" onClick={() => handleModify(params.row)}>
           Modify
         </Button>
       )
     }]}
     initialState={{ pagination: { paginationModel } }}
     pageSizeOptions={[5, 10]} // Enable page size options
-    checkboxSelection
+    checkboxSelection 
+    onRowSelectionModelChange={(ids) => {
+      console.log("Selected IDs:",ids);
+      setSelectedRows(ids)}}
+    
     sx={{ border: 0 }}
   />
 </Paper>
-          {/* <div className="overflow-x-auto h-72 w-full rounded-lg">
-  {loading ? (
-    <p className="text-center text-white">Loading...</p> // Loading message
-  ) : filtereddata.length === 0 ? (
-    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-      <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-
-        <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-          <th className="px-6 py-3" scope="col">No data found</th>
-      
-        </tr>
-      </thead>
-      <tbody>
-        {[...Array(1)].map((_, index) => (
-          <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-            <td scope="row" className="px-6 py-2 text-center">-</td>
-            <td scope="row" className="px-6 py-2 text-center">-</td>
-            <td scope="row" className="px-6 py-2 text-center">-</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  ) : (
-    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-      <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-        <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-          {Object.keys(filtereddata[0]).map((key) => (
-            <th key={key} className="px-6 py-3" scope="col">
-              {key.charAt(0).toUpperCase() + key.slice(1)}
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {filtereddata.map((row) => (
-          <tr key={row.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-            {Object.values(row).map((value, index) => (
-              <td key={index} className="px-6 py-2 text-center">
-                {value}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  )}
-</div> */}
+          
 </div>
         </div>
       </CustomTabPanel>
