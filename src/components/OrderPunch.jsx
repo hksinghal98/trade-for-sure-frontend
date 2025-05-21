@@ -91,22 +91,26 @@ const OrderPunch = () => {
 
   useEffect(() => {
     if (passedState.action) {
-      console.log(passedState.data,'data')
+      console.log(passedState.data,'data>>>>')
       setside(passedState.action.toUpperCase());
-      setBrokerName4(passedState.data.broker)
-      setExchange(passedState.data.exchange)
-      setInstrument(passedState.data.instrument)
-      setselectsymbol(passedState.data.tradingsymbol)
+      setmodify(passedState.modify)
       settoken(passedState.data.symboltoken )
       setPrice(passedState.data.ltp )
-      setlotsize(passedState.data.lotsize )
-      console.log(passedState.data.lotsize)
 
+      setBrokerName4(passedState.data.brokername || "");
+      setExchange(passedState.data.exchange || "");
+      setInstrument(passedState.data.instrument || "");
+      setselectsymbol(passedState.data.tradingsymbol || "");
+      // setside(passedState.data.side || "");
+      // setAccountname(passedState.data.accountname || "");
+      setlotsize(passedState.data.lotsize || "");
+      setQuantity(passedState.data.quantity || "");
+      setdiscolseqty(passedState.data.discloseqty || "");
 
 
 
     }
-  }, [passedState,setlotsize]);
+  }, [passedState]);
 
 
   const dummyLogs = [

@@ -14,9 +14,12 @@ import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridColumnHeaderSeparatorSides } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
 import { Flex } from '@mantine/core';
+import { columnGroupsStateInitializer } from '@mui/x-data-grid/internals';
+import { useNavigate } from 'react-router-dom';
+
 
 
 
@@ -60,6 +63,9 @@ const OrderStatus = () => {
     const[filtereddata,setfiltereddata]= useState([])
     const[selectedorder,setselectedorder]= useState([])
 
+    const [selectedRows, setSelectedRows] = useState([]);
+
+    const navigate  = useNavigate();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -92,8 +98,6 @@ const paginationModel = { page: 0, pageSize: 5 };
 
   useEffect(() => {
     fetchTableData('all',setTableDatafetch);
-    fetchTableData('open',setTableDatafetch2);
-    fetchTableData('close',setTableDatafetch3);
 
 
   }, []);
@@ -134,7 +138,7 @@ const handlecancelorder = ()=>{
   const handleSelectIndex = (value) => {
       if (value) {
 
-
+    
     const fill = tableDatafetch.filter((item) =>
     item.orderstatus.toLowerCase().includes(value.toLowerCase())
   );
@@ -148,6 +152,23 @@ const handlecancelorder = ()=>{
     }
 
     };
+    const handleDelete = () => {
+  // Ensure selectedRows is an array
+  
+  const selectedIds = Array.isArray(selectedRows) ? selectedRows : Array.from(selectedRows);
+  console.log(selectedIds, 'selectedIds');
+  // Filter out the selected rows
+  const updatedData = filtereddata.filter((row) => !selectedIds.includes(row.id));
+
+  // Update the state
+  setfiltereddata(updatedData);
+  setSelectedRows([]); // Clear the selection
+};
+
+const handleModify = (row) => {
+
+  navigate('/OrderPunch', { state: { data: row , action: row.transactiontype,modify:true} });
+};
 
 
     
@@ -212,7 +233,9 @@ const handlecancelorder = ()=>{
   <DataGrid
     className='text-black overflow-x-scroll scrollbar-hide'
     rows={filtereddata} // Use filtereddata as rows
-    getRowId={(row) => row.orderid}
+    getRowId={(row) => row.id} // Ensure this matches the unique identifier
+    disableSelectionOnClick
+    
     columns={[...Object.keys(filtereddata[0] || {}).map((key) => ({
       field: key,
       headerName: key.charAt(0).toUpperCase() + key.slice(1),
@@ -223,8 +246,9 @@ const handlecancelorder = ()=>{
       field: 'Modify',
       headerName: 'Modify',
       // flex: 1, // Adjust column width
+      width:150,
       renderCell: (params) =>(
-        <Button   color="primary" className="p-3 bg-teal-700/85">
+        <Button   color="primary" className="p-3 bg-teal-700/85" onClick={() => handleModify(params.row)}>
           Modify
         </Button>
       )
@@ -232,7 +256,7 @@ const handlecancelorder = ()=>{
     initialState={{ pagination: { paginationModel } }}
     pageSizeOptions={[5, 10]} // Enable page size options
     checkboxSelection
-    onRowSelectionModelChange={(value)=>handleOrderselect(value)}
+    onRowSelectionModelChange={(value)=>{handleOrderselect(value),setSelectedRows(value.ids)}}
     sx={{ border: 0 }}
   />
 </Paper>

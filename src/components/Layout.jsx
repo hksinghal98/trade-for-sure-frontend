@@ -12,6 +12,7 @@ import {
 
 
 import { handleexchangerequest } from '../utility/Api';
+import { RefreshCcw } from 'lucide-react';
 const Layout = () => {
 
 
@@ -88,9 +89,10 @@ const fetchlogsdata = async () => {
   <AccordionItem value="item-1">
     <AccordionTrigger className=" text-black px-3">SYSTEM LOGS (Click here)</AccordionTrigger>
     <AccordionContent className=" text-black px-3 overflow-scroll h-44 scrollbar-hide">
+      <RefreshCcw onClick={fetchlogsdata} className='cursor-pointer text-black hover:text-slate-800 duration-500' />
       <ul >
         {data.map((log,index) => (
-          <li key={index}>{log}</li> // Adjust based on your data structure
+          <li className=' text-wrap break-words w-4/5' key={index}>{log}</li> // Adjust based on your data structure
         ))}
       </ul>
     </AccordionContent>

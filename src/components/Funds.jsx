@@ -1,63 +1,91 @@
-import {React, useState} from 'react'
-
+import React, { useState, useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
-import { Flex } from '@mantine/core';
-
-
-
+import { Button } from '../components/ui/button';
+import { handleexchangerequest } from '../utility/Api';
 
 const Funds = () => {
-    const [selected, setSelected] = useState([])
-
-
+  const [loading, setLoading] = useState(false);
+  const [tableDatafetch, setTableDatafetch] = useState([]);
+  const [filtereddata, setfiltereddata] = useState([]);
+  const [selectedRows, setSelectedRows] = useState([]);
 
   const paginationModel = { page: 0, pageSize: 5 };
 
+  // Fetch table data
+  const fetchTableData = async () => {
+    setLoading(true);
+    try {
+      const type = 'GET';
+      const endpoint = 'getfunds'; // Replace with your API endpoint
+      const payload = 'type=all'; // Example payload
+      const response = await handleexchangerequest(type, payload, endpoint, false);
+      if (response) {
+        console.log('API Response:', response);
+        setTableDatafetch(response);
+      } else {
+        console.error('Failed to fetch table data');
+      }
+    } catch (error) {
+      console.error('Error fetching table data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-const rows = [
-    { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-    { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-    { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-    { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-    { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-    { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-  ];
-  const columns = [
-    { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-    { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-    { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-    { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-    { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-    { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-  ];
+  // Process data and add unique IDs
+  useEffect(() => {
+    fetchTableData();
+  }, []);
+
+  useEffect(() => {
+    const dataWithIds = tableDatafetch.map((item, index) => ({
+      ...item,
+      id: index, // Add a unique id based on the index
+    }));
+    setfiltereddata(dataWithIds);
+    console.log('Processed Data:', dataWithIds);
+  }, [tableDatafetch]);
+
+  // Handle row deletion
+  const handleDelete = () => {
+    const updatedData = filtereddata.filter((row) => !selectedRows.includes(row.id));
+    setfiltereddata(updatedData);
+    setSelectedRows([]); // Clear the selection
+  };
+
   return (
-    
     <>
-    <h1 className="text-5xl ">Funds</h1>
-     <Paper sx={{ height: 400, width: '100%' }}>
+      <h1 className="text-2xl">Funds</h1>
+      <div className="container flex items-end gap-2 flex-col mx-auto mt-6 p-6 bg-transparent rounded-lg max-w-6xl">
+      
+        <Paper sx={{ height: 400, width: '100%' }}>
           <DataGrid
-            className='text-black overflow-x-scroll scrollbar-hide'
-            rows={rows} // Use filtereddata as rows
-            // getRowId={(row) => row.orderid}
-            columns={columns}
-            
+            className="text-black overflow-x-scroll scrollbar-hide"
+            rows={filtereddata}
+            getRowId={(row) => row.id}
+            disableSelectionOnClick
+            columns={[
+              ...Object.keys(filtereddata[0] || {}).map((key) => ({
+                field: key,
+                headerName: key.charAt(0).toUpperCase() + key.slice(1),
+                width: 250,
+              })),
+              
+            ]}
             initialState={{ pagination: { paginationModel } }}
-            pageSizeOptions={[5, 10]} // Enable page size options
+            pageSizeOptions={[5, 10]}
             checkboxSelection
+            onRowSelectionModelChange={(ids) => {
+              console.log('Selected IDs:', ids);
+              setSelectedRows(ids);
+            }}
             sx={{ border: 0 }}
           />
         </Paper>
-    
+      </div>
     </>
+  );
+};
 
-  )
-}
-
-export default Funds
+export default Funds;
