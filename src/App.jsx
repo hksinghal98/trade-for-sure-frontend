@@ -11,16 +11,17 @@ import AddBroker from './components/AddBroker';
 import ViewBroker from './components/ViewBroker';
 import Marketwatch from './components/Marketwatch';
 import Angel from './components/Angelbroker';
+import Funds from './components/Funds';
+import Holdings from './components/Holdings';
+import NetPosition from './components/NetPosition';
 
 function App() {
   return (
     <MantineProvider>
       <Router>
         <Routes>
-          {/* Public Route */}
           <Route path="/" element={<LoginPage />} />
-          
-          {/* Protected Routes with Layout */}
+      
           <Route element={<Layout />}>
             <Route path="/home" element={<Marketwatch />} />
             
@@ -30,6 +31,9 @@ function App() {
             
               <Route path="/OrderStatus" element={<OrderStatus />} />
               <Route path="/OrderPunch" element={<OrderPunch />} />
+              <Route path="/Funds" element={<Funds />} />
+              <Route path="/NetPosition" element={<NetPosition />} />
+              <Route path="/Holdings" element={<Holdings />} />
             
             {/* <Route path="/Settings" element={<AddBroker />} /> */}
             <Route path="/ViewBroker" element={<ViewBroker defaultBrokerName="Shoonya" />} />

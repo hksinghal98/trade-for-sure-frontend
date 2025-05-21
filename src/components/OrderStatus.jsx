@@ -14,6 +14,10 @@ import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
+import { DataGrid } from '@mui/x-data-grid';
+import Paper from '@mui/material/Paper';
+import { Flex } from '@mantine/core';
+
 
 
 function CustomTabPanel(props) {
@@ -60,6 +64,8 @@ const OrderStatus = () => {
   }
 
 
+const paginationModel = { page: 0, pageSize: 5 };
+
 
 
   const fetchTableData = async (t,setdata) => {
@@ -92,11 +98,13 @@ const OrderStatus = () => {
 
 
   useEffect(()=>{
-
-      setfiltereddata(tableDatafetch)
-      console.log(tableDatafetch,'filteredAndSortedProjects')
-
-  },[tableDatafetch])
+  const dataWithIds = tableDatafetch.map((item, index) => ({
+    ...item,
+    id: index, // Add a unique id based on the index
+  }));
+  setfiltereddata(dataWithIds);
+  console.log(dataWithIds, 'filteredAndSortedProjects');
+}, [tableDatafetch])
     
 
   const handleSelectIndex = (value) => {
@@ -174,8 +182,35 @@ const OrderStatus = () => {
               </SelectContent>
             </Select>
           )}
-          <div className='container mx-auto mt-6 p-6 bg-trasparent rounded-lg max-w-6xl'>
-          <div className="overflow-x-auto h-72 w-full rounded-lg">
+          <div className='container flex items-end gap-2 flex-col  mx-auto mt-6 p-6 bg-trasparent rounded-lg max-w-6xl'>
+            <Button className=" bg-red-600/95">Delete </Button>
+             <Paper sx={{ height: 400, width: '100%' }}>
+  <DataGrid
+    className='text-black overflow-x-scroll scrollbar-hide'
+    rows={filtereddata} // Use filtereddata as rows
+    getRowId={(row) => row.orderid}
+    columns={[...Object.keys(filtereddata[0] || {}).map((key) => ({
+      field: key,
+      headerName: key.charAt(0).toUpperCase() + key.slice(1),
+      flex: 1, // Adjust column width
+    })),
+    {
+      field: 'Modify',
+      headerName: 'Modify',
+      // flex: 1, // Adjust column width
+      renderCell: (params) =>(
+        <Button   color="primary" className="p-3 bg-teal-700/85">
+          Modify
+        </Button>
+      )
+    }]}
+    initialState={{ pagination: { paginationModel } }}
+    pageSizeOptions={[5, 10]} // Enable page size options
+    checkboxSelection
+    sx={{ border: 0 }}
+  />
+</Paper>
+          {/* <div className="overflow-x-auto h-72 w-full rounded-lg">
   {loading ? (
     <p className="text-center text-white">Loading...</p> // Loading message
   ) : filtereddata.length === 0 ? (
@@ -191,8 +226,8 @@ const OrderStatus = () => {
         {[...Array(1)].map((_, index) => (
           <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
             <td scope="row" className="px-6 py-2 text-center">-</td>
-            {/* <td scope="row" className="px-6 py-2 text-center">-</td>
-            <td scope="row" className="px-6 py-2 text-center">-</td> */}
+            <td scope="row" className="px-6 py-2 text-center">-</td>
+            <td scope="row" className="px-6 py-2 text-center">-</td>
           </tr>
         ))}
       </tbody>
@@ -221,7 +256,7 @@ const OrderStatus = () => {
       </tbody>
     </table>
   )}
-</div>
+</div> */}
 </div>
         </div>
       </CustomTabPanel>
@@ -230,6 +265,7 @@ const OrderStatus = () => {
         {/* Render the Select component only when the "Open Position" tab is selected */}
 
            <div className='container mx-auto mt-6 p-6 bg-trasparent rounded-lg max-w-6xl'>
+
           <div className="overflow-x-auto h-72 w-full rounded-lg">
   {loading ? (
     <p className="text-center text-white">Loading...</p> // Loading message
