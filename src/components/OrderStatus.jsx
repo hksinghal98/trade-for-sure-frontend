@@ -63,6 +63,7 @@ const OrderStatus = () => {
     const[filtereddata,setfiltereddata]= useState([])
     const[selectedorder,setselectedorder]= useState([])
 
+
     const [selectedRows, setSelectedRows] = useState([]);
 
     const navigate  = useNavigate();
@@ -122,12 +123,21 @@ setselectedorder(value.ids)
 
 
 
+
 }
 
 
 const handlecancelorder = ()=>{
-
-
+        const obj= JSON.stringify([...selectedorder])
+        const payload ="selectedRows="+obj
+        const type = "GET"
+        const endpoint= "placeorder"
+        handleexchangerequest(type, payload, endpoint,true)
+    .then(response => {
+    console.log(response) 
+    
+    })
+    
 
   
 
@@ -138,7 +148,6 @@ const handlecancelorder = ()=>{
   const handleSelectIndex = (value) => {
       if (value) {
 
-    
     const fill = tableDatafetch.filter((item) =>
     item.orderstatus.toLowerCase().includes(value.toLowerCase())
   );
@@ -186,8 +195,8 @@ const handleModify = (row) => {
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="Order Book" className='text-slate-900 font-bold' {...a11yProps(0)} />
-          <Tab label="Open Position"className='text-slate-900 font-bold' {...a11yProps(1)} />
-          <Tab label="Close Position"className='text-slate-900 font-bold' {...a11yProps(2)} />
+          {/* <Tab label="Open Position"className='text-slate-900 font-bold' {...a11yProps(1)} />
+          <Tab label="Close Position"className='text-slate-900 font-bold' {...a11yProps(2)} /> */}
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
@@ -264,116 +273,7 @@ const handleModify = (row) => {
 </div>
         </div>
       </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
-        Open Position
-        {/* Render the Select component only when the "Open Position" tab is selected */}
-
-           <div className='container mx-auto mt-6 p-6 bg-trasparent rounded-lg max-w-6xl'>
-
-          <div className="overflow-x-auto h-72 w-full rounded-lg">
-  {loading ? (
-    <p className="text-center text-white">Loading...</p> // Loading message
-  ) : tableDatafetch2.length === 0 ? (
-    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-      <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-
-        <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-          <th className="px-6 py-3" scope="col">No data found</th>
       
-        </tr>
-      </thead>
-      <tbody>
-        {[...Array(1)].map((_, index) => (
-          <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-            <td scope="row" className="px-6 py-2 text-center">-</td>
-            {/* <td scope="row" className="px-6 py-2 text-center">-</td>
-            <td scope="row" className="px-6 py-2 text-center">-</td> */}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  ) : (
-    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-      <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-        <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-          {Object.keys(tableDatafetch2[0]).map((key) => (
-            <th key={key} className="px-6 py-3" scope="col">
-              {key.charAt(0).toUpperCase() + key.slice(1)}
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {tableDatafetch2.map((row) => (
-          <tr key={row.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-            {Object.values(row).map((value, index) => (
-              <td key={index} className="px-6 py-2 text-center">
-                {value}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  )}
-</div>
-</div>
- 
-    
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-        Close Position
-
-             <div className='container mx-auto mt-6 p-6 bg-trasparent rounded-lg max-w-6xl'>
-          <div className="overflow-x-auto h-72 w-full rounded-lg">
-  {loading ? (
-    <p className="text-center text-white">Loading...</p> // Loading message
-  ) : tableDatafetch3.length === 0 ? (
-    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-      <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-
-        <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-          <th className="px-6 py-3" scope="col">No data found</th>
-      
-        </tr>
-      </thead>
-      <tbody>
-        {[...Array(1)].map((_, index) => (
-          <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-            <td scope="row" className="px-6 py-2 text-center">-</td>
-            {/* <td scope="row" className="px-6 py-2 text-center">-</td>
-            <td scope="row" className="px-6 py-2 text-center">-</td> */}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  ) : (
-    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-      <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-        <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-          {Object.keys(tableDatafetch3[0]).map((key) => (
-            <th key={key} className="px-6 py-3" scope="col">
-              {key.charAt(0).toUpperCase() + key.slice(1)}
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {tableDatafetch3.map((row) => (
-          <tr key={row.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-            {Object.values(row).map((value, index) => (
-              <td key={index} className="px-6 py-2 text-center">
-                {value}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  )}
-</div>
-</div>
-    </CustomTabPanel>
     </Box>
     </>
   )

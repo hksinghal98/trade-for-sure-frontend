@@ -77,6 +77,8 @@ const OrderPunch = () => {
   const [lotsize, setlotsize] = useState('');
   const [isAccountDisabled, setIsAccountDisabled] = useState(false);
   const [modify, setmodify] = useState(false);
+  const [orderid, setorderid] = useState('');
+
 
   
 
@@ -96,13 +98,13 @@ const OrderPunch = () => {
       setmodify(passedState.modify)
       settoken(passedState.data.symboltoken )
       setPrice(passedState.data.ltp )
-
+      setorderid(passedState.data.orderid)
       setBrokerName4(passedState.data.brokername || "");
       setExchange(passedState.data.exchange || "");
       setInstrument(passedState.data.instrument || "");
       setselectsymbol(passedState.data.tradingsymbol || "");
       // setside(passedState.data.side || "");
-      // setAccountname(passedState.data.accountname || "");
+      // setAccountname(passedState.data.accountnumber || "");  
       setlotsize(passedState.data.lotsize || "");
       setQuantity(passedState.data.quantity || "");
       setdiscolseqty(passedState.data.discloseqty || "");
@@ -194,7 +196,8 @@ const OrderPunch = () => {
           token,
           discloseqty,
           instrument,
-          modify
+          modify,
+          orderid
 
 
         });
