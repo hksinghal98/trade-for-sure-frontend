@@ -73,9 +73,12 @@ const OrderPunch = () => {
   const[token,settoken]=useState( "");
   const [side, setside] = useState(""); // "Buy" or "Sell"
   const [price, setPrice] = useState('');
-  const [accountname, setAccountname] = useState('');
+  const [accountname, setAccountname] = useState([]);
   const [lotsize, setlotsize] = useState('');
   const [isAccountDisabled, setIsAccountDisabled] = useState(false);
+  const [modify, setmodify] = useState(false);
+
+  
 
   const [query, setQuery] = useState('');
  const [data,setdata]= useState([])
@@ -143,12 +146,15 @@ const OrderPunch = () => {
   };
 
 
-  const fetchaccountlist = async () => {
+  const fetchaccountlist = async (broker) => {
         try {
-      const response = await handleexchangerequest("GET", 'broker=all', "broker",false); // Replace with your API endpoint
+      const response = await handleexchangerequest("GET", 'broker='+broker+'&account=all', "broker",false); // Replace with your API endpoint
       if (response) {
         setAccountlist(response); // Assuming response.data contains the broker list
-        console.error(response,'account');
+        console.log(response,'account');
+        if(response.length==0){
+          alert('No Logged in  Account found. Please Login to Broker ')
+        }
 
       } else {
         console.error("Failed to fetch brokers");
@@ -163,7 +169,7 @@ const OrderPunch = () => {
     // Fetch brokers on component mount
         useEffect(() => {
           fetchBrokers();
-          fetchaccountlist()
+          // fetchaccountlist()
       
         }, []);
 
@@ -181,7 +187,10 @@ const OrderPunch = () => {
           exchange,
           side,
           accountname,
-          token
+          token,
+          discloseqty,
+          instrument,
+          modify
 
 
         });
@@ -333,8 +342,8 @@ const OrderPunch = () => {
   }
 
   const handleaccountselect=(value)=>{
-    setBrokerName4(value.brokername)
-    // console.log('Selected accounts:', selectedAccounts);
+    // setBrokerName4(value.brokername)
+    console.log('Selected accounts:', value);
     setAccountname(value)
 
   }
@@ -439,7 +448,7 @@ const OrderPunch = () => {
                 <Label className="text-lg text-slate-800 text-center">Accounts</Label>
                 <div className="flex items-center gap-2 justify-center">
 
-                  <Select onValueChange={(value) => {setBrokerName4(value),setIsAccountDisabled(true),setAccountname('')}}>
+                  <Select onValueChange={(value) => {setBrokerName4(value),setIsAccountDisabled(true),setAccountname(''),fetchaccountlist(value)}}>
             <SelectTrigger className="w-36 max-xs:w-20 bg-blue-800 text-white hover:bg-blue-700">
               <SelectValue placeholder="All in Broker" />
             </SelectTrigger>
@@ -736,7 +745,6 @@ const OrderPunch = () => {
                   >
                     +
                   </Button>
-                  <p>lotsize:{lotsize}</p>
 
                 </div>
               </div>
