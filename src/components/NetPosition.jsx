@@ -3,6 +3,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
 import { Button } from '../components/ui/button';
 import { handleexchangerequest } from '../utility/Api';
+import { RefreshCcw } from 'lucide-react';
 
 const NetPosition = () => {
   const [loading, setLoading] = useState(false);
@@ -78,6 +79,7 @@ const NetPosition = () => {
     <>
       <h1 className="text-2xl">Net Position</h1>
       <div className="container flex items-end gap-2 flex-col mx-auto mt-6 p-6 bg-transparent rounded-lg max-w-6xl">
+        <RefreshCcw className="cursor-pointer" onClick={fetchNetposition} />
         
         <Paper sx={{ height: 400, width: '100%' }}>
           <DataGrid
