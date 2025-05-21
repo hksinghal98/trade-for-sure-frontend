@@ -54,6 +54,26 @@ const NetPosition = () => {
     setSelectedRows([]); // Clear the selection
   };
 
+  const handlexit = async (type, row) => {
+    console.log('Exit button clicked for row:', row);
+    try {
+      const endpoint = 'exitposition'; 
+      const payload = { ...row }; 
+      console.log('Payload:', payload);
+      const response = await handleexchangerequest('POST', payload, endpoint, true); // Use POST method
+      if (response) {
+        console.log('Exit API Response:', response);
+        alert('Row data sent to backend successfully!');
+      } else {
+        console.error('Failed to send row data to backend');
+        alert('Failed to send row data to backend');
+      }
+    } catch (error) {
+      console.error('Error sending row data to backend:', error);
+      alert('Error sending row data to backend');
+    }
+  }
+
   return (
     <>
       <h1 className="text-2xl">Net Position</h1>
@@ -76,8 +96,8 @@ const NetPosition = () => {
                 headerName: 'Modify',
                 width: 150,
                 renderCell: (params) => (
-                  <Button color="primary" className="p-3 bg-teal-700/85">
-                    Modify
+                  <Button color="primary" className="p-3 bg-cyan-700/85" onClick={() => handlexit('Exit', params.row)}>
+                    Exit
                   </Button>
                 ),
               },
