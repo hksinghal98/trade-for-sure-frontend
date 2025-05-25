@@ -96,7 +96,7 @@ const OrderPunch = () => {
       console.log(passedState.data,'data>>>>')
       setside(passedState.action.toUpperCase());
       setmodify(passedState.modify)
-      settoken(passedState.data.symboltoken )
+      settoken(passedState.data.symboltoken ) 
       setPrice(passedState.data.ltp )
       setorderid(passedState.data.orderid)
       setBrokerName4(passedState.data.brokername || "");

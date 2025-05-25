@@ -106,3 +106,19 @@
    |  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 5  |  
 6  |  
+
+> new_dash@0.0.0 dev
+> vite --host
+
+
+  VITE v6.3.5  ready in 321 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: http://172.31.46.6:5173/
+[vite:css][postcss] @import must precede all other statements (besides @charset or empty @layer)
+2  |  @tailwind components;
+3  |  @tailwind utilities;
+4  |  @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@200..800&display=swap');
+   |  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+5  |  
+6  |  

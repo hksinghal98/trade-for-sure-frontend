@@ -93,16 +93,16 @@ const NetPosition = () => {
                 headerName: key.charAt(0).toUpperCase() + key.slice(1),
                 width: 250,
               })),
-              {
-                field: 'Modify',
-                headerName: 'Modify',
-                width: 150,
-                renderCell: (params) => (
-                  <Button color="primary" className="p-3 bg-cyan-700/85" onClick={() => handlexit('Exit', params.row)}>
-                    Exit
-                  </Button>
-                ),
-              },
+              // {
+              //   field: 'Modify',
+              //   headerName: 'Modify',
+              //   width: 150,
+              //   renderCell: (params) => (
+              //     <Button color="primary" className="p-3 bg-cyan-700/85" onClick={() => handlexit('Exit', params.row)}>
+              //       Exit
+              //     </Button>
+              //   ),
+              // },
             ]}
             initialState={{ pagination: { paginationModel } }}
             pageSizeOptions={[5, 10]}
