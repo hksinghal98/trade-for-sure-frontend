@@ -197,7 +197,8 @@ const OrderPunch = () => {
           discloseqty,
           instrument,
           modify,
-          orderid
+          orderid,
+          lotsize
 
 
         });
@@ -299,6 +300,10 @@ const OrderPunch = () => {
                if(broker=='ANGEL'){
                removeDuplicatsymbol = [...new Set(response.symbol)];
                
+              }else{
+
+               removeDuplicatsymbol = [...new Set(response.TradingSymbol)];
+
               }
               
               setsymbol(removeDuplicatsymbol);

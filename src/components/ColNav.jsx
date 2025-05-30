@@ -145,20 +145,33 @@ const NavContent = ({ className = '' }) => {
               ANGEL
             </NavLink>
             <NavLink
-              to="/ViewAngel"
+              to="/Viewdhan"
               isActive={location.pathname === '/ViewAngel'}
               onClick={() => handleLinkClick('/ViewAngel')}
             >
               DHAN
             </NavLink>
             <NavLink
-              to="/ViewAngel"
+              to="/Viewmotilal"
+              isActive={location.pathname === '/ViewAngel'}
+              onClick={() => handleLinkClick('/ViewAngel')}
+            >
+              Motilal
+            </NavLink>
+
+                <NavLink
+              to="/Viewgroww"
+              isActive={location.pathname === '/ViewAngel'}
+              onClick={() => handleLinkClick('/ViewAngel')}
+            >
+              Groww
+            </NavLink> <NavLink
+              to="/Viewfyers"
               isActive={location.pathname === '/ViewAngel'}
               onClick={() => handleLinkClick('/ViewAngel')}
             >
               FYRES
             </NavLink>
-
 
             
             
