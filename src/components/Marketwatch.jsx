@@ -38,7 +38,7 @@ const Marketwatch = () => {
 
 
         
-              console.log(data['token'])
+  
 
     const [messages, setMessages] = useState([]);
 
@@ -55,6 +55,12 @@ const Marketwatch = () => {
         setToken(data['token'][index])
         setlotsize(data['lotsize'][index])
 
+
+       }
+
+       else {
+       setToken(data['token'][index])
+        setlotsize(data['lotsize'][index])
 
        }
 
@@ -112,13 +118,18 @@ const Marketwatch = () => {
           const response = await handleexchangerequest("GET", queryParams, "symbols",false);
           if (response) {
             setdata(response)
-            if(broker=='SHOONYA'){
-             removeDuplicatsymbol = [...new Set(response.TradingSymbol)];
-            }
+            // if(broker=='SHOONYA'){
+            //  removeDuplicatsymbol = [...new Set(response.TradingSymbol)];
+            // }
 
-             if(broker=='ANGEL'){
-             removeDuplicatsymbol = [...new Set(response.symbol)];
-            }
+            //  if(broker=='ANGEL'){
+            //  removeDuplicatsymbol = [...new Set(response.symbol)];
+            // }
+           
+            removeDuplicatsymbol = [...new Set(response.TradingSymbol)];
+
+
+
 
             setsymbol(removeDuplicatsymbol);
             console.log("Symbols fetched successfully:", removeDuplicatsymbol);
@@ -293,7 +304,7 @@ if (brokerName4) {
     console.log(response) 
     setSymbolCount(response); // Increment the symbol count
     
-    window.location.reload()
+    // window.location.reload()
     })
     
     }

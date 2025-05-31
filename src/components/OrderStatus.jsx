@@ -62,6 +62,9 @@ const OrderStatus = () => {
     const [tableDatafetch3, setTableDatafetch3] = useState([]);
     const[filtereddata,setfiltereddata]= useState([])
     const[selectedorder,setselectedorder]= useState([])
+    const[openfil,setopenfil]= useState('')
+
+    
 
 
     const [selectedRows, setSelectedRows] = useState([]);
@@ -204,7 +207,7 @@ const handleModify = (row) => {
         {/* Render the Select component only when the "Order Book" tab is selected */}
         <div className='flex flex-wrap items-center justify-around gap-4'>
           {value === 0 && (
-            <Select onValueChange={(value) => handleSelectIndex(value)}>
+            <Select onValueChange={(value) => {handleSelectIndex(value),setopenfil(value)}}>
               <SelectTrigger className="w-40 max-xs:w-20 bg-sky-700/85 text-white hover:bg-sky-700">
                 <SelectValue placeholder="Select Status" />
               </SelectTrigger>
@@ -251,18 +254,39 @@ const handleModify = (row) => {
       // flex: 1, // Adjust column width
       width:150
     })),
+  
+
+    
+    
     {
+  
+  
       field: 'Modify',
       headerName: 'Modify',
       // flex: 1, // Adjust column width
       width:150,
       renderCell: (params) =>(
+    
         <Button   color="primary" className="p-3 bg-teal-700/85" onClick={() => handleModify(params.row)}>
           Modify
         </Button>
       )
-    }]}
-    initialState={{ pagination: { paginationModel } }}
+    } 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    ]}
+
+
+    
+    initialS
+    tate={{ pagination: { paginationModel } }}
     pageSizeOptions={[5, 10]} // Enable page size options
     checkboxSelection
     onRowSelectionModelChange={(value)=>{handleOrderselect(value),setSelectedRows(value.ids)}}

@@ -36,6 +36,8 @@ export const handleexchangerequest = async (type, payload, endpoint,okalert) => 
 
 
   const sdd = localStorage.getItem("token");
+  const csrf = localStorage.getItem("csrf");
+
   console.log(payload)
   try {
     const t = "token " + sdd;
@@ -45,6 +47,8 @@ export const handleexchangerequest = async (type, payload, endpoint,okalert) => 
         method: type,
         headers: {
           "Content-Type": "application/json",
+          'X-CSRFToken':csrf,
+
           Authorization: t,
         },
         body: payload,
@@ -67,6 +71,8 @@ if (okalert){
         method: type,
         headers: {
           "Content-Type": "application/json",
+          'X-CSRFToken':csrf,
+
           Authorization: t,
         },
         body: payload,
@@ -93,6 +99,8 @@ if (okalert){
           method: type,
           headers: {  
             "Content-Type": "application/json",
+          'X-CSRFToken':csrf,
+
             Authorization: t,
           },
         }
@@ -119,6 +127,8 @@ if (okalert){
           method: type,
           headers: {  
             "Content-Type": "application/json",
+          'X-CSRFToken':csrf,
+
             Authorization: t,
           },
         }

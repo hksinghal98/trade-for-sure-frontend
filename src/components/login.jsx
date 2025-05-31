@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState,useEffect} from 'react';
 // import    '../style/botstyle.css';
 import { useNavigate  } from 'react-router-dom';
 import { FiArrowLeft, FiArrowRight } from 'react-icons/fi'; 
@@ -10,11 +10,41 @@ const LoginPage = () => {
   const [error, setError] = useState('');
   const history = useNavigate();
   const navigate = useNavigate();
+  const [csrf_token,setCsrfToken]= useState('')
+
   const onback = () =>{
        navigate('/')
 }
+useEffect( () => {
+  // Fetch the CSRF token when the component mounts
+  try{
+   const res =  fetch(`${Host_Ip}csrf_token`,{
+   method: 'GET'}
+   )
+   .then((response) => {
+    if (!response.ok) {
+      throw new Error('token failed');
+    }
+    return response.json();
+  })
+  .then((data) => {
+    const tokencsrf = data.csrfToken;
+    setCsrfToken(tokencsrf);
+    localStorage.setItem('csrf',tokencsrf)
+  })
+  }
+  
+  catch (error) {
+    setError('Invalid username or password');
+    console.error('Login error:', error);
+  }
 
+    
+    
+}, []); 
  
+
+
 
   
 
@@ -28,6 +58,8 @@ const LoginPage = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'X-CSRFToken':csrf_token
+
          
           
         },
