@@ -30,10 +30,10 @@ const Marketwatch = () => {
     const [symbolCount, setSymbolCount] = useState(0); // Track the number of symbols added
          const[exchange,setExchange]= useState("")
          const [query, setQuery] = useState("");
-        const [Symbol,setsymbol]= useState([])
-        const [token,setToken]= useState([])
-        const [data,setdata]= useState([])
-        const [instrument,setInstrument]= useState([])
+        const [Symbol,setsymbol]= useState('')
+        const [token,setToken]= useState('')
+        const [data,setdata]= useState('')
+        const [instrument,setInstrument]= useState('')
         const [lotsize,setlotsize]= useState('')
 
 
@@ -329,7 +329,7 @@ const handleSearch = debounce((value) => {
     fetchSymbols(brokerName4, exchange,instrument,value); 
 }
 
-      }, 800); // Wait 300ms before executing the search
+      }, 1000); // Wait 300ms before executing the search
 
 
 

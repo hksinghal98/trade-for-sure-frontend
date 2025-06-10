@@ -19,6 +19,18 @@ import Motilal from './components/Motilal';
 import Groww from './components/Grow';
 import Fyers from './components/Fyers';
 import Fyersredirect from './components/Fyresredirect';
+import Upstox from './components/upstox';
+import Upstoxedirect from './components/upstoxredirect';
+import Aliceblue from './components/Aliceblue';
+import Zerodha from './components/Zerodha';
+import Zerodhared from './components/zerodharedirect';
+import Stoxkart from './components/stoxkart';
+import Stoxkartred from './components/stoxkartredirect';
+import Flattrade from './components/flattrade';
+import Flattradered from './components/flattraderedirect';
+import HDFC from './components/hdfc';
+import SAMCO from './components/samco';
+import Hdfcred from './components/hdfcredirect';
 
 function App() {
   return (
@@ -39,6 +51,7 @@ function App() {
               <Route path="/Funds" element={<Funds />} />
               <Route path="/NetPosition" element={<NetPosition />} />
               <Route path="/Holdings" element={<Holdings />} />
+              
             
             {/* <Route path="/Settings" element={<AddBroker />} /> */}
             <Route path="/ViewBroker" element={<ViewBroker defaultBrokerName="Shoonya" />} />
@@ -48,6 +61,30 @@ function App() {
             <Route path="/Viewgroww" element={<Groww />} />
             <Route path="/Viewfyers" element={<Fyers />} />
             <Route path="/fyerstoken" element={<Fyersredirect />} />
+            <Route path="/Upstox" element={<Upstox />} />
+            <Route path="/upstoxtoken" element={<Upstoxedirect />} />
+            <Route path="/Alice" element={<Aliceblue />} />
+            <Route path="/Zerodha1" element={<Zerodha />} />
+            <Route path="/ZERODHA" element={<Zerodhared />} />
+            <Route path="/Stoxkart1" element={<Stoxkart />} />
+            <Route path="/STOXKART" element={<Stoxkartred />} />
+
+            <Route path="/Flattrade1" element={<Flattrade />} />
+            <Route path="/Flattrade" element={<Flattradered />} />
+            <Route path="/hdfc1" element={<HDFC />} />
+            <Route path="/samco1" element={<SAMCO />} />
+            <Route path="/HDFC" element={<Hdfcred />} />
+
+
+
+
+
+
+
+
+
+
+
 
 
 

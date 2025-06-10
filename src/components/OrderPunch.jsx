@@ -372,6 +372,11 @@ const OrderPunch = () => {
 
 
     }
+    else{
+      setlotsize(data.lotsize[index])
+      settoken(data.token[index])
+
+    }
     
   }
 
@@ -499,6 +504,7 @@ const OrderPunch = () => {
 
 
               <SelectValue placeholder="Select Account" />
+
             </SelectTrigger>
             <SelectContent className="bg-white text-slate-800 border border-blue-300">
               {accountlist && accountlist.length > 0 ? (
