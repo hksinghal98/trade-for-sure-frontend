@@ -104,10 +104,17 @@ const OrderPunch = () => {
       setInstrument(passedState.data.instrument || "");
       setselectsymbol(passedState.data.tradingsymbol || "");
       // setside(passedState.data.side || "");
-      // setAccountname(passedState.data.accountnumber || "");  
       setlotsize(passedState.data.lotsize || "");
       setQuantity(passedState.data.quantity || "");
       setdiscolseqty(passedState.data.discloseqty || "");
+      setProduct(passedState.data.product_type||"")
+      setOrderType(passedState.data.ordertype||"")
+      setBrokerName4(passedState.data.broker||"")
+      setPrice(passedState.data.ltp||"")
+      setAccountname(passedState.data.accountnumber || "");  
+
+
+
 
 
 

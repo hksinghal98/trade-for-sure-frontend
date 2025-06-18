@@ -74,7 +74,8 @@ const ViewBroker = () => {
       accountnumber,
       password,
       put,
-      brokerid
+      brokerid,
+      nickname
 
     });
     

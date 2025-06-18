@@ -24,6 +24,7 @@ const Motilal = () => {
   const [tableDatafetch, setTableDatafetch] = useState([]);
   const [loading, setLoading] = useState(false);
   const [brokerid, setBrokerid] = useState(false);
+    const [nickname, setnickname] = useState('');
 
       const [REType, setREType] = useState('POST');
 
@@ -73,7 +74,8 @@ const Motilal = () => {
       accountnumber,
       password,
       put,
-      brokerid
+      brokerid,
+      nickname
     });
     
       const Rtype = REType
@@ -173,6 +175,19 @@ const handlelogin = async (brokerid) => {
             className="w-2/3 p-2 border border-gray-300 rounded-md bg-gray-200 pointer-events-none"
           />
         </div>
+         <div className="flex items-center gap-4">
+                                  <Label htmlFor="broker-name" className="w-1/3 text-lg text-gray-700">
+                                    Nick Name
+                                  </Label>
+                                  <Input
+                                    id="broker-name"
+                                    type="text"
+                                    placeholder="Enter Nick Name"
+                                    value={nickname}
+                                    onChange={(e) => setnickname(e.target.value)}
+                                    className="w-2/3 p-2 border border-gray-300 rounded-md"
+                                  />
+                                </div>
         {/* Other input fields */}
         <div className="flex items-center gap-4">
           <Label htmlFor="api-key" className="w-1/3 text-lg text-gray-700">

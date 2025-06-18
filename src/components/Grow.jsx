@@ -24,6 +24,7 @@ const Groww = () => {
   const [tableDatafetch, setTableDatafetch] = useState([]);
   const [loading, setLoading] = useState(false);
   const [brokerid, setBrokerid] = useState(false);
+    const [nickname, setnickname] = useState('');
 
       const [REType, setREType] = useState('POST');
 
@@ -73,7 +74,8 @@ const Groww = () => {
       accountnumber,
       password,
       put,
-      brokerid
+      brokerid,
+      nickname
     });
     
       const Rtype = REType
@@ -161,29 +163,56 @@ const handlelogin = async (brokerid) => {
     <div className="container mx-auto p-6 bg-gray-100 rounded-lg shadow-md max-w-7xl">
       <h1 className="text-2xl font-bold text-blue-800 mb-6">Add Broker</h1>
       <form className="flex flex-col gap-4">
+         <div className="flex items-center gap-4">
+                  <Label htmlFor="broker-name" className="w-1/3 text-lg text-gray-700">
+                    Broker Name
+                  </Label>
+                  <Input
+                    id="broker-name"
+                    type="text"
+                    value={brokerName}
+                    readOnly
+                    className="w-2/3 p-2 border border-gray-300 rounded-md bg-gray-200 pointer-events-none"
+                  />
+                </div>
+                {/* Other input fields */}
+                <div className="flex items-center gap-4">
+                          <Label htmlFor="broker-name" className="w-1/3 text-lg text-gray-700">
+                            Nick Name
+                          </Label>
+                          <Input
+                            id="broker-name"
+                            type="text"
+                            placeholder="Enter Nick Name"
+                            value={nickname}
+                            onChange={(e) => setnickname(e.target.value)}
+                            className="w-2/3 p-2 border border-gray-300 rounded-md"
+                          />
+                        </div>
+        
        <div className="flex items-center gap-4">
           <Label htmlFor="auth-token" className="w-1/3 text-lg text-gray-700">
-            Account Number
+            Api key
           </Label>
           <Input
             id="auth-token"
             type="text"
-            placeholder="Enter Auth Token"
-            value={accountnumber}
-            onChange={(e) => setaccountnumber(e.target.value)}
+            placeholder="Enter apikey "
+            value={apikey}
+            onChange={(e) => setapikey(e.target.value)}
             className="w-2/3 p-2 border border-gray-300 rounded-md"
           />
         </div>
         <div className="flex items-center gap-4">
           <Label htmlFor="auth-token" className="w-1/3 text-lg text-gray-700">
-            Auth Token
+            Secret Key
           </Label>
-          <Input
+          <Input 
             id="auth-token"
             type="text"
             placeholder="Enter Auth Token"
-            value={AuthToken}
-            onChange={(e) => setAuthToken(e.target.value)}
+            value={secretkey}
+            onChange={(e) => setsecretkey(e.target.value)}
             className="w-2/3 p-2 border border-gray-300 rounded-md"
           />
         </div>
@@ -215,7 +244,7 @@ const handlelogin = async (brokerid) => {
                     </th>
                   ))}
                   <th   className="px-6 py-3"> Active</th>
-                  {/* <th className="px-6 py-3">Login</th> */}
+                  <th className="px-6 py-3">Login</th>
                   <th className="px-6 py-3">Edit</th>
                   <th className="px-6 py-3">Delete</th>
                 </tr>
@@ -239,14 +268,14 @@ const handlelogin = async (brokerid) => {
                         {row.active?"Deactivate":"Activate"}
                       </Button>
                     </td>
-                    {/* <td className="px-6 py-4 text-center">
+                    <td className="px-6 py-4 text-center">
                          <Button
                         className="bg-blue-600 text-white py-2 text-sm rounded-md hover:bg-blue-700"
                         onClick={() => handlelogin(row.brokerid)}
                       >
                         Login
                       </Button>
-                    </td> */}
+                    </td>
                     <td className="px-6 py-4 text-center">
                       <Button
                         className="bg-blue-600 text-white py-2 text-sm rounded-md hover:bg-blue-700"

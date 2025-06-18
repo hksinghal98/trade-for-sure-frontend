@@ -130,13 +130,7 @@ const NavContent = ({ className = '' }) => {
         </div>
         {showDropdown2 && (
           <div className="pl-8 flex flex-col gap-2">
-            <NavLink
-              to="/ViewBroker"
-              isActive={location.pathname === '/ViewBroker'}
-              onClick={() => handleLinkClick('/ViewBroker')}
-            >
-              SHOONYA
-            </NavLink>
+         
              <NavLink
               to="/ViewAngel"
               isActive={location.pathname === '/ViewAngel'}
@@ -144,34 +138,93 @@ const NavContent = ({ className = '' }) => {
             >
               ANGEL
             </NavLink>
+              <NavLink
+              to="/Alice"
+              isActive={location.pathname === '/ViewAngel'}
+              onClick={() => handleLinkClick('/ViewAngel')}
+            >
+              ALICEBLUE
+            </NavLink>
             <NavLink
               to="/Viewdhan"
               isActive={location.pathname === '/ViewAngel'}
               onClick={() => handleLinkClick('/ViewAngel')}
             >
+
               DHAN
             </NavLink>
-            <NavLink
-              to="/Viewmotilal"
+               <NavLink
+              to="/Flattrade1"
               isActive={location.pathname === '/ViewAngel'}
               onClick={() => handleLinkClick('/ViewAngel')}
             >
-              MOTILAL
+              FLATTRADE
             </NavLink>
 
-                <NavLink
-              to="/Viewgroww"
-              isActive={location.pathname === '/ViewAngel'}
-              onClick={() => handleLinkClick('/ViewAngel')}
-            >
-              GROWW
-            </NavLink> <NavLink
+             <NavLink
               to="/Viewfyers"
               isActive={location.pathname === '/ViewAngel'}
               onClick={() => handleLinkClick('/ViewAngel')}
             >
               FYRES
             </NavLink>
+                 <NavLink
+              to="/Viewgroww"
+              isActive={location.pathname === '/ViewAngel'}
+              onClick={() => handleLinkClick('/ViewAngel')}
+            >
+              GROWW
+            </NavLink>
+            
+                <NavLink
+              to="/hdfc1"
+              isActive={location.pathname === '/ViewAngel'}
+              onClick={() => handleLinkClick('/ViewAngel')}
+            >
+              HDFC
+            </NavLink>
+            
+            <NavLink
+              to="/Viewmotilal"
+              isActive={location.pathname === '/ViewAngel'}
+              onClick={() => handleLinkClick('/ViewAngel')}
+            >
+              
+              MOTILAL
+            </NavLink>
+            
+                    <NavLink
+              to="/samco1"
+              isActive={location.pathname === '/ViewAngel'}
+              onClick={() => handleLinkClick('/ViewAngel')}
+            >
+              SAMCO
+            </NavLink>
+
+            
+
+           
+
+
+           <NavLink
+              to="/ViewBroker"
+              isActive={location.pathname === '/ViewBroker'}
+              onClick={() => handleLinkClick('/ViewBroker')}
+            >
+              SHOONYA
+            </NavLink>
+
+             <NavLink
+              to="/Stoxkart1"
+              isActive={location.pathname === '/ViewAngel'}
+              onClick={() => handleLinkClick('/ViewAngel')}
+            >
+              STOXKART
+            </NavLink>  
+            
+          
+
+           
             <NavLink
               to="/Upstox"
               isActive={location.pathname === '/ViewAngel'}
@@ -188,48 +241,6 @@ const NavContent = ({ className = '' }) => {
               ZERODHA
             </NavLink>
 
-                    <NavLink
-              to="/samco1"
-              isActive={location.pathname === '/ViewAngel'}
-              onClick={() => handleLinkClick('/ViewAngel')}
-            >
-              SAMCO
-            </NavLink>
-
-             <NavLink
-              to="/Stoxkart1"
-              isActive={location.pathname === '/ViewAngel'}
-              onClick={() => handleLinkClick('/ViewAngel')}
-            >
-              STOXKART
-            </NavLink>  
-            
-             <NavLink
-              to="/Flattrade1"
-              isActive={location.pathname === '/ViewAngel'}
-              onClick={() => handleLinkClick('/ViewAngel')}
-            >
-              FLATTRADE
-            </NavLink>
-            
-
-             <NavLink
-              to="/Alice"
-              isActive={location.pathname === '/ViewAngel'}
-              onClick={() => handleLinkClick('/ViewAngel')}
-            >
-              ALICEBLUE
-            </NavLink>
-
-                <NavLink
-              to="/hdfc1"
-              isActive={location.pathname === '/ViewAngel'}
-              onClick={() => handleLinkClick('/ViewAngel')}
-            >
-              HDFC
-            </NavLink>
-
-        
             
 
 
