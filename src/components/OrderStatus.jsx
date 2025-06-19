@@ -19,7 +19,7 @@ import Paper from '@mui/material/Paper';
 import { Flex } from '@mantine/core';
 import { columnGroupsStateInitializer } from '@mui/x-data-grid/internals';
 import { useNavigate } from 'react-router-dom';
-
+import { RefreshCcw } from 'lucide-react';
 
 
 
@@ -110,7 +110,7 @@ const paginationModel = { page: 0, pageSize: 5 };
   useEffect(()=>{
   const dataWithIds = tableDatafetch.map((item, index) => ({
     ...item,
-    id: index, // Add a unique id based on the index
+    id: item.id, // Add a unique id based on the index
   }));
   setfiltereddata(dataWithIds);
   console.log(dataWithIds, 'filteredAndSortedProjects');
@@ -120,7 +120,7 @@ const paginationModel = { page: 0, pageSize: 5 };
 
 const handleOrderselect=(value)=>{
 
-console.log(value,'value')
+console.log(value,'valuesss')
 setselectedorder(value.ids)
 
 
@@ -195,19 +195,27 @@ const handleModify = (row) => {
   return (
     <>
      <Box sx={{ width: '100%' }}>
+
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <RefreshCcw className="cursor-pointer" onClick={fetchTableData} >
+        </RefreshCcw>
+        <p>Refresh</p>
+
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="Order Book" className='text-slate-900 font-bold' {...a11yProps(0)} />
           {/* <Tab label="Open Position"className='text-slate-900 font-bold' {...a11yProps(1)} />
           <Tab label="Close Position"className='text-slate-900 font-bold' {...a11yProps(2)} /> */}
         </Tabs>
       </Box>
+
       <CustomTabPanel value={value} index={0}>
         <span>Order Book</span>
+        
         {/* Render the Select component only when the "Order Book" tab is selected */}
         <div className='flex flex-wrap items-center justify-around gap-4'>
           {value === 0 && (
             <Select onValueChange={(value) => {handleSelectIndex(value),setopenfil(value)}}>
+              
               <SelectTrigger className="w-40 max-xs:w-20 bg-sky-700/85 text-white hover:bg-sky-700">
                 <SelectValue placeholder="Select Status" />
               </SelectTrigger>
@@ -239,9 +247,14 @@ const handleModify = (row) => {
               </SelectContent>
             </Select>
           )}
+          
+          
           <div className='container flex items-end gap-2 flex-col  mx-auto mt-6 p-6 bg-trasparent rounded-lg max-w-6xl'>
+
             <Button onClick={()=>handlecancelorder()} className=" bg-red-600/95">Cancel </Button>
+            
              <Paper sx={{ height: 400, width: '100%' }}>
+              
   <DataGrid
     className='text-black overflow-x-scroll scrollbar-hide'
     rows={filtereddata} // Use filtereddata as rows
@@ -282,14 +295,11 @@ const handleModify = (row) => {
     
     
     ]}
-
-
-    
     initialS
     tate={{ pagination: { paginationModel } }}
     pageSizeOptions={[5, 10]} // Enable page size options
     checkboxSelection
-    onRowSelectionModelChange={(value)=>{handleOrderselect(value),setSelectedRows(value.ids)}}
+    onRowSelectionModelChange={(value)=>{handleOrderselect(value),setSelectedRows(value.id)}}
     sx={{ border: 0 }}
   />
 </Paper>

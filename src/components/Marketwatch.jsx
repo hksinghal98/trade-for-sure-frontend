@@ -30,10 +30,10 @@ const Marketwatch = () => {
     const [symbolCount, setSymbolCount] = useState(0); // Track the number of symbols added
          const[exchange,setExchange]= useState("")
          const [query, setQuery] = useState("");
-        const [Symbol,setsymbol]= useState([])
-        const [token,setToken]= useState([])
-        const [data,setdata]= useState([])
-        const [instrument,setInstrument]= useState([])
+        const [Symbol,setsymbol]= useState('')
+        const [token,setToken]= useState('')
+        const [data,setdata]= useState('')
+        const [instrument,setInstrument]= useState('')
         const [lotsize,setlotsize]= useState('')
 
 
@@ -329,7 +329,7 @@ const handleSearch = debounce((value) => {
     fetchSymbols(brokerName4, exchange,instrument,value); 
 }
 
-      }, 800); // Wait 300ms before executing the search
+      }, 1000); // Wait 300ms before executing the search
 
 
 
@@ -344,7 +344,7 @@ const handleBuyOrSell = (data,action) => {
 
 };
 
-const handleDelete = (id,name) => {
+const handleDelete = (id,name,ts) => {
 
 
 
@@ -352,7 +352,7 @@ const handleDelete = (id,name) => {
  
       const type = "DELETE"
       const endpoint= "watchlist"
-      const payload= "id="+id+"&brokername="+name
+      const payload= "id="+id+"&brokername="+name+"&ts="+ts
       handleexchangerequest(type, payload, endpoint,true)
       .then(response => {
         console.log(response) 
@@ -649,7 +649,7 @@ return (
       >
         <Button
           className="bg-red-700 text-white hover:bg-red-700"
-          onClick={() => handleDelete(row.symboltoken,row.broker)}
+          onClick={() => handleDelete(row.symboltoken,row.broker,row.tradingsymbol)}
         >
           Delete
         </Button>
