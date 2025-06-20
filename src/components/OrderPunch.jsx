@@ -394,7 +394,7 @@ const OrderPunch = () => {
     <>
     <div className="flex flex-col h-screen">
       
-      <div className="flex flex-col items-start gap-6 p-6 pt-0 bg-transparent text-slate-800">
+      <div className="flex flex-col items-start gap-3 p-6 pt-0 bg-transparent text-slate-800">
         <div className="flex flex-col gap-4 h-full"> 
         <div className="flex flex-wrap items-start gap-4">
 
@@ -466,15 +466,15 @@ const OrderPunch = () => {
         >
           
           
-          <div className="flex flex-col gap-2 w-full items-center justify-center">
+          <div className="flex flex-col gap-3 w-full items-center justify-center">
             <h1 className="text-3xl font-bold text-slate-800">Order Punch</h1>
-            <div className="flex gap-3 w-full items-end">
-              <div className="flex flex-col gap-2 items-center justify-center">
+            <div className="flex gap-3 w-full items-center max-xs:flex-col">
+              <div className="flex flex-col gap-2 items-center justify-center w-full">
                 <Label className="text-lg text-slate-800 text-center">Accounts</Label>
-                <div className="flex items-center gap-2 justify-center">
+                <div className="flex items-center gap-2 justify-center w-full max-xs:flex-col">
 
                   <Select onValueChange={(value) => {setBrokerName4(value),setIsAccountDisabled(true),setAccountname(''),fetchaccountlist(value)}}>
-            <SelectTrigger className="w-36 max-xs:w-20 bg-blue-800 text-white hover:bg-blue-700">
+            <SelectTrigger className="w-full bg-blue-800 text-white hover:bg-blue-700">
               <SelectValue placeholder="All in Broker" />
             </SelectTrigger>
             <SelectContent className="bg-white border border-blue-300">
@@ -495,6 +495,9 @@ const OrderPunch = () => {
               )}
             </SelectContent>
           </Select>
+<<<<<<< HEAD
+            
+=======
           {/* <Select
                 onValueChange={(value) => {
                   handleaccountselect(value);
@@ -532,9 +535,10 @@ const OrderPunch = () => {
               )}
             </SelectContent>
           </Select> */}
+>>>>>>> 50e61c0d7b1cfed87bc892b46c1e7850eff3729f
 
        
-        <div className="space-y-4">
+        <div className="space-y-4 w-full">
           <MultiSelect
             options={accountlist.map((broker)=>{
               return {
@@ -560,7 +564,9 @@ const OrderPunch = () => {
 
               <div className="flex flex-col gap-2 w-full items-center ">
                   <Label className="text-lg text-slate-800 text-center">Exchange</Label>
-                <div className="flex gap-6">
+                <div className="flex flex-wrap max-xs:flex-col gap-6 w-full">
+                  <div className="flex gap-6 flex-wrap">
+                    <div className=" flex max-xs:flex-col gap-4 ">
                   <Label className="flex items-center gap-2">
                     <input
                       type="radio"
@@ -573,7 +579,7 @@ const OrderPunch = () => {
                     />
                     <span className="text-lg text-slate-800">NFO</span>
                   </Label>
-                  <div className="flex gap-6">
+                  
                     <Label className="flex items-center gap-2">
                       <input
                         type="radio"
@@ -586,6 +592,8 @@ const OrderPunch = () => {
                       />
                       <span className="text-lg text-slate-800">NSE</span>
                     </Label>
+                    </div>
+                    <div className="flex max-xs:flex-col gap-4">
                     <Label className="flex items-center gap-2">
                       <input
                         type="radio"
@@ -608,6 +616,7 @@ const OrderPunch = () => {
                       />
                       <span className="text-lg text-slate-800">BFO</span>
                     </Label>
+                    </div>
                     {/* <Label className="flex items-center gap-2">
                       <input
                         type="radio"
@@ -624,11 +633,23 @@ const OrderPunch = () => {
               </div>
 
               {/* Entry Price */}
-              <div>
+              
+
+                                          
+
+          
+          
+
+              
+              
+            </div>
+
+            <div className="flex gap-6 w-full items-center justify-evenly">
+                <div>
                <div className={`flex flex-col gap-2 w-full items-center ${!isIndexEnabled && !isindexEQ ? "text-gray-400 hidden" : "text-slate-800 flex"}`}>
   <Label className="text-slate-800 text-center">Type</Label>
-  <div className="flex gap-4">
-    <div className="flex  flex-xl-column ">
+  <div className="flex gap-4 flex-wrap">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3">
     <Label className="flex items-center gap-2">
       <input
         type="radio"
@@ -659,9 +680,9 @@ const OrderPunch = () => {
         FUTIDX
       </span>
     </Label>
-    </div>
+    {/* </div>
 
-      <div className="flex  flex-xl-column ">
+      <div className="flex gap-3 flex-wrap items-center"> */}
     <Label className="flex items-center gap-2">
       <input
         type="radio"
@@ -692,11 +713,7 @@ const OrderPunch = () => {
         OPTSTK
       </span>
     </Label>
-   
-    </div>
-  </div>
-</div>
-  <div>
+    {/* <div> */}
      <Label className="flex items-center gap-2">
       <input
         type="radio"
@@ -712,13 +729,19 @@ const OrderPunch = () => {
         EQ
       </span>
     </Label>
+  {/* </div> */}
+   
+    </div>
+    
   </div>
+  
+</div>
+  
   </div>
 
-                                          
-
-          
-          <div className="flex gap-6">
+<div className="flex flex-col gap-2">
+  <Label>Buy/Sell</Label>
+  <div className="flex gap-6 max-xs:flex-col">
                 <Label className="flex items-center gap-2">
                   <input
                     type="radio"
@@ -742,17 +765,19 @@ const OrderPunch = () => {
                   <span className="text-lg text-red-600">Sell</span>
                 </Label>
               </div>
-              
-            </div>
-            <div className="flex gap-2 w-full items-center ">
-              <div className="flex flex-col gap-2 w-full ">
+              </div>
+
+
+              </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
+              <div className="space-y-2">
                 <Label className="text-lg text-slate-800">Quantity</Label>
                 <div className="flex items-center gap-2">
                   <Button
                     onClick={() =>
                       setQuantity((prev) => Math.min(0, Number(prev) - 1))
                     } // Convert to number before decrementing
-                    className="bg-red-500 text-slate-800 px-4 py-2 rounded-md hover:bg-red-600"
+                    className="bg-red-500 text-white px-3 py-2 rounded-md hover:bg-red-600 flex-shrink-0"
                   >
                     -
                   </Button>
@@ -762,26 +787,26 @@ const OrderPunch = () => {
                     value={quantity}
                     onChange={(e) => setQuantity(Number(e.target.value))} // Ensure the value is a number
                     placeholder="Enter quantity"
-                    className="w-full p-2 border border-gray-300 rounded-md text-center bg-slate-300/65 shadow-md"
+                    className="w-full min-w-24 p-2 border border-gray-300 rounded-md text-center bg-slate-300/65 shadow-md"
                   />
                   {/* Increment Button */}
                   <Button
                     onClick={() => setQuantity((prev) => Number(prev) + 1)} // Convert to number before incrementing
-                    className="bg-green-500 text-slate-800 px-4 py-2 rounded-md hover:bg-green-600"
+                    className="bg-green-500 text-white px-3 py-2 rounded-md hover:bg-green-600 flex-shrink-0"
                   >
                     +
                   </Button>
 
                 </div>
               </div>
-              <div className="flex flex-col gap-2 w-full ">
-                <Label className="text-lg text-slate-800">Disclose Quantity</Label>
+              <div className="space-y-2">
+                <Label className="text-base sm:text-lg text-slate-800">Disclose Quantity</Label>
                 <div className="flex items-center gap-2">
                   <Button
                     onClick={() =>
                       setdiscolseqty((prev) => Math.min(0, Number(prev) - 1))
                     } // Convert to number before decrementing
-                    className="bg-red-500 text-slate-800 px-4 py-2 rounded-md hover:bg-red-600"
+                    className="bg-red-500 text-white px-3 py-2 rounded-md hover:bg-red-600 flex-shrink-0"
                   >
                     -
                   </Button>
@@ -791,20 +816,23 @@ const OrderPunch = () => {
                     value={discloseqty}
                     onChange={(e) => setdiscolseqty(Number(e.target.value))} // Ensure the value is a number
                     placeholder="Enter quantity"
-                    className="w-full p-2 border border-gray-300 rounded-md text-center bg-slate-300/65 shadow-md"
+                    className="w-full min-w-24 p-2 border border-gray-300 rounded-md text-center bg-slate-300/65 shadow-md"
                   />
                   {/* Increment Button */}
                   <Button
                     onClick={() => setdiscolseqty((prev) => Number(prev) + 1)} // Convert to number before incrementing
-                    className="bg-green-500 text-slate-800 px-4 py-2 rounded-md hover:bg-green-600"
+                    className="bg-green-500 text-white px-3 py-2 rounded-md hover:bg-green-600 flex-shrink-0"
                   >
                     +
                   </Button>
-                  <p>lotsize:{lotsize}</p>
+
+                  
 
                 </div>
+                  <p className="text-xs text-gray-600">{"Lot size: " + lotsize}</p>
               </div>
-              <div className="flex flex-col gap-2">
+                
+              <div className="flex flex-col space-y-3">
                 <Label className="text-slate-800 text-base">Symbol</Label>
                 <Popover open={Comboopen} onOpenChange={setComboOpen}>
                   <PopoverTrigger asChild>
@@ -812,7 +840,7 @@ const OrderPunch = () => {
                       variant="outline"
                       role="combobox"
                       aria-expanded={Comboopen}
-                      className="max-xs:w-20 justify-between bg-stone-700 text-white hover:bg-stone-600"
+                      className="max-xs:w-full justify-between bg-stone-700 text-white hover:bg-stone-600"
                     >
                       {selectsymbol || "Select Symbol"}
                       {/* <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" /> */}
@@ -867,7 +895,7 @@ const OrderPunch = () => {
                   </PopoverContent>
                 </Popover>
               </div>
-              <div className="flex flex-col gap-2 w-full ">
+              <div className="space-y-2">
                 <Label className="text-lg text-slate-800">Entry Price</Label>
                 <Input
                   type="number"
@@ -885,7 +913,7 @@ const OrderPunch = () => {
               <div className="flex flex-col gap-2 w-full ">
               {/* Product */}
                 <Label className="text-lg text-slate-800">Product</Label>
-                <div className="flex gap-6">
+                <div className="flex gap-6 flex-wrap ">
                   <Label className="flex items-center gap-2">
                     <input
                       type="radio"
@@ -897,7 +925,7 @@ const OrderPunch = () => {
                     />
                     <span className="text-lg text-slate-800">MIS</span>
                   </Label>
-                  <div className="flex gap-6">
+                  
                     <Label className="flex items-center gap-2">
                       <input
                         type="radio"
@@ -920,12 +948,12 @@ const OrderPunch = () => {
                       />
                       <span className="text-lg text-slate-800">DELIVERY</span>
                     </Label>
-                  </div>
+                  
                 </div>
               </div>
               <div className="flex flex-col gap-2 w-full ">
                 <Label className="text-lg text-slate-800">Order Type</Label>
-                <div className="flex gap-6">
+                <div className="flex gap-6 flex-wrap">
                   <Label className="flex items-center gap-2">
                     <input
                       type="radio"
