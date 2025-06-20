@@ -31,6 +31,7 @@ import Flattradered from './components/flattraderedirect';
 import HDFC from './components/hdfc';
 import SAMCO from './components/samco';
 import Hdfcred from './components/hdfcredirect';
+import Anandrathi from './components/anandrathi';
 
 function App() {
   return (
@@ -74,6 +75,8 @@ function App() {
             <Route path="/hdfc1" element={<HDFC />} />
             <Route path="/samco1" element={<SAMCO />} />
             <Route path="/HDFC" element={<Hdfcred />} />
+            <Route path="/Anandrathi" element={<Anandrathi />} />
+
 
 
 

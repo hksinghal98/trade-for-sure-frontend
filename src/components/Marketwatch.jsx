@@ -151,71 +151,43 @@ const Marketwatch = () => {
 
 
 
- useEffect(  () => {
-      // Create a WebSocket connection
-  
-      
-  
-      const newSocket = new WebSocket(WSHOST);
-      
-     
-  
-      newSocket.onopen = async() => {
-        // const client = await AsyncStorage.getItem('chatid');
-        // const id = await AsyncStorage.getItem('id');
-        console.log('WebSocket connection established');
-        // const message = {
-          
-        //   user:'46',
-        //   sendEvent:'True',
-        //   text: '',
-        //   chatpairid:'ok'
-        // };
-        newSocket.send(JSON.stringify({message:'LTPFEEDS'}))
-        // newSocket.send('');
-        // setSocket(newSocket);
-  
-      };
-      
-  
-      newSocket.onmessage = (event) => {
-        console.log(event.data,'EVENT')   
-        console.log('EVENT')   
-        
-        
-        const receivedBlob = event.data
-        const message = JSON.parse(receivedBlob);
-          setMessages(message.message)
+ useEffect(() => {
+  const socket = new WebSocket(WSHOST);
 
-        // const reader = new FileReader();
-        // reader.onload = function () {
-        //   const receivedData = reader.result; // This   will be a string
-        //   console.log(receivedData);
-       
-        
-        // const message = JSON.parse(receivedData);
-        // console.log('Received event :', message);
-        // // Handle incoming messages
-        // }
-        
-      // reader.readAsText(receivedBlob)
-       
-     
-       
-       
-      };
-  
-      newSocket.onclose = () => {
-        console.log('WebSocket connection closed');
-      };
-  
-      // Clean up the WebSocket connection when the component unmounts
-      return () => {
-        newSocket.close();
-      };
+  const id = window.localStorage.getItem('id');
 
-    }, [setMessages,messages]);
+  socket.onopen = () => {
+    console.log('WebSocket connection established', id);
+    socket.send(JSON.stringify({ message: 'LTPFEEDS', user: id }));
+  };
 
+  socket.onmessage = (event) => {
+    try {
+      const message = JSON.parse(event.data);
+      console.log('EVENT', message);
+      setMessages(message.message);
+    } catch (e) {
+      console.error('Error parsing message', e);
+    }
+  };
+
+  socket.onclose = () => {
+    console.log('WebSocket connection closed');
+  };
+
+  // 🔁 Keep-alive ping every 30 seconds
+  const pingInterval = setInterval(() => {
+    if (socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify({ type: 'ping' }));
+    }
+  }, 60000); // 30 seconds
+
+  // Cleanup function
+  return () => {
+    clearInterval(pingInterval);
+    socket.close();
+  };
+}, [setMessages]);
 
 
 
@@ -649,7 +621,7 @@ return (
       >
         <Button
           className="bg-red-700 text-white hover:bg-red-700"
-          onClick={() => handleDelete(row.symboltoken,row.broker,row.tradingsymbol)}
+          onClick={() => handleDelete(row.id,row.broker,row.tradingsymbol)}
         >
           Delete
         </Button>

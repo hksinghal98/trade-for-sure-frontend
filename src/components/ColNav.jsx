@@ -138,6 +138,14 @@ const NavContent = ({ className = '' }) => {
             >
               ANGEL
             </NavLink>
+            
+             <NavLink
+              to="/Anandrathi"
+              isActive={location.pathname === '/Anandrathi'}
+              onClick={() => handleLinkClick('/Anandrathi')}
+            >
+              ANANDRATHI(SYMPHONY)
+            </NavLink>
               <NavLink
               to="/Alice"
               isActive={location.pathname === '/ViewAngel'}

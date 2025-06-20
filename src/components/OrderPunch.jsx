@@ -219,6 +219,7 @@ const OrderPunch = () => {
     })
     
     }
+
   
 
   const handleSelectChange = (value) => {
@@ -305,7 +306,7 @@ const OrderPunch = () => {
               }
   
                if(broker=='ANGEL'){
-               removeDuplicatsymbol = [...new Set(response.symbol)];
+               removeDuplicatsymbol = [...new Set(response.TradingSymbol)];
                
               }else{
 

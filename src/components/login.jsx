@@ -79,6 +79,8 @@ useEffect( () => {
         
       localStorage.setItem('token',token)
       localStorage.setItem('expiry',expiry)
+      localStorage.setItem('id',id)
+
 
 
            
