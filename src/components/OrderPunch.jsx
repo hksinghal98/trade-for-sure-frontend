@@ -495,47 +495,7 @@ const OrderPunch = () => {
               )}
             </SelectContent>
           </Select>
-<<<<<<< HEAD
             
-=======
-          {/* <Select
-                onValueChange={(value) => {
-                  handleaccountselect(value);
-
-                }}
-                disabled={isAccountDisabled} // Disable based on state
-              >
-                <SelectTrigger
-                  className={`w-36 max-xs:w-20 ${
-                    isAccountDisabled
-                      ? "bg-gray-400 text-gray-700 cursor-not-allowed"
-                      : "bg-blue-800 text-white hover:bg-blue-700"
-                  }`}
-                >
-
-
-              <SelectValue placeholder="Select Account" />
-
-            </SelectTrigger>
-            <SelectContent className="bg-white text-slate-800 border border-blue-300">
-              {accountlist && accountlist.length > 0 ? (
-                accountlist.map((broker, index) => (
-                  <SelectItem
-                    key={index}
-                    value={broker}
-                    className="hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-200"
-                  >
-                    {broker.accountnumber}
-                  </SelectItem>
-                ))
-              ) : (
-                <SelectItem value="loading" disabled>
-                  {loading ? "Loading brokers..." : "No brokers available"}
-                </SelectItem>
-              )}
-            </SelectContent>
-          </Select> */}
->>>>>>> 50e61c0d7b1cfed87bc892b46c1e7850eff3729f
 
        
         <div className="space-y-4 w-full">
