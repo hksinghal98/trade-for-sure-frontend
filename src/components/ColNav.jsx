@@ -129,6 +129,7 @@ const NavContent = ({ className = '' }) => {
           <span className="md:inline">Broker</span>
         </div>
         {showDropdown2 && (
+        <div className='h-72 overflow-y-scroll'>
           <div className="pl-8 flex flex-col gap-2">
          
              <NavLink
@@ -248,6 +249,7 @@ const NavContent = ({ className = '' }) => {
             
             
           </div>
+      </div>
         )}
       </div>
       {/* <NavLink
