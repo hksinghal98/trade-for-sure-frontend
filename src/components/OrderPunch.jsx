@@ -358,6 +358,7 @@ const OrderPunch = () => {
     setOrderType("");
     setExchange("")
     setInstrument("")
+    setdiscolseqty("")
 
   }
 
@@ -503,7 +504,7 @@ const OrderPunch = () => {
             options={accountlist.map((broker)=>{
               return {
                 value: broker.accountnumber,
-                label: broker.accountnumber,
+                label: broker.nickname,
               }
             })}
             // className="text-black"
@@ -735,7 +736,8 @@ const OrderPunch = () => {
                 <div className="flex items-center gap-2">
                   <Button
                     onClick={() =>
-                      setQuantity((prev) => Math.min(0, Number(prev) - 1))
+                      {setQuantity((prev) => Math.max(0, Number(prev) - 1))
+                      setdiscolseqty((prev) => Math.max(0, Number(prev) - 1))}
                     } // Convert to number before decrementing
                     className="bg-red-500 text-white px-3 py-2 rounded-md hover:bg-red-600 flex-shrink-0"
                   >
@@ -745,13 +747,17 @@ const OrderPunch = () => {
                   <Input
                     type="number"
                     value={quantity}
-                    onChange={(e) => setQuantity(Number(e.target.value))} // Ensure the value is a number
+                    onChange={(e) => {setQuantity(Number(e.target.value))
+                      setdiscolseqty(Number(e.target.value))
+                    } }// Ensure the value is a number
                     placeholder="Enter quantity"
                     className="w-full min-w-24 p-2 border border-gray-300 rounded-md text-center bg-slate-300/65 shadow-md"
                   />
                   {/* Increment Button */}
                   <Button
-                    onClick={() => setQuantity((prev) => Number(prev) + 1)} // Convert to number before incrementing
+                    onClick={() => {setQuantity((prev) => Number(prev) + 1)
+
+                       setdiscolseqty((prev) => Number(prev) + 1)}} // Convert to number before incrementing
                     className="bg-green-500 text-white px-3 py-2 rounded-md hover:bg-green-600 flex-shrink-0"
                   >
                     +
@@ -764,7 +770,7 @@ const OrderPunch = () => {
                 <div className="flex items-center gap-2">
                   <Button
                     onClick={() =>
-                      setdiscolseqty((prev) => Math.min(0, Number(prev) - 1))
+                      setdiscolseqty((prev) => Math.max(0, Number(prev) - 1))
                     } // Convert to number before decrementing
                     className="bg-red-500 text-white px-3 py-2 rounded-md hover:bg-red-600 flex-shrink-0"
                   >

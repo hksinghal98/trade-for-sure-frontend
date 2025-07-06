@@ -13,8 +13,8 @@ import {
 
  import {handleexchangerequest}  from '../utility/Api'
 import { Type } from "lucide-react";
-const HDFC = () => {
-  const [brokerName, setBrokerName] = useState('HDFC');
+const Anandrathi = () => {
+  const [brokerName, setBrokerName] = useState('ANANDRATHI');
   const [apikey, setapikey] = useState("");
   const [secretkey, setsecretkey] = useState("");
   const [AuthToken, setAuthToken] = useState("");
@@ -25,6 +25,7 @@ const HDFC = () => {
   const [loading, setLoading] = useState(false);
   const [brokerid, setBrokerid] = useState(false);
     const [nickname, setnickname] = useState('');
+  
 
       const [REType, setREType] = useState('POST');
 
@@ -38,7 +39,7 @@ const HDFC = () => {
   const fetchaccountlist = async () => {
     const type = "GET";
     const endpoint = "loadaccount";
-    const payload = "broker=HDFC";
+    const payload = "broker=ANANDRATHI";
     setLoading(true); // Set loading to true before fetching data
     handleexchangerequest(type, payload, endpoint, false)
       .then((response) => {
@@ -97,18 +98,16 @@ const HDFC = () => {
  
     // Add API call logic here to save the broker details
   };
-    const handlelogin = async (brokerid) => {
-        const payload = "brokerid="+brokerid;
-        const type = "GET"
-        const endpoint= "loginredirect"
+const handlelogin = async (brokerid) => {
+        const payload = JSON.stringify({brokerid });
+        const type = "POST"
+        const endpoint= "loginbroker"
         handleexchangerequest(type, payload, endpoint,true)
-          .then(response => {
-          console.log(response)
-          localStorage.setItem('brokerid',brokerid)
-          window.open(response)
-          setBrokerid(false)
+    .then(response => {
+    console.log(response) 
+    setBrokerid(false)
     
-    // window.location.reload()
+    window.location.reload()
     })
   }
 
@@ -165,92 +164,62 @@ const HDFC = () => {
     <div className="container mx-auto p-6 bg-gray-100 rounded-lg shadow-md max-w-7xl">
       <h1 className="text-2xl font-bold text-blue-800 mb-6">Add Broker</h1>
       <form className="flex flex-col gap-4">
-        <div className="flex items-center gap-4">
-          <Label htmlFor="broker-name" className="w-1/3 text-lg text-gray-700">
-            Broker Name
-          </Label>
-          <Input
-            id="broker-name"
-            type="text"
-            value={brokerName}
-            readOnly
-            className="w-2/3 p-2 border border-gray-300 rounded-md bg-gray-200 pointer-events-none"
-          />
-        </div>
-        {/* Other input fields */}
          <div className="flex items-center gap-4">
-                                  <Label htmlFor="broker-name" className="w-1/3 text-lg text-gray-700">
-                                    Nick Name
-                                  </Label>
-                                  <Input
-                                    id="broker-name"
-                                    type="text"
-                                    placeholder="Enter Nick Name"
-                                    value={nickname}
-                                    onChange={(e) => setnickname(e.target.value)}
-                                    className="w-2/3 p-2 border border-gray-300 rounded-md"
-                                  />
-                                </div>
-       
+                  <Label htmlFor="broker-name" className="w-1/3 text-lg text-gray-700">
+                    Nick Name
+                  </Label>
+                  <Input
+                    id="broker-name"
+                    type="text"
+                    placeholder="Enter Nick Name"
+                    value={nickname}
+                    onChange={(e) => setnickname(e.target.value)}
+                    className="w-2/3 p-2 border border-gray-300 rounded-md"
+                  />
+                </div>
+      
         <div className="flex items-center gap-4">
           <Label htmlFor="auth-token" className="w-1/3 text-lg text-gray-700">
-            Auth Token(optional)
+             Apikey
           </Label>
           <Input
             id="auth-token"
             type="text"
-            placeholder="Enter Auth Token"
-            value={AuthToken}
-            onChange={(e) => setAuthToken(e.target.value)}
-            className="w-2/3 p-2 border border-gray-300 rounded-md"
-          />
-        </div>
-
-        {/* Vendor Code */}
-        <div className="flex items-center gap-4">
-          <Label htmlFor="vendor-code" className="w-1/3 text-lg text-gray-700">
-            Secret Key
-          </Label>
-          <Input
-            id="vendor-code"
-            type="text"
-            placeholder="Enter secret Code"
-            value={secretkey    }
-            onChange={(e) => setsecretkey(e.target.value)}
-            className="w-2/3 p-2 border border-gray-300 rounded-md"
-          />
-        </div>
-         <div className="flex items-center gap-4">
-          <Label htmlFor="vendor-code" className="w-1/3 text-lg text-gray-700">
-            API KEY
-          </Label>
-          <Input
-            id="vendor-code"
-            type="text"
-            placeholder="Enter Api key"
-            value={apikey    }
+            placeholder="Enter Apikey"
+            value={apikey}
             onChange={(e) => setapikey(e.target.value)}
             className="w-2/3 p-2 border border-gray-300 rounded-md"
           />
         </div>
 
-        {/* Account Number */}
-        <div className="flex items-center gap-4">
-          <Label htmlFor="account-number" className="w-1/3 text-lg text-gray-700">
-            Account Number(app id)
+         <div className="flex items-center gap-4">
+          <Label htmlFor="auth-token" className="w-1/3 text-lg text-gray-700">
+             Account Number 
           </Label>
           <Input
-            id="account-number"
+            id="auth-token"
             type="text"
-            placeholder="Enter Account Number"
+            placeholder="Enter user id"
             value={accountnumber}
             onChange={(e) => setaccountnumber(e.target.value)}
             className="w-2/3 p-2 border border-gray-300 rounded-md"
           />
         </div>
-
        
 
+         <div className="flex items-center gap-4">
+          <Label htmlFor="auth-token" className="w-1/3 text-lg text-gray-700">
+             Secret Key
+          </Label>
+          <Input
+            id="auth-token"
+            type="text"
+            placeholder="Enter secretkey"
+            value={secretkey}
+            onChange={(e) => setsecretkey(e.target.value)}
+            className="w-2/3 p-2 border border-gray-300 rounded-md"
+          />
+        </div>
         {/* Submit Button */}
         <div className="flex justify-end">
           <Button
@@ -273,8 +242,8 @@ const HDFC = () => {
             <table className="min-w-full table-auto">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                  <th className="px-6 py-3">Login</th>
-                         
+                  <th   className="px-6 py-3"> Login</th>
+
                  {Object.keys(tableDatafetch[0])
                                   .filter((key) => key !== 'valid' && key !== 'active')
                                   .map((key) => (
@@ -293,7 +262,7 @@ const HDFC = () => {
                     key={index}
                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                   >
-                     <td className="px-6 py-4 text-center">
+                      <td className="px-6 py-4 text-center">
                          <Button
                         className={row.valid?"bg-green-600 text-white py-2 text-sm rounded-md hover:bg-blue-700":"bg-red-600 text-white py-2 text-sm rounded-md hover:bg-blue-700"}
                         onClick={() => handlelogin(row.brokerid)}
@@ -316,7 +285,7 @@ const HDFC = () => {
                         {row.active?"Deactivate":"Activate"}
                       </Button>
                     </td>
-                   
+                  
                     <td className="px-6 py-4 text-center">
                       <Button
                         className="bg-blue-600 text-white py-2 text-sm rounded-md hover:bg-blue-700"
@@ -344,4 +313,4 @@ const HDFC = () => {
   );
 };
 
-export default HDFC;
+export default Anandrathi;

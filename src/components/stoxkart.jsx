@@ -273,13 +273,16 @@ const Stoxkart = () => {
             <table className="min-w-full table-auto">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                  {Object.keys(tableDatafetch[0]).map((key) => (
-                    <th key={key} className="px-6 py-3">
-                      {key.charAt(0).toUpperCase() + key.slice(1)}
-                    </th>
-                  ))}
-                  <th   className="px-6 py-3"> Active</th>
                   <th className="px-6 py-3">Login</th>
+
+                 {Object.keys(tableDatafetch[0])
+                                  .filter((key) => key !== 'valid' && key !== 'active')
+                                  .map((key) => (
+                                    <th key={key} className="px-6 py-3">
+                                      {key.charAt(0).toUpperCase() + key.slice(1)}
+                                    </th>
+                                  ))}
+                  <th   className="px-6 py-3"> Active</th>
                   <th className="px-6 py-3">Edit</th>
                   <th className="px-6 py-3">Delete</th>
                 </tr>
@@ -290,11 +293,21 @@ const Stoxkart = () => {
                     key={index}
                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                   >
-                    {Object.values(row).map((value, idx) => (
-                      <td key={idx} className="px-6 py-4">
-                        {value}
-                      </td>
-                       ))}
+                     <td className="px-6 py-4 text-center">
+                                            <Button
+                                           className={row.valid?"bg-green-600 text-white py-2 text-sm rounded-md hover:bg-blue-700":"bg-red-600 text-white py-2 text-sm rounded-md hover:bg-blue-700"}
+                                           onClick={() => handlelogin(row.brokerid)}
+                                         >
+                                           Login
+                                         </Button>
+                                       </td>
+                        {Object.entries(row)
+      .filter(([key]) => key !== 'valid' && key !== 'active')
+      .map(([key, value], idx) => (
+        <td key={idx} className="px-6 py-4">
+          {value}
+        </td>
+      ))}
                     <td className="px-6 py-4 text-center">
                       <Button
                         className="bg-blue-600 text-white py-2 text-sm rounded-md hover:bg-blue-700"
@@ -303,14 +316,7 @@ const Stoxkart = () => {
                         {row.active?"Deactivate":"Activate"}
                       </Button>
                     </td>
-                    <td className="px-6 py-4 text-center">
-                         <Button
-                        className="bg-blue-600 text-white py-2 text-sm rounded-md hover:bg-blue-700"
-                        onClick={() => handlelogin(row.brokerid)}
-                      >
-                        Login
-                      </Button>
-                    </td>
+                    
                     <td className="px-6 py-4 text-center">
                       <Button
                         className="bg-blue-600 text-white py-2 text-sm rounded-md hover:bg-blue-700"
@@ -339,3 +345,5 @@ const Stoxkart = () => {
 };
 
 export default Stoxkart;
+
+[{'Prc': '34.73', 'RequestID': '1', 'Cancelqty': 0, 'discQtyPerc': 'NA', 'customText': 'NA', 'Mktpro': 'NA', 'defmktproval': '', 'optionType': 'XX', 'usecs': 'NA', 'mpro': '', 'Qty': 2552, 'ordergenerationtype': '--', 'Unfilledsize': 0, 'orderAuthStatus': '', 'Usercomments': 'NA', 'ticksize': '0.01', 'Prctype': 'L', 'Status': 'complete', 'Minqty': 0, 'orderCriteria': 'NA', 'Exseg': 'bse_cm', 'Sym': 'COLAB', 'multiplier': '1', 'ExchOrdID': '1750996800000107697', 'ExchConfrmtime': '27-Jun-2025 13:31:22', 'Pcode': 'CNC', 'SyomOrderId': '', 'Dscqty': 0, 'Exchange': 'BSE', 'Ordvaldate': 'NA', 'accountId': '1841781', 'exchangeuserinfo': 'NA', 'Avgprc': '34.73', 'Trgprc': '00.00', 'Trantype': 'S', 'bqty': '2552', 'Trsym': 'COLAB', 'Fillshares': 2552, 'AlgoCategory': 'NA', 'sipindicator': 'NA', 'strikePrice': '00.00', 'reporttype': 'NA', 'AlgoID': 'NA', 'noMktPro': '', 'BrokerClient': '--', 'OrderUserMessage': '--', 'decprec': 'NA', 'ExpDate': 'NA', 'COPercentage': 0.0, 'marketprotectionpercentage': '--', 'Nstordno': '25062700089034', 'ExpSsbDate': 'NA', 'OrderedTime': '27/06/2025 14:15:00', 'RejReason': ' ', 'modifiedBy': '--', 'Scripname': 'COLAB', 'stat': 'Ok', 'orderentrytime': 'Jun 27 2025 14:15:00', 'PriceDenomenator': '1', 'panNo': 'NA', 'RefLmtPrice': 0.0, 'PriceNumerator': '1', 'token': '542866', 'ordersource': 'NA', 'Validity': 'DAY', 'GeneralDenomenator': '1', 'series': '', 'InstName': 'E', 'GeneralNumerator': '1', 'user': '1841781', 'remarks': '--', 'iSinceBOE': 0}, {'Prc': '34.73', 'RequestID': '1', 'Cancelqty': 0, 'discQtyPerc': 'NA', 'customText': 'NA', 'Mktpro': 'NA', 'defmktproval': '', 'optionType': 'XX', 'usecs': 'NA', 'mpro': '', 'Qty': 1450, 'ordergenerationtype': '--', 'Unfilledsize': 0, 'orderAuthStatus': '', 'Usercomments': 'NA', 'ticksize': '0.01', 'Prctype': 'L', 'Status': 'complete', 'Minqty': 0, 'orderCriteria': 'NA', 'Exseg': 'bse_cm', 'Sym': 'COLAB', 'multiplier': '1', 'ExchOrdID': '1750996800000091459', 'ExchConfrmtime': '27-Jun-2025 10:31:15', 'Pcode': 'CNC', 'SyomOrderId': '', 'Dscqty': 0, 'Exchange': 'BSE', 'Ordvaldate': 'NA', 'accountId': '1841781', 'exchangeuserinfo': 'NA', 'Avgprc': '34.73', 'Trgprc': '00.00', 'Trantype': 'S', 'bqty': '1450', 'Trsym': 'COLAB', 'Fillshares': 1450, 'AlgoCategory': 'NA', 'sipindicator': 'NA', 'strikePrice': '00.00', 'reporttype': 'NA', 'AlgoID': 'NA', 'noMktPro': '', 'BrokerClient': '--', 'OrderUserMessage': '--', 'decprec': 'NA', 'ExpDate': 'NA', 'COPercentage': 0.0, 'marketprotectionpercentage': '--', 'Nstordno': '25062700044026', 'ExpSsbDate': 'NA', 'OrderedTime': '27/06/2025 11:15:00', 'RejReason': ' ', 'modifiedBy': '--', 'Scripname': 'COLAB', 'stat': 'Ok', 'orderentrytime': 'Jun 27 2025 11:15:00', 'PriceDenomenator': '1', 'panNo': 'NA', 'RefLmtPrice': 0.0, 'PriceNumerator': '1', 'token': '542866', 'ordersource': 'NA', 'Validity': 'DAY', 'GeneralDenomenator': '1', 'series': '', 'InstName': 'E', 'GeneralNumerator': '1', 'user': '1841781', 'remarks': '--', 'iSinceBOE': 0}, {'Prc': '34.73', 'RequestID': '1', 'Cancelqty': 0, 'discQtyPerc': 'NA', 'customText': 'NA', 'Mktpro': 'NA', 'defmktproval': '', 'optionType': 'XX', 'usecs': 'NA', 'mpro': '', 'Qty': 2000, 'ordergenerationtype': '--', 'Unfilledsize': 0, 'orderAuthStatus': '', 'Usercomments': 'NA', 'ticksize': '0.01', 'Prctype': 'L', 'Status': 'complete', 'Minqty': 0, 'orderCriteria': 'NA', 'Exseg': 'bse_cm', 'Sym': 'COLAB', 'multiplier': '1', 'ExchOrdID': '1750996800000006251', 'ExchConfrmtime': '27-Jun-2025 09:31:22', 'Pcode': 'CNC', 'SyomOrderId': '', 'Dscqty': 2000, 'Exchange': 'BSE', 'Ordvaldate': 'NA', 'accountId': '1841781', 'exchangeuserinfo': 'NA', 'Avgprc': '34.73', 'Trgprc': '00.00', 'Trantype': 'S', 'bqty': '2000', 'Trsym': 'COLAB', 'Fillshares': 2000, 'AlgoCategory': 'NA', 'sipindicator': 'NA', 'strikePrice': '00.00', 'reporttype': 'NA', 'AlgoID': 'NA', 'noMktPro': '', 'BrokerClient': '--', 'OrderUserMessage': '--', 'decprec': 'NA', 'ExpDate': 'NA', 'COPercentage': 0.0, 'marketprotectionpercentage': '--', 'Nstordno': '25062700016673', 'ExpSsbDate': 'NA', 'OrderedTime': '27/06/2025 10:15:00', 'RejReason': ' ', 'modifiedBy': '--', 'Scripname': 'COLAB', 'stat': 'Ok', 'orderentrytime': 'Jun 27 2025 10:15:00', 'PriceDenomenator': '1', 'panNo': 'NA', 'RefLmtPrice': 0.0, 'PriceNumerator': '1', 'token': '542866', 'ordersource': '1750996882857.8074', 'Validity': 'DAY', 'GeneralDenomenator': '1', 'series': '', 'InstName': 'E', 'GeneralNumerator': '1', 'user': '1841781', 'remarks': '1750996882857.8074', 'iSinceBOE': 0}] 

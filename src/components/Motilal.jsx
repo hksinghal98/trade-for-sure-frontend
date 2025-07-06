@@ -217,20 +217,19 @@ const handlelogin = async (brokerid) => {
           />
         </div>
 
-        {/* Vendor Code */}
-        {/* <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4">
           <Label htmlFor="vendor-code" className="w-1/3 text-lg text-gray-700">
-            Vendor Info
+            2FA
           </Label>
           <Input
             id="vendor-code"
             type="text"
             placeholder="Enter Vendor Code"
-            value={secretkey    }
+            value={vendorcode}
             onChange={(e) => setvendorcode(e.target.value)}
             className="w-2/3 p-2 border border-gray-300 rounded-md"
           />
-        </div> */}
+        </div>
 
         {/* Account Number */}
         <div className="flex items-center gap-4">
@@ -283,14 +282,17 @@ const handlelogin = async (brokerid) => {
           ) : (
             <table className="min-w-full table-auto">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                  {Object.keys(tableDatafetch[0]).map((key) => (
-                    <th key={key} className="px-6 py-3">
-                      {key.charAt(0).toUpperCase() + key.slice(1)}
-                    </th>
-                  ))}
-                  <th   className="px-6 py-3"> Active</th>
                   <th className="px-6 py-3">Login</th>
+
+                <tr>
+                 {Object.keys(tableDatafetch[0])
+                                  .filter((key) => key !== 'valid' && key !== 'active')
+                                  .map((key) => (
+                                    <th key={key} className="px-6 py-3">
+                                      {key.charAt(0).toUpperCase() + key.slice(1)}
+                                    </th>
+                                  ))}
+                  <th   className="px-6 py-3"> Active</th>
                   <th className="px-6 py-3">Edit</th>
                   <th className="px-6 py-3">Delete</th>
                 </tr>
@@ -301,11 +303,21 @@ const handlelogin = async (brokerid) => {
                     key={index}
                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                   >
-                    {Object.values(row).map((value, idx) => (
-                      <td key={idx} className="px-6 py-4">
-                        {value}
-                      </td>
-                       ))}
+                     <td className="px-6 py-4 text-center">
+                         <Button
+                        className={row.valid?"bg-green-600 text-white py-2 text-sm rounded-md hover:bg-blue-700":"bg-red-600 text-white py-2 text-sm rounded-md hover:bg-blue-700"}
+                        onClick={() => handlelogin(row.brokerid)}
+                      >
+                        Login
+                      </Button>
+                    </td>
+                        {Object.entries(row)
+      .filter(([key]) => key !== 'valid' && key !== 'active')
+      .map(([key, value], idx) => (
+        <td key={idx} className="px-6 py-4">
+          {value}
+        </td>
+      ))}
                     <td className="px-6 py-4 text-center">
                       <Button
                         className="bg-blue-600 text-white py-2 text-sm rounded-md hover:bg-blue-700"
@@ -314,14 +326,7 @@ const handlelogin = async (brokerid) => {
                         {row.active?"Deactivate":"Activate"}
                       </Button>
                     </td>
-                    <td className="px-6 py-4 text-center">
-                         <Button
-                        className="bg-blue-600 text-white py-2 text-sm rounded-md hover:bg-blue-700"
-                        onClick={() => handlelogin(row.brokerid)}
-                      >
-                        Login
-                      </Button>
-                    </td>
+                   
                     <td className="px-6 py-4 text-center">
                       <Button
                         className="bg-blue-600 text-white py-2 text-sm rounded-md hover:bg-blue-700"

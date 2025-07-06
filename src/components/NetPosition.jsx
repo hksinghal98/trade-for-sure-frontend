@@ -11,7 +11,7 @@ const NetPosition = () => {
   const [filtereddata, setfiltereddata] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
 
-  const paginationModel = { page: 0, pageSize: 5 };
+  const paginationModel = { page: 0, pageSize: 10 };
 
   // Fetch table data
   const fetchNetposition = async () => {
@@ -81,7 +81,7 @@ const NetPosition = () => {
       <div className="container flex items-end gap-2 flex-col mx-auto mt-6 p-6 bg-transparent rounded-lg max-w-6xl">
         <RefreshCcw className="cursor-pointer" onClick={fetchNetposition} />
         
-        <Paper sx={{ height: 400, width: '100%' }}>
+        <Paper sx={{ height: "100%", width: '100%' }}>
           <DataGrid
             className="text-black overflow-x-scroll scrollbar-hide"
             rows={filtereddata}
@@ -105,14 +105,13 @@ const NetPosition = () => {
               // },
             ]}
             initialState={{ pagination: { paginationModel } }}
-            pageSizeOptions={[5, 10]}
+            pageSizeOptions={[10, 20,50]}
             checkboxSelection
             onRowSelectionModelChange={(ids) => {
               console.log('Selected IDs:', ids);
               setSelectedRows(ids);
             }}
-            sx={{ border: 0 }}
-          />
+            sx={{ border: 0 , '.MuiDataGrid-columnHeaderTitle': { fontWeight: 'bold' }}}          />
         </Paper>
       </div>
     </>

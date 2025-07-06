@@ -17,6 +17,9 @@ import{WSHOST} from "../utility/Host"
 import { Check, ChevronsUpDown } from "lucide-react"
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { DataGrid } from '@mui/x-data-grid';
+import Paper from '@mui/material/Paper';
+import { RefreshCcw } from 'lucide-react';
 
 
 const Marketwatch = () => {
@@ -532,42 +535,68 @@ return (
 {loading ? (
 <p className="text-center text-slate-800">Loading...</p> // Loading message
 ) : tableDatafetch.length === 0 ? (
-<table className="w-full h-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-  <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-      <th scope="col" className="px-6 py-3">Column 1</th>
-      <th scope="col" className="px-6 py-3">Column 2</th>
-      <th scope="col" className="px-6 py-3">Column 3</th>
-      <th scope="col" className="px-6 py-3">Buy</th>
-      <th scope="col" className="px-6 py-3">Sell</th>
-      <th scope="col" className="px-6 py-3">Delete</th>
-    </tr>
-  </thead>
-  <tbody>
-    {[...Array(5)].map((_, index) => (
-      <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-        <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-slate-800">-</td>
-        <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-slate-800">-</td>
-        <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-slate-800">-</td>
-<td scope="row" className="px-3 py-2 font-medium text-center text-gray-900 whitespace-nowrap dark:text-slate-800">
-         <Button className="bg-green-600 text-white hover:bg-green-700">Buy</Button>
-        </td>
-        <td scope="row" className="px-3 py-2 text-center font-medium text-gray-900 whitespace-nowrap dark:text-slate-800">
-         <Button className="bg-red-600/90 text-white hover:bg-red-700">Sell</Button>
-        </td>
-        <td scope="row" className="px-3 py-2 text-center font-medium text-gray-900 whitespace-nowrap dark:text-slate-800">
-           <Button className="bg-red-700 text-white hover:bg-red-700">Delete</Button>    
-        </td>
-      </tr>
-    ))}
-  </tbody>
-</table>
+<Paper sx={{ height: "100%", width: '100%' }}>
+    <DataGrid
+      className="text-black overflow-x-scroll scrollbar-hide"
+      rows={[...Array(5)].map((_, index) => ({ id: index }))} // Dummy rows for empty state
+      getRowId={(row) => row.id}
+      disableSelectionOnClick
+      columns={[
+        { field: 'column1', headerName: 'Column 1', width: 150, renderCell: () => '-' },
+        { field: 'column2', headerName: 'Column 2', width: 150, renderCell: () => '-' },
+        { field: 'column3', headerName: 'Column 3', width: 150, renderCell: () => '-' },
+        {
+          field: 'buy',
+          headerName: 'Buy',
+          width: 100,
+          renderCell: () => (
+            <Button
+              variant="contained"
+              sx={{ backgroundColor: '#16a34a', '&:hover': { backgroundColor: '#15803d' } }}
+            >
+              Buy
+            </Button>
+          ),
+        },
+        {
+          field: 'sell',
+          headerName: 'Sell',
+          width: 100,
+          renderCell: () => (
+            <Button
+              variant="contained"
+              sx={{ backgroundColor: '#dc2626', '&:hover': { backgroundColor: '#b91c1c' } }}
+            >
+              Sell
+            </Button>
+          ),
+        },
+        {
+          field: 'delete',
+          headerName: 'Delete',
+          width: 100,
+          renderCell: () => (
+            <Button
+              variant="contained"
+              sx={{ backgroundColor: '#b91c1c', '&:hover': { backgroundColor: '#991b1b' } }}
+            >
+              Delete
+            </Button>
+          ),
+        },
+      ]}
+      initialState={{ pagination: { paginationModel: { pageSize: 5 } } }}
+      pageSizeOptions={[5, 10]}
+      sx={{ border: 0 }}
+    />
+  </Paper>
 ) : (
 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-<thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+<thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 font-bold">
   <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
     {messages.length > 0 &&
-      Object.keys(messages[0]).map((key) => (
+      Object.keys(messages[0]).filter((key) => key !== 'lotsize')
+        .map((key) => (
         <th key={key} scope="col" className="px-6 py-3">
           {key.charAt(0).toUpperCase() + key.slice(1)}
         </th>
@@ -583,7 +612,8 @@ return (
       key={rowIndex}
       className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
     >
-      {Object.keys(row).map((key, colIndex) => (
+      {Object.keys(row).filter((key) => key !== 'lotsize')
+      .map((key, colIndex) => (
         <td
           key={colIndex}
           scope="row"
@@ -631,6 +661,8 @@ return (
 </tbody>
 </table>
 )}
+
+
 </div>
 </div>
 </div>

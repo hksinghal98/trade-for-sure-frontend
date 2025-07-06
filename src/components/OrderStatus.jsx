@@ -76,7 +76,7 @@ const OrderStatus = () => {
   }
 
 
-const paginationModel = { page: 0, pageSize: 5 };
+const paginationModel = { page: 0, pageSize: 10 };
 
 
 
@@ -253,7 +253,7 @@ const handleModify = (row) => {
 
             <Button onClick={()=>handlecancelorder()} className=" bg-red-600/95">Cancel </Button>
             
-             <Paper sx={{ height: 400, width: '100%' }}>
+             <Paper sx={{ height: '100%', width: '100%' }}>
               
   <DataGrid
     className='text-black overflow-x-scroll scrollbar-hide'
@@ -295,13 +295,11 @@ const handleModify = (row) => {
     
     
     ]}
-    initialS
-    tate={{ pagination: { paginationModel } }}
-    pageSizeOptions={[5, 10]} // Enable page size options
+    initialState={{ pagination: { paginationModel } }}
+    pageSizeOptions={[10, 20,50]} // Enable page size options
     checkboxSelection
     onRowSelectionModelChange={(value)=>{handleOrderselect(value),setSelectedRows(value.id)}}
-    sx={{ border: 0 }}
-  />
+    sx={{ border: 0 , '.MuiDataGrid-columnHeaderTitle': { fontWeight: 'bold' }}}     />
 </Paper>
          
 </div>
