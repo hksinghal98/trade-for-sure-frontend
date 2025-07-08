@@ -13,8 +13,8 @@ import {
 
  import {handleexchangerequest}  from '../utility/Api'
 import { Type } from "lucide-react";
-const Anandrathi = () => {
-  const [brokerName, setBrokerName] = useState('ANANDRATHI');
+const SYMPHONY = () => {
+  const [brokerName, setBrokerName] = useState('SYMPHONY');
   const [apikey, setapikey] = useState("");
   const [secretkey, setsecretkey] = useState("");
   const [AuthToken, setAuthToken] = useState("");
@@ -24,7 +24,9 @@ const Anandrathi = () => {
   const [tableDatafetch, setTableDatafetch] = useState([]);
   const [loading, setLoading] = useState(false);
   const [brokerid, setBrokerid] = useState(false);
-    const [nickname, setnickname] = useState('');
+  const [nickname, setnickname] = useState('');
+  const [url, setUrl] = useState('');
+
   
 
       const [REType, setREType] = useState('POST');
@@ -39,7 +41,7 @@ const Anandrathi = () => {
   const fetchaccountlist = async () => {
     const type = "GET";
     const endpoint = "loadaccount";
-    const payload = "broker=ANANDRATHI";
+    const payload = "broker=SYMPHONY";
     setLoading(true); // Set loading to true before fetching data
     handleexchangerequest(type, payload, endpoint, false)
       .then((response) => {
@@ -76,7 +78,8 @@ const Anandrathi = () => {
       password,
       put,
       brokerid,
-      nickname
+      nickname,
+      url
     });
     
       const Rtype = REType
@@ -155,6 +158,10 @@ const handlelogin = async (brokerid) => {
     setaccountnumber(rowData.accountnumber);
     setPassword(rowData.password);
     setBrokerid(rowData.brokerid)
+    setnickname(rowData.nickname)
+    setUrl(rowData.url)
+
+
     setREType('PUT')
     
   };
@@ -177,6 +184,21 @@ const handlelogin = async (brokerid) => {
                     className="w-2/3 p-2 border border-gray-300 rounded-md"
                   />
                 </div>
+
+
+                 <div className="flex items-center gap-4">
+          <Label htmlFor="auth-token" className="w-1/3 text-lg text-gray-700">
+             URL
+          </Label>
+          <Input
+            id="auth-token"
+            type="text"
+            placeholder="Enter url"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            className="w-2/3 p-2 border border-gray-300 rounded-md"
+          />
+        </div>
       
         <div className="flex items-center gap-4">
           <Label htmlFor="auth-token" className="w-1/3 text-lg text-gray-700">
@@ -313,4 +335,4 @@ const handlelogin = async (brokerid) => {
   );
 };
 
-export default Anandrathi;
+export default SYMPHONY;

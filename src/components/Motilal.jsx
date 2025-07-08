@@ -317,7 +317,7 @@ const handlelogin = async (brokerid) => {
         <td key={idx} className="px-6 py-4">
           {value}
         </td>
-      ))}
+      ))}           
                     <td className="px-6 py-4 text-center">
                       <Button
                         className="bg-blue-600 text-white py-2 text-sm rounded-md hover:bg-blue-700"

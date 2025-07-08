@@ -145,7 +145,7 @@ const NavContent = ({ className = '' }) => {
               isActive={location.pathname === '/Anandrathi'}
               onClick={() => handleLinkClick('/Anandrathi')}
             >
-              ANANDRATHI(SYMPHONY)
+            SYMPHONY XTS
             </NavLink>
               <NavLink
               to="/Alice"
