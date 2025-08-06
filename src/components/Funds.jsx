@@ -5,6 +5,7 @@ import { Button } from '../components/ui/button';
 import { handleexchangerequest } from '../utility/Api';
 import { RefreshCcw } from 'lucide-react';
 
+import { DownloadCSVFromJSON } from '../utility/downloadcsv';
 const Funds = () => {
   const [loading, setLoading] = useState(false);
   const [tableDatafetch, setTableDatafetch] = useState([]);
@@ -60,6 +61,10 @@ const Funds = () => {
       <h1 className="text-2xl">Funds</h1>
       <div className="container flex items-end gap-2 flex-col mx-auto  mt-6 p-6 bg-transparent rounded-lg max-w-6xl " >
       <RefreshCcw className="text-black cursor-pointer" onClick={fetchTableData} />
+       <Button color="primary" className="p-3 bg-cyan-700/85" onClick = {() => DownloadCSVFromJSON(filtereddata,'funds.csv')}>
+                Download
+              </Button>
+      
         <Paper sx={{ height: "100%", width: '100%' }}>
           <DataGrid
             className="text-black overflow-x-scroll scrollbar-hide font-bold"

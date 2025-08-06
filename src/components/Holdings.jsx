@@ -4,6 +4,7 @@ import Paper from '@mui/material/Paper';
 import { Button } from '../components/ui/button';
 import { handleexchangerequest } from '../utility/Api';
 import { RefreshCcw } from 'lucide-react';
+import { DownloadCSVFromJSON } from '../utility/downloadcsv';
 
 const Holdings = () => {
   const [loading, setLoading] = useState(false);
@@ -80,6 +81,10 @@ const Holdings = () => {
       <h1 className="text-2xl">Holdings</h1>
       <div className="container flex items-end gap-2 flex-col mx-auto mt-6 p-6 bg-transparent rounded-lg max-w-6xl">
        <RefreshCcw className="text-black cursor-pointer" onClick={fetchTableData} />
+        <Button color="primary" className="p-3 bg-cyan-700/85" onClick = {() => DownloadCSVFromJSON(filtereddata,"holdings.csv")}>
+          Download
+        </Button>
+
         <Paper sx={{ height: "100%", width: '100%' }}>
           <DataGrid
             className="text-black overflow-x-scroll scrollbar-hide"

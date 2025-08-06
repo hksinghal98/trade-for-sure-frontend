@@ -20,6 +20,7 @@ import { Flex } from '@mantine/core';
 import { columnGroupsStateInitializer } from '@mui/x-data-grid/internals';
 import { useNavigate } from 'react-router-dom';
 import { RefreshCcw } from 'lucide-react';
+import { DownloadCSVFromJSON } from '../utility/downloadcsv';
 
 
 
@@ -199,6 +200,7 @@ const handleModify = (row) => {
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <RefreshCcw className="cursor-pointer" onClick={fetchTableData} >
         </RefreshCcw>
+     
         <p>Refresh</p>
 
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
@@ -207,12 +209,18 @@ const handleModify = (row) => {
           <Tab label="Close Position"className='text-slate-900 font-bold' {...a11yProps(2)} /> */}
         </Tabs>
       </Box>
+      
 
       <CustomTabPanel value={value} index={0}>
         <span>Order Book</span>
         
+        
         {/* Render the Select component only when the "Order Book" tab is selected */}
         <div className='flex flex-wrap items-center justify-around gap-4'>
+              <Button color="primary" className="p-3 bg-cyan-700/85" onClick = {() => DownloadCSVFromJSON(filtereddata,"orderbook.csv")}>
+                  Download
+                </Button>
+        
           {value === 0 && (
             <Select onValueChange={(value) => {handleSelectIndex(value),setopenfil(value)}}>
               

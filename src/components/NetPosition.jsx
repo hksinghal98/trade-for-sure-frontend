@@ -4,6 +4,7 @@ import Paper from '@mui/material/Paper';
 import { Button } from '../components/ui/button';
 import { handleexchangerequest } from '../utility/Api';
 import { RefreshCcw } from 'lucide-react';
+import { DownloadCSVFromJSON } from '../utility/downloadcsv';
 
 const NetPosition = () => {
   const [loading, setLoading] = useState(false);
@@ -80,6 +81,9 @@ const NetPosition = () => {
       <h1 className="text-2xl">Net Position</h1>
       <div className="container flex items-end gap-2 flex-col mx-auto mt-6 p-6 bg-transparent rounded-lg max-w-6xl">
         <RefreshCcw className="cursor-pointer" onClick={fetchNetposition} />
+         <Button color="primary" className="p-3 bg-cyan-700/85" onClick = {() => DownloadCSVFromJSON(filtereddata,'position.csv')}>
+                  Download
+                </Button>
         
         <Paper sx={{ height: "100%", width: '100%' }}>
           <DataGrid
